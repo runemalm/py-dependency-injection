@@ -44,39 +44,6 @@ singleton_instance.do_something()
 
 ```
 
-### Constructor Injection:
-
-```python
-class SomeClass(SomeInterface):
-
-    def __init__(self, scoped_instance: AnotherInterface)
-        self.scoped_instance = scoped_instance
-
-transient_instance = container.resolve(SomeInterface)
-
-```
-
-### Instance method injection:
-
-```python
-from dependency_injection.decorator.inject import inject
-
-class SomeService:
-    
-    @inject()
-    def do_something_1(self, transient_instance: SomeInterface):
-        transient_instance.do_something()
-
-    @inject(scope_name="some-scope")
-    def do_something_2(self, scoped_instance: AnotherInterface):
-        scoped_instance.do_something()
-
-    @inject(container=DependencyContainer.get_instance())
-    def do_something_3(self, singleton_instance: ThirdInterface):
-        singleton_instance.do_something()
-
-```
-
 ### Documentation:
   
 You can find the latest [documentation](https://py-dependency-injection.readthedocs.io/en/latest/) at readthedocs.
@@ -86,8 +53,8 @@ You can find the latest [documentation](https://py-dependency-injection.readthed
 If you want to contribute to the code base, create a pull request on the develop branch.
 
 We follow the git flow model, documentation can be found here:
-- [Vincent Driessen at nvie (official)](https://nvie.com/posts/a-successful-git-branching-model/)
-- [Atlassian (atlernative)](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+- [Official documentation](https://nvie.com/posts/a-successful-git-branching-model/)
+- [Atlassian guide](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
   
 ### Release Notes:
 
