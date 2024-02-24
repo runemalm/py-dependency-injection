@@ -53,6 +53,39 @@ singleton_instance.do_something()
 
 ```
 
+### ..constructor injection:
+
+```python
+class SomeClass(SomeInterface):
+
+    def __init__(self, scoped_instance: AnotherInterface)
+        self.scoped_instance = scoped_instance
+
+transient_instance = container.resolve(SomeInterface)
+
+```
+
+### ..method injection:
+
+```python
+from dependency_injection.decorator.inject import inject
+
+class SomeService:
+    
+    @inject()
+    def do_something_1(self, transient_instance: SomeInterface):
+        transient_instance.do_something()
+
+    @inject(scope_name="some-scope")
+    def do_something_2(self, scoped_instance: AnotherInterface):
+        scoped_instance.do_something()
+
+    @inject(container=DependencyContainer.get_instance())
+    def do_something_3(self, singleton_instance: ThirdInterface):
+        singleton_instance.do_something()
+
+```
+
 ### Documentation:
   
 You can find the latest [documentation](https://py-dependency-injection.readthedocs.io/en/latest/) at readthedocs.

@@ -104,6 +104,7 @@ class TestDecorator(UnitTestCase):
         self.assertNotEqual(foo.vehicle_5, foo.vehicle_6)
 
 class Foo:
+
     def __init__(self):
         self.vehicle_1 = None
         self.vehicle_2 = None
