@@ -1,8 +1,12 @@
 import functools
 import inspect
 
+from dependency_injection.container import DependencyContainer
+from dependency_injection.scope import DEFAULT_SCOPE_NAME
 
-def inject(container, scope_name=None):
+
+def inject(container=DependencyContainer.get_instance(), scope_name=DEFAULT_SCOPE_NAME):
+
     def decorator_inject(func):
         @functools.wraps(func)
         def wrapper_inject(self, *args, **kwargs):

@@ -1,7 +1,7 @@
 import inspect
 
 from dependency_injection.registration import Registration
-from dependency_injection.scope import Scope
+from dependency_injection.scope import DEFAULT_SCOPE_NAME, Scope
 from dependency_injection.utils.singleton_meta import SingletonMeta
 
 
@@ -31,7 +31,7 @@ class DependencyContainer(metaclass=SingletonMeta):
             raise ValueError(f"Dependency {interface} is already registered.")
         self._registrations[interface] = Registration(interface, class_, Scope.SINGLETON)
 
-    def resolve(self, interface, scope_name=None):
+    def resolve(self, interface, scope_name=DEFAULT_SCOPE_NAME):
         if scope_name not in self._scoped_instances:
             self._scoped_instances[scope_name] = {}
 
