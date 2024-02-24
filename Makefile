@@ -65,7 +65,7 @@ sphinx-rebuild: ## re-build the sphinx docs
 
 .PHONY: sphinx-autobuild
 sphinx-autobuild: ## activate autobuild of docs
-	sphinx-autobuild docs docs/_build/html --watch src
+	sphinx-autobuild docs docs/_build/html --watch $(SRC)
 
 ################################################################################
 # PIPENV

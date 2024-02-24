@@ -15,8 +15,8 @@ setup(
     long_description_content_type="text/markdown",
     url='https://github.com/runemalm/py-dependency-injection',
     project_urls={
-        "Documentation": "https://ddd-for-python.readthedocs.io/en/latest/",
-        "Bug Tracker": "https://github.com/runemalm/ddd-for-python/issues",
+        "Documentation": "https://py-dependency-injection.readthedocs.io/en/latest/",
+        "Bug Tracker": "https://github.com/runemalm/py-dependency-injection/issues",
     },
     package_dir={'': '.'},
     packages=find_packages(

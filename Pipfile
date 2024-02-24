@@ -7,6 +7,10 @@ name = "pypi"
 
 [dev-packages]
 pytest = "*"
+sphinx = "7.1.2"
+sphinx-rtd-theme = "2.0.0"
+sphinx-autobuild = "2021.3.14"
+sphinxcontrib-napoleon = "0.7"
 
 [requires]
 python_version = "3.8"
