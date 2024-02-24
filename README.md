@@ -1,26 +1,17 @@
 ## py-dependency-injection
 
-A simple dependency injection implementation for python.
+This is a lightweight Python library for handling dependency injection. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
 
 ### Features:
 
 - Dependency Container
 - Constructor Injection
-- Scopes
-    - Transient
-    - Scoped
-    - Singleton
-
-### Design Pattern Resources: 
-  
-You can read about the dependency injection pattern here:
-  
-- [Wikipedia](https://en.wikipedia.org/wiki/Dependency_injection)
+- Support for different dependency scopes such as transient, scoped, and singleton.
 
 ### Supported Python Versions:
 
 - Tested with python 3.8.5.
-- Should work with any version >= 3.8.0.
+- Expected to work with any version >= 3.8.0.
   
 ### Installation:
   
@@ -43,7 +34,7 @@ container.register_singleton(ThirdInterface, ThirdClass)
 
 # Resolve dependencies
 transient_instance = container.resolve(SomeInterface)
-scoped_instance = container.resolve(AnotherInterface, scope_name="some_scope")
+scoped_instance = container.resolve(AnotherInterface, scope_name="http_request_scope_123")
 singleton_instance = container.resolve(ThirdInterface)
 
 # Use dependencies
@@ -53,7 +44,7 @@ singleton_instance.do_something()
 
 ```
 
-### ..constructor injection:
+### Constructor Injection:
 
 ```python
 class SomeClass(SomeInterface):
@@ -65,7 +56,7 @@ transient_instance = container.resolve(SomeInterface)
 
 ```
 
-### ..method injection:
+### Instance method injection:
 
 ```python
 from dependency_injection.decorator.inject import inject
