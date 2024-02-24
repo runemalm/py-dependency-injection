@@ -1,4 +1,4 @@
-from dependency_injection.container.container import DependencyContainer
+from dependency_injection.container import DependencyContainer
 from unit_test.car import Car
 from unit_test.unit_test_case import UnitTestCase
 from unit_test.vehicle import Vehicle
@@ -20,7 +20,7 @@ class TestResolveScoped(UnitTestCase):
         resolved_dependency_in_scope_2 = dependency_container.resolve(interface, scope_name="test-scope")
 
         # assert
-        self.assertEquals(resolved_dependency_in_scope_1, resolved_dependency_in_scope_2)
+        self.assertEqual(resolved_dependency_in_scope_1, resolved_dependency_in_scope_2)
 
     def test_resolve_singleton_in_different_scopes_returns_different_instances(
         self,
@@ -36,4 +36,4 @@ class TestResolveScoped(UnitTestCase):
         resolved_dependency_in_scope_2 = dependency_container.resolve(interface, scope_name="scope_2")
 
         # assert
-        self.assertNotEquals(resolved_dependency_in_scope_1, resolved_dependency_in_scope_2)
+        self.assertNotEqual(resolved_dependency_in_scope_1, resolved_dependency_in_scope_2)

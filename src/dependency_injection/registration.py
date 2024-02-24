@@ -1,4 +1,4 @@
-from dependency_injection.container.scope import Scope
+from dependency_injection.scope import Scope
 
 
 class Registration():

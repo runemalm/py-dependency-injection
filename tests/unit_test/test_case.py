@@ -1,6 +1,6 @@
 from unittest import TestCase as TestCaseBase
 
-from dependency_injection.container.container import DependencyContainer
+from dependency_injection.container import DependencyContainer
 
 
 class TestCase(TestCaseBase):

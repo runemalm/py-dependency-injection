@@ -1,6 +1,6 @@
 import pytest
 
-from dependency_injection.container.container import DependencyContainer
+from dependency_injection.container import DependencyContainer
 from unit_test.car import Car
 from unit_test.unit_test_case import UnitTestCase
 from unit_test.vehicle import Vehicle

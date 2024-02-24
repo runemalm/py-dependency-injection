@@ -1,4 +1,4 @@
-from dependency_injection.container.container import DependencyContainer
+from dependency_injection.container import DependencyContainer
 from unit_test.car import Car
 from unit_test.unit_test_case import UnitTestCase
 from unit_test.vehicle import Vehicle
@@ -35,5 +35,5 @@ class TestResolveTransient(UnitTestCase):
         resolved_dependency_2 = dependency_container.resolve(interface)
 
         # assert
-        self.assertNotEquals(resolved_dependency_1, resolved_dependency_2)
+        self.assertNotEqual(resolved_dependency_1, resolved_dependency_2)
 

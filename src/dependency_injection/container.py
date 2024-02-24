@@ -1,7 +1,7 @@
 import inspect
 
-from dependency_injection.container.registration import Registration
-from dependency_injection.container.scope import Scope
+from dependency_injection.registration import Registration
+from dependency_injection.scope import Scope
 from dependency_injection.utils.singleton_meta import SingletonMeta
 
 

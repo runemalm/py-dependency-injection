@@ -10,7 +10,7 @@ setup(
     author='David Runemalm, 2024',
     author_email='david.runemalm@gmail.com',
     description=
-    'A dependency injection framework for Python.',
+    'A simple dependency injection implementation for python.',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/runemalm/py-dependency-injection',
@@ -22,14 +22,14 @@ setup(
     packages=find_packages(
         where='.',
         include=['dependency_injection*',],
-        exclude=[]
+        exclude=['tests*',]
     ),
     license='GNU General Public License v3.0',
     install_requires=[
-        'addict>=2.3.0',
+
     ],
     tests_require=[
-        'pytest>=8.0.1',
+        'pytest',
     ],
     python_requires='>=3.8',
 )
