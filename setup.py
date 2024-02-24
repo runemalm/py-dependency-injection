@@ -1,0 +1,35 @@
+from setuptools import find_packages
+from setuptools import setup
+
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
+setup(
+    name='py-dependency-injection',
+    version='1.0.0-alpha.1',
+    author='David Runemalm, 2024',
+    author_email='david.runemalm@gmail.com',
+    description=
+    'A dependency injection framework for Python.',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url='https://github.com/runemalm/py-dependency-injection',
+    project_urls={
+        "Documentation": "https://ddd-for-python.readthedocs.io/en/latest/",
+        "Bug Tracker": "https://github.com/runemalm/ddd-for-python/issues",
+    },
+    package_dir={'': '.'},
+    packages=find_packages(
+        where='.',
+        include=['dependency_injection*',],
+        exclude=[]
+    ),
+    license='GNU General Public License v3.0',
+    install_requires=[
+        'addict>=2.3.0',
+    ],
+    tests_require=[
+        'pytest>=8.0.1',
+    ],
+    python_requires='>=3.8',
+)
