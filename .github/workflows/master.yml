@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.7.17, 3.8.18, 3.9, "3.10", 3.11.0, 3.12]
+        python-version: [3.7.17, 3.8.18, 3.9.18, "3.10.13", 3.11.6, 3.12.0, 3.13]
       fail-fast: false
 
     steps:
@@ -25,31 +25,9 @@ jobs:
           default: 3.7.17
           versions: ${{ matrix.python-version }}
 
-      - name: List installed python versions
-        run: |
-          pyenv versions
-
-      - name: Verify python version is installed
-        run: |
-          pyenv versions
-          if pyenv versions | grep -q "${{ matrix.python-version }}"; then
-            echo "Python ${{ matrix.python-version }} is installed."
-          else
-            echo "Python ${{ matrix.python-version }} is not installed. Exiting workflow."
-            exit 1
-          fi
-
-      - name: Display current python version
-        run: |
-          python -V
-
       - name: Switch python version
         run: |
           pyenv local "$(cat .python-version)"
-
-      - name: Display current python version
-        run: |
-          python -V
 
       - name: Verify python version is same as in .python-version
         run: |
@@ -69,7 +47,7 @@ jobs:
         run: |
           pipenv --python ${{ matrix.python-version }} install --dev --deploy
 
-      - name: Verify tests running with python version ${{ matrix.python-version }}
+      - name: Verify running tests with ${{ matrix.python-version }}
         run: |
           if pipenv run python -V | grep -q "${{ matrix.python-version }}"; then
             echo "Python ${{ matrix.python-version }} is being used."
