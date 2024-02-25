@@ -12,14 +12,14 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.7.17, 3.8.18, 3.9, "3.10", 3.11, 3.12]
+        python-version: [3.7.17, 3.8.18, 3.9, "3.10", 3.11.0, 3.12]
       fail-fast: false
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install python version
+      - name: Install pyenv and python ${{ matrix.python-version }}
         uses: "gabrielfalcao/pyenv-action@v18"
         with:
           default: 3.7.17
@@ -45,42 +45,38 @@ jobs:
 
       - name: Switch python version
         run: |
-          pyenv global ${{ matrix.python-version }}
-          python -V
+          pyenv local "$(cat .python-version)"
 
       - name: Display current python version
         run: |
           python -V
 
-      # - name: Activate Python version
-      #   run: |
-      #     pyenv install --skip-existing "$(cat .python-version)"
-      #     pyenv global "$(cat .python-version)"
-      #     pyenv rehash
+      - name: Verify python version is same as in .python-version
+        run: |
+          if python -V | grep -q "$(cat .python-version)"; then
+            echo "Python version is '$(python -V)'"
+          else
+            echo "Python version is '$(python -V)', but should be '$(cat .python-version)'. Exiting workflow."
+            exit 1
+          fi
 
       - name: Install pipenv
         run: |
           python -m pip install --upgrade pip
           pip install pipenv
 
-      # - name: Generate requirements.txt from Pipfile
-      #   run: |
-      #     pipenv lock -r > requirements.txt
-
-      # - name: Install dependencies using pip
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install -r requirements.txt
-
-
       - name: Setup virtual environment
         run: |
           pipenv --python ${{ matrix.python-version }} install --dev --deploy
 
-      # - name: Install dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install -r Pipfile
+      - name: Verify tests running with python version ${{ matrix.python-version }}
+        run: |
+          if pipenv run python -V | grep -q "${{ matrix.python-version }}"; then
+            echo "Python ${{ matrix.python-version }} is being used."
+          else
+            echo "Python ${{ matrix.python-version }} is not being used. Exiting workflow."
+            exit 1
+          fi
 
       - name: Run unittests
         run: |
