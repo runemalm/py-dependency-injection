@@ -1,0 +1,17 @@
+name: Push on feature
+
+on:
+  push:
+    branches:
+      - "feature*"
+
+jobs:
+  unittests:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: unittests
+        uses: ./.github/workflows/shared.yml
+        with:
+          job-name: unittests
