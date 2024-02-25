@@ -29,7 +29,7 @@ help:
 
 .PHONY: test
 test: ## run test suite
-	PYTHONPATH=./src:./tests pytest $(TESTS)
+	PYTHONPATH=./src:./tests pipenv run pytest $(TESTS)
 
 ################################################################################
 # RELEASE
