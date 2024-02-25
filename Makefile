@@ -47,11 +47,11 @@ clean: ## clean the build
 
 .PHONY: upload-test
 upload-test: ## upload package to testpypi repository
-	twine upload --repository testpypi --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+	TWINE_USERNAME=$(PYPI_USERNAME_TEST) TWINE_PASSWORD=$(PYPI_PASSWORD_TEST) twine upload --repository testpypi --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
 
 .PHONY: upload
 upload: ## upload package to pypi repository
-	twine upload --skip-existing dist/*
+	TWINE_USERNAME=$(PYPI_USERNAME) TWINE_PASSWORD=$(PYPI_PASSWORD) twine upload --skip-existing dist/*
 
 .PHONY: sphinx-quickstart
 sphinx-quickstart: ## run the sphinx quickstart
