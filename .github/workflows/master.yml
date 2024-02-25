@@ -19,11 +19,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install $(cat .python-version) and ${{ matrix.python-version }}
+      - name: Install .python-version and ${{ matrix.python-version }}
         uses: "gabrielfalcao/pyenv-action@v18"
         with:
           default: 3.7.17
           versions: ${{ matrix.python-version }}
+
+      - name: List installable python versions
+        run: |
+          pyenv install -l | grep 3.11
 
       - name: Switch to .python-version
         run: |
