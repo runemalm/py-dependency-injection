@@ -8,4 +8,4 @@ on:
 jobs:
   tests:
     name: Run unittests
-    uses: ./.github/workflows/jobs/unittests.yml
+    uses: ./.github/workflows/job_unittests.yml
