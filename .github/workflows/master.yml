@@ -43,6 +43,15 @@ jobs:
         run: |
           python -V
 
+      - name: Switch python version
+        run: |
+          pyenv global ${{ matrix.python-version }}
+          python -V
+
+      - name: Display current python version
+        run: |
+          python -V
+
       # - name: Activate Python version
       #   run: |
       #     pyenv install --skip-existing "$(cat .python-version)"
