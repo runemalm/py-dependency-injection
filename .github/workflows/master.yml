@@ -1,4 +1,4 @@
-name: Tests
+name: Push on master branch
 
 on:
   push:

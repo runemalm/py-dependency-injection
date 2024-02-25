@@ -1,4 +1,4 @@
-name: Tests feature branch
+name: Push on feature branch
 
 on:
   push:
