@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9, "3.10", 3.11, 3.12]
+      fail-fast: false
 
     steps:
       - name: Checkout code
@@ -50,6 +51,12 @@ jobs:
           echo 'eval "$(pyenv init --path)"' >> $HOME/.bashrc
           echo 'eval "$(pyenv virtualenv-init -)"' >> $HOME/.bashrc
           source $HOME/.bashrc
+
+      - name: Debug Print Bashrc
+        run: |
+          cat $HOME/.bashrc
+          echo $PATH
+
 
       # - name: Set up python
       #   uses: actions/setup-python@v5
