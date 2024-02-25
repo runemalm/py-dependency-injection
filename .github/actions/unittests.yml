@@ -1,17 +1,22 @@
 name: 'Run Tests'
 description: 'Run unit tests for the project'
 
+inputs:
+  python-version:
+    description: 'Python version to use'
+    required: true
+
 runs:
   using: 'composite'
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install .python-version and ${{ matrix.python-version }}
+    - name: Install .python-version and ${{ inputs.python-version }}
       uses: "gabrielfalcao/pyenv-action@v18"
       with:
         default: 3.7.17
-        versions: ${{ matrix.python-version }}
+        versions: ${{ inputs.python-version }}
 
     - name: Switch to .python-version
       run: |
@@ -30,14 +35,14 @@ runs:
 
     - name: Setup virtual environment
       run: |
-        pipenv --python ${{ matrix.python-version }} install --dev --deploy
+        pipenv --python ${{ inputs.python-version }} install --dev --deploy
 
-    - name: Verify virtual environment uses python version ${{ matrix.python-version }}
+    - name: Verify virtual environment uses python version ${{ inputs.python-version }}
       run: |
-        if pipenv run python -V | grep -q "${{ matrix.python-version }}"; then
-          echo "Python ${{ matrix.python-version }} is being used."
+        if pipenv run python -V | grep -q "${{ inputs.python-version }}"; then
+          echo "Python ${{ inputs.python-version }} is being used."
         else
-          echo "Python ${{ matrix.python-version }} is not being used. Exiting workflow."
+          echo "Python ${{ inputs.python-version }} is not being used. Exiting workflow."
           exit 1
         fi
 
