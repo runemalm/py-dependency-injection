@@ -12,7 +12,12 @@ This is a simple dependency injection library for python. It provides a simple a
 
 This library is compatible with the following Python versions:
 
+- Python 3.7
 - Python 3.8
+- Python 3.9
+- Python 3.10
+- Python 3.11
+- Python 3.12
   
 ### Installation:
   
