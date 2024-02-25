@@ -6,7 +6,7 @@ from unit_test.vehicle import Vehicle
 
 class TestResolveScoped(UnitTestCase):
 
-    def test_resolve_singleton_in_same_scope_returns_same_instance(
+    def test_resolve_scoped_in_same_scope_returns_same_instance(
         self,
     ):
         # arrange
@@ -22,7 +22,7 @@ class TestResolveScoped(UnitTestCase):
         # assert
         self.assertEqual(resolved_dependency_in_scope_1, resolved_dependency_in_scope_2)
 
-    def test_resolve_singleton_in_different_scopes_returns_different_instances(
+    def test_resolve_scoped_in_different_scopes_returns_different_instances(
         self,
     ):
         # arrange

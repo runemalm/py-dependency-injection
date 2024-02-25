@@ -6,7 +6,7 @@ from unit_test.vehicle import Vehicle
 
 class TestResolveSingleton(UnitTestCase):
 
-    def test_resolve_transient_returns_instance(
+    def test_resolve_singleton_returns_instance(
         self,
     ):
         # arrange
@@ -21,7 +21,7 @@ class TestResolveSingleton(UnitTestCase):
         # assert
         self.assertIsInstance(resolved_dependency, Car)
 
-    def test_resolve_transient_twice_returns_same_instance(
+    def test_resolve_singleton_twice_returns_same_instance(
         self,
     ):
         # arrange
