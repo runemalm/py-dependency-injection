@@ -22,19 +22,12 @@ jobs:
       - name: Install .python-version and ${{ matrix.python-version }}
         uses: "gabrielfalcao/pyenv-action@v18"
         with:
-          default: 3.7.17
+          default: 3.7.16
           versions: ${{ matrix.python-version }}
-
-      - name: List installable python versions
-        run: |
-          pyenv install -l | grep 3.11
 
       - name: Switch to .python-version
         run: |
           pyenv local "$(cat .python-version)"
-
-      - name: Verify python version is same as in .python-version
-        run: |
           if python -V | grep -q "$(cat .python-version)"; then
             echo "Python version is '$(python -V)'"
           else
@@ -51,7 +44,7 @@ jobs:
         run: |
           pipenv --python ${{ matrix.python-version }} install --dev --deploy
 
-      - name: Verify virtual environment python version is ${{ matrix.python-version }}
+      - name: Verify virtual environment uses python version ${{ matrix.python-version }}
         run: |
           if pipenv run python -V | grep -q "${{ matrix.python-version }}"; then
             echo "Python ${{ matrix.python-version }} is being used."
