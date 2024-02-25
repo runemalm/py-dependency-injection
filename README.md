@@ -1,6 +1,6 @@
 ## py-dependency-injection
 
-This is a simple dependency injection library for python.. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
+This is a simple dependency injection library for python. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
 
 ### Features:
 
