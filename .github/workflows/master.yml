@@ -56,6 +56,14 @@ jobs:
       #   with:
       #     python-version: ${{ matrix.python-version }}
 
+      - name: Activate Python version
+        run: |
+          pyenv install --skip-existing "$(cat .python-version)"
+          pyenv global "$(cat .python-version)"
+          pyenv rehash
+        shell: bash
+
+
       - name: Install pipenv
         run: |
           python -m pip install --upgrade pip
