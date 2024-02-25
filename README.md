@@ -30,7 +30,7 @@ $ pip install py-dependency-injection
 ### Example:
 
 ```python
-from dependency_injection.container.container import DependencyContainer
+from dependency_injection.container import DependencyContainer
 
 
 container = DependencyContainer.get_instance()

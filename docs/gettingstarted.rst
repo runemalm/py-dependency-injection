@@ -13,7 +13,7 @@ Example
 
 The following example demonstrates how to set up a dependency injection container and utilize it for registering and resolving dependencies::
 
-    from dependency_injection.container.container import DependencyContainer
+    from dependency_injection.container import DependencyContainer
 
 
     container = DependencyContainer.get_instance()
