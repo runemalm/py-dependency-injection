@@ -56,6 +56,7 @@ jobs:
         run: |
           cat $HOME/.bashrc
           echo $PATH
+        shell: bash
 
 
       # - name: Set up python
@@ -67,6 +68,7 @@ jobs:
         run: |
           pyenv --version
           pyenv versions
+        shell: bash
 
       - name: Activate Python version
         run: |
