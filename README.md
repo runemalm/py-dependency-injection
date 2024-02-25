@@ -1,8 +1,10 @@
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+![First Principles Software](https://img.shields.io/badge/Powered_by-First_Principles_Software-blue)
 [![Push on master](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
 
 ## py-dependency-injection
 
-This is a simple dependency injection library for python. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
+This is a dependency injection library for python. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
 
 ### Features:
 
@@ -69,7 +71,7 @@ We follow the git flow model, documentation can be found here:
 #### [1.0.0-alpha.1](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.1) (2024-02-25)
 
 - Initial alpha release.
-- Added Dependency Container: The library includes a simple dependency container for managing object dependencies.
+- Added Dependency Container: The library includes a dependency container for managing object dependencies.
 - Added Constructor Injection: Users can leverage constructor injection for cleaner and more modular code.
 - Added Dependency Scopes: Define and manage the lifecycle of dependencies with support for different scopes.
 - Basic Documentation: An initial set of documentation is provided, giving users an introduction to the library.
