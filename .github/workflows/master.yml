@@ -19,63 +19,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pyenv dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            libssl-dev \
-            zlib1g-dev \
-            libbz2-dev \
-            libreadline-dev \
-            libsqlite3-dev \
-            wget \
-            curl \
-            llvm \
-            libncurses5-dev \
-            libncursesw5-dev \
-            xz-utils \
-            tk-dev \
-            libffi-dev \
-            liblzma-dev \
-            python3-openssl \
-            git
-
-      - name: Install pyenv
-        run: |
-          curl https://pyenv.run | bash
-
-      - name: Add pyenv to PATH
-        run: |
-          echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> $HOME/.bashrc
-          echo 'eval "$(pyenv init --path)"' >> $HOME/.bashrc
-          echo 'eval "$(pyenv virtualenv-init -)"' >> $HOME/.bashrc
-          source $HOME/.bashrc
-
-      - name: Debug Print Bashrc
-        run: |
-          cat $HOME/.bashrc
-          echo $PATH
-        shell: bash
-
-
-      # - name: Set up python
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
+      - name: setup pyenv
+        uses: "gabrielfalcao/pyenv-action@v18"
+        with:
+          default: ${{ matrix.python-version }}
+          # versions: 3.8.16, 3.5.7
 
       - name: Verify pyenv installation
         run: |
           pyenv --version
           pyenv versions
-        shell: bash
 
-      - name: Activate Python version
-        run: |
-          pyenv install --skip-existing "$(cat .python-version)"
-          pyenv global "$(cat .python-version)"
-          pyenv rehash
-        shell: bash
+      # - name: Activate Python version
+      #   run: |
+      #     pyenv install --skip-existing "$(cat .python-version)"
+      #     pyenv global "$(cat .python-version)"
+      #     pyenv rehash
 
       - name: Install pipenv
         run: |
