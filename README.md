@@ -1,8 +1,8 @@
+[![Push on master](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
+
 ## py-dependency-injection
 
 This is a simple dependency injection library for python. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
-
-[![Tests on master](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
 
 ### Features:
 
