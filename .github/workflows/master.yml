@@ -22,9 +22,10 @@ jobs:
       - name: Install python version
         uses: "gabrielfalcao/pyenv-action@v18"
         with:
-          default: ${{ matrix.python-version }}
+          default: 3.7.17
+          versions: ${{ matrix.python-version }}
 
-      - name: Verify pyenv installation
+      - name: List installed python versions
         run: |
           pyenv versions
 
@@ -37,6 +38,10 @@ jobs:
             echo "Python ${{ matrix.python-version }} is not installed. Exiting workflow."
             exit 1
           fi
+
+      - name: Display current python version
+        run: |
+          python -V
 
       # - name: Activate Python version
       #   run: |
