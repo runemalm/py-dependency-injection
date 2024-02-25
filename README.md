@@ -2,6 +2,8 @@
 
 This is a simple dependency injection library for python. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
 
+[![Tests on master](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
+
 ### Features:
 
 - Dependency Container
@@ -64,10 +66,6 @@ We follow the git flow model, documentation can be found here:
   
 ### Release Notes
 
-#### [1.0.0-alpha.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.2) (2024-03-xx)
-
-- Python Version Support: Added support for Python versions 3.7, 3.9, 3.10, 3.11, and 3.12.
-
 #### [1.0.0-alpha.1](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.1) (2024-02-25)
 
 - Initial alpha release.
@@ -76,3 +74,7 @@ We follow the git flow model, documentation can be found here:
 - Added Dependency Scopes: Define and manage the lifecycle of dependencies with support for different scopes.
 - Basic Documentation: An initial set of documentation is provided, giving users an introduction to the library.
 - License: Released under the GPL 3 license.
+
+#### [1.0.0-alpha.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.2) (2024-03-xx)
+
+- Python Version Support: Added support for Python versions 3.7, 3.9, 3.10, 3.11, and 3.12.
