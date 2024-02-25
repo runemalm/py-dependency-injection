@@ -10,7 +10,7 @@ setup(
     author='David Runemalm, 2024',
     author_email='david.runemalm@gmail.com',
     description=
-    'A simple dependency injection implementation for python.',
+    'A simple dependency injection library for python.',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/runemalm/py-dependency-injection',

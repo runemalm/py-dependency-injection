@@ -1,17 +1,18 @@
 ## py-dependency-injection
 
-This is a lightweight Python library for handling dependency injection. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
+This is a simple dependency injection library for python.. It provides a simple and flexible way to manage dependencies in your Python applications, promoting modularity, testability, and code maintainability.
 
 ### Features:
 
 - Dependency Container
 - Constructor Injection
-- Support for different dependency scopes such as transient, scoped, and singleton.
+- Support Dependency Scopes
 
-### Supported Python Versions:
+### Python Compatibility
 
-- Tested with python 3.8.5.
-- Expected to work with any version >= 3.8.0.
+This library is compatible with the following Python versions:
+
+- Python 3.8
   
 ### Installation:
   
@@ -56,7 +57,11 @@ We follow the git flow model, documentation can be found here:
 - [Official documentation](https://nvie.com/posts/a-successful-git-branching-model/)
 - [Atlassian guide](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
   
-### Release Notes:
+### Release Notes
 
-**1.0.0-alpha.1** - 2024-03-03
-- Initial release.
+#### [1.0.0-alpha.1](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.1) (2024-02-25)
+
+- Initial alpha release.
+- Added Dependency Container: The library includes a simple dependency container for managing object dependencies.
+- Added Constructor Injection: Users can leverage constructor injection for cleaner and more modular code.
+- Added Dependency Scopes: Define and manage the lifecycle of dependencies with support for different scopes.

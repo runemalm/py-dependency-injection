@@ -11,6 +11,10 @@ PWD := $(shell pwd)
 SRC := $(PWD)/src
 TESTS := $(PWD)/tests
 
+# Load env file
+include env.make
+export $(shell sed 's/=.*//' env.make)
+
 ##########################################################################
 # MENU
 ##########################################################################
@@ -26,8 +30,6 @@ help:
 .PHONY: test
 test: ## run test suite
 	PYTHONPATH=./src:./tests pytest $(TESTS)
-
-# 	python -m unittest discover -s /Users/david/Projects/py-dependency-injection/tests -p "test_*.py" -t /Users/david/Projects/py-dependency-injection/src
 
 ################################################################################
 # RELEASE
