@@ -23,7 +23,7 @@ jobs:
         uses: "gabrielfalcao/pyenv-action@v18"
         with:
           default: ${{ matrix.python-version }}
-          versions: ${{ matrix.python-version }}
+          # versions: 3.8.16, 3.5.7
 
       - name: Verify pyenv installation
         run: |
