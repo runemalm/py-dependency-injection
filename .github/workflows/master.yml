@@ -12,18 +12,17 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10", 3.11, 3.12]
+        python-version: [3.7.17, 3.8.18, 3.9, "3.10", 3.11, 3.12]
       fail-fast: false
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: setup pyenv
+      - name: Install python version
         uses: "gabrielfalcao/pyenv-action@v18"
         with:
           default: ${{ matrix.python-version }}
-          # versions: 3.8.16, 3.5.7
 
       - name: Verify pyenv installation
         run: |
