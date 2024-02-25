@@ -28,6 +28,16 @@ jobs:
         run: |
           pyenv versions
 
+      - name: Verify python version is installed
+        run: |
+          pyenv versions
+          if pyenv versions | grep -q "${{ matrix.python-version }}"; then
+            echo "Python ${{ matrix.python-version }} is installed."
+          else
+            echo "Python ${{ matrix.python-version }} is not installed. Exiting workflow."
+            exit 1
+          fi
+
       # - name: Activate Python version
       #   run: |
       #     pyenv install --skip-existing "$(cat .python-version)"
