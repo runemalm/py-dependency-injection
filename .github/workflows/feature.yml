@@ -3,7 +3,7 @@ name: Push on feature
 on:
   push:
     branches:
-      - 'feature/*'
+      - feature/*
 
 jobs:
   unittests:

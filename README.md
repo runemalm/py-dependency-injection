@@ -64,6 +64,10 @@ We follow the git flow model, documentation can be found here:
   
 ### Release Notes
 
+#### [1.0.0-alpha.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.2) (2024-03-xx)
+
+- Python Version Support: Added support for Python versions 3.7, 3.9, 3.10, 3.11, and 3.12.
+
 #### [1.0.0-alpha.1](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.1) (2024-02-25)
 
 - Initial alpha release.

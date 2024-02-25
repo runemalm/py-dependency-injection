@@ -1,5 +1,4 @@
-name: 'Run Tests'
-description: 'Run unit tests for the project'
+name: Run unit tests
 
 inputs:
   python-version:
