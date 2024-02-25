@@ -1,0 +1,11 @@
+name: Push on master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  tests:
+    name: Run unittests
+    uses: ./.github/workflows/jobs/unittests.yml

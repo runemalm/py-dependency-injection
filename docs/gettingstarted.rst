@@ -71,7 +71,7 @@ Constructor Injection is a form of dependency injection where dependencies are p
 Scoped Dependencies
 -------------------
 
-Scoped Dependencies refer to instances of objects that have a limited scope during their lifecycle. In `py-dependency-injection`, you can register dependencies with different scopes, such as transient, scoped, or singleton, allowing control over how instances are created and managed.
+Scoped Dependencies refer to instances of objects that have a limited scope during their lifecycle. In `py-dependency-injection`, you can register dependencies with three different scopes, which are transient, scoped, or singleton, allowing control over how instances are created and managed.
 
 
 ###############
