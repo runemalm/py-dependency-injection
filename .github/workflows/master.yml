@@ -23,11 +23,10 @@ jobs:
         uses: "gabrielfalcao/pyenv-action@v18"
         with:
           default: ${{ matrix.python-version }}
-          # versions: 3.8.16, 3.5.7
+          versions: ${{ matrix.python-version }}
 
       - name: Verify pyenv installation
         run: |
-          pyenv --version
           pyenv versions
 
       # - name: Activate Python version
@@ -61,4 +60,5 @@ jobs:
       #     pip install -r Pipfile
 
       - name: Run unittests
-        run: pipenv run pytest ./tests
+        run: |
+          PYTHONPATH=./src:./tests pipenv run pytest ./tests
