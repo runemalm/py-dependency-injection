@@ -74,8 +74,8 @@ sphinx-autobuild: ## activate autobuild of docs
 ################################################################################
 
 .PHONY: pipenv-install
-pipenv-install: ## install a package (uses PACKAGE)
-	pipenv install --dev
+pipenv-install: ## setup the virtual environment
+	pipenv --python 3.7 install --dev
 
 .PHONY: pipenv-packages-install
 pipenv-packages-install: ## install a package (uses PACKAGE)
