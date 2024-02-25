@@ -1,17 +1,26 @@
 py-dependency-injection
 =======================
 
-Welcome to the py-dependency-injection library documentation.
+Welcome to the documentation for the `py-dependency-injection` library.
 
-Whether you are new to dependency injection or an experienced developer, this guide will help you get started and make the most out of the features offered by the library.
+Introduction
+============
 
-Below is an example of the library in use.
+The `py-dependency-injection` library simplifies and enhances the management of dependencies in your Python projects. Whether you're new to the concept of dependency injection or an experienced developer seeking an efficient solution, this guide is designed to help you grasp the fundamentals and leverage the features offered by the library.
 
-Check out the :doc:`user guide<gettingstarted>` to get started using the library.
-  
+Key Features
+============
+
+- **Flexible Dependency Management:** The library provides a flexible and intuitive way to manage dependencies within your Python applications, promoting modular and maintainable code.
+
+- **Scoped, Transient, and Singleton Dependencies:** `py-dependency-injection` supports various dependency lifetimes, allowing you to choose between scoped, transient, and singleton instances based on your application's requirements.
+
+- **Effortless Dependency Resolution:** With a straightforward API, resolving dependencies is a breeze. The library ensures that instances are created and managed seamlessly, allowing you to focus on building robust and scalable applications.
 
 Example
 =======
+
+To get started quickly, take a look at the following example showcasing the basic usage of the library:
 
 .. code-block:: python
 
@@ -34,6 +43,15 @@ Example
     transient_instance.do_something()
     scoped_instance.do_something()
     singleton_instance.do_something()
+
+Explore the :doc:`user guide<gettingstarted>` to dive deeper into using the library effectively.
+
+GitHub Repository
+=================
+
+Find the source code, contribute, and report issues on our `GitHub Repository <https://github.com/runemalm/py-dependency-injection>`_.
+
+Now, let's embark on a journey to harness the power of dependency injection with py-dependency-injection!
 
 .. gettingstarted-docs:
 .. toctree::
