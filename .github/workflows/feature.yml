@@ -3,7 +3,7 @@ name: Push on feature
 on:
   push:
     branches:
-      - "feature*"
+      - feature*
 
 jobs:
   unittests:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: unittests
-        uses: ./.github/workflows/shared.yml
-        with:
-          job-name: unittests
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run unittests
+        uses: ./.github/actions/unittests
