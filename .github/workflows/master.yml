@@ -3,7 +3,7 @@ name: Push on master
 on:
   push:
     branches:
-      - master
+      - 'master'
 
 jobs:
   unittests:
