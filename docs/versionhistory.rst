@@ -2,9 +2,11 @@
 Version history
 ###############
 
-**1.0.0-alpha.2 (2024-03-xx)**
+**1.0.0-alpha.2 (2024-02-xx)**
 
 - Python Version Support: Added support for Python versions 3.7, 3.9, 3.10, 3.11, and 3.12.
+- New Feature: Method Injection with Decorator: Introduced a new feature allowing method injection using the @inject decorator. Dependencies can now be injected into an instance method, providing more flexibility in managing dependencies within class instance methods.
+- Documentation Update: Expanded and improved the documentation to include details about the newly added method injection feature and additional usage examples. Users can refer to the latest documentation at readthedocs for comprehensive guidance.
 
 `View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.2>`_
 
