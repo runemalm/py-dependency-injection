@@ -56,14 +56,20 @@ dependency_container.register_singleton(ThirdInterface, ThirdClass)
 ### Example - Resolving dependencies:
 
 ```python
-# When resolving scoped dependencies, specify the scope explicitly if needed.
-# The scope, often associated with an application service action invocation, can be provided for scoped instances.
-# Default resolution is applied for non-scoped instances.
+# Resolving dependencies from the dependency container.
 
+# Resolving a transient instance, which is created anew for each resolution.
 transient_instance = dependency_container.resolve(SomeInterface)
-scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="some-action-id") # application service action invocation ID
-singleton_instance = dependency_container.resolve(ThirdInterface)
 
+# Resolving a scoped instance with an optional scope name.
+# A scope is often created for each application service action invocation.
+# This scope creation typically happens inside the application framework,
+# upon entry into the application layer via primary adapters in the infrastructure layer.
+# Provide a scope name, such as the auto-created scope, for scoped instances.
+scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="auto-created-scope-name")
+
+# Resolving a singleton instance, which remains the same across the entire application.
+singleton_instance = dependency_container.resolve(ThirdInterface)
 ```
 
 ### Example - Constructor injection:
