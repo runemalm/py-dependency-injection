@@ -27,6 +27,8 @@ $ pip install py-dependency-injection
 
 ## Usage:
 
+The following example demonstrates how to set up a dependency injection container and utilize it for registering and resolving dependencies.
+
 #### Obtaining the Default Dependency Container
 
 ```python
