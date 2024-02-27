@@ -27,7 +27,7 @@ $ pip install py-dependency-injection
 
 ## Usage:
 
-### Example: Obtaining the Default Dependency Container
+#### Obtaining the Default Dependency Container
 
 ```python
 # Retrieve the default container, typically recommended for a single-application setup.
@@ -38,7 +38,7 @@ from dependency_injection.container import DependencyContainer
 dependency_container = DependencyContainer.get_instance()
 ```
 
-### Example: Obtaining a Second Dependency Container
+#### Obtaining a Second Dependency Container
 
 ```python
 # Create additional containers if needed, especially for multi-application scenarios.
@@ -49,7 +49,7 @@ from dependency_injection.container import DependencyContainer
 a_second_dependency_container = DependencyContainer.get_instance(name="a_second_dependency_container")
 ```
 
-### Example: Registering Dependencies
+#### Registering Dependencies
 
 ```python
 # Register dependencies with three available scopes: transient, scoped, or singleton.
@@ -59,7 +59,7 @@ dependency_container.register_scoped(AnotherInterface, AnotherClass)
 dependency_container.register_singleton(ThirdInterface, ThirdClass)
 ```
 
-### Example: Resolving Dependencies
+#### Resolving Dependencies
 
 ```python
 # Resolve transient instance (created anew for each call).
@@ -72,7 +72,7 @@ scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="app
 singleton_instance = dependency_container.resolve(ThirdInterface)
 ```
 
-### Example: Constructor Injection
+#### Constructor Injection
 
 ```python
 # Class instances resolved through the container have dependencies injected into their constructors.
@@ -85,7 +85,7 @@ class Foo:
         self._singleton_instance = singleton_instance
 ```
 
-### Example: Method Injection
+#### Method Injection
 
 ```python
 # Inject dependencies into instance methods using the `@inject` decorator.
