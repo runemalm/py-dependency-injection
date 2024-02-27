@@ -7,5 +7,6 @@ class TestCase(TestCaseBase):
 
     def tearDown(self):
         super().tearDown()
-        if DependencyContainer in DependencyContainer._instances:
-            del DependencyContainer._instances[DependencyContainer]
+
+        # Delete all singleton instances
+        DependencyContainer._instances = {}

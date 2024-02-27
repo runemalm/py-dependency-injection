@@ -1,4 +1,5 @@
-from dependency_injection.container import DependencyContainer
+from dependency_injection.container import DEFAULT_CONTAINER_NAME, \
+    DependencyContainer
 from dependency_injection.decorator import inject
 from unit_test.car import Car
 from unit_test.unit_test_case import UnitTestCase
@@ -11,7 +12,7 @@ class TestDecorator(UnitTestCase):
         self,
     ):
         # arrange
-        dependency_container = DependencyContainer.get_instance()
+        dependency_container = DependencyContainer.get_instance(name="test-container")
         interface = Vehicle
         dependency_class = Car
 
@@ -29,7 +30,7 @@ class TestDecorator(UnitTestCase):
         self,
     ):
         # arrange
-        dependency_container = DependencyContainer.get_instance()
+        dependency_container = DependencyContainer.get_instance(name="test-container")
         interface = Vehicle
         dependency_class = Car
 
@@ -62,6 +63,7 @@ class TestDecorator(UnitTestCase):
         # assert
         self.assertIsNotNone(foo.vehicle_3)
         self.assertIsInstance(foo.vehicle_3, Vehicle)
+        self.assertEqual(foo.vehicle_3, dependency_container.resolve(interface))
 
     def test_injects_same_scoped_dependency_when_no_container_or_scope_name_in_decorator_arguments(
         self,
@@ -113,11 +115,11 @@ class Foo:
         self.vehicle_5 = None
         self.vehicle_6 = None
 
-    @inject(container=DependencyContainer.get_instance(), scope_name="test-scope-1")
+    @inject(container_name="test-container", scope_name="test-scope-1")
     def bar_1(self, vehicle: Vehicle):
         self.vehicle_1 = vehicle
 
-    @inject(container=DependencyContainer.get_instance(), scope_name="test-scope-2")
+    @inject(container_name="test-container", scope_name="test-scope-2")
     def bar_2(self, vehicle: Vehicle):
         self.vehicle_2 = vehicle
 

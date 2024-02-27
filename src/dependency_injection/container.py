@@ -5,16 +5,25 @@ from dependency_injection.scope import DEFAULT_SCOPE_NAME, Scope
 from dependency_injection.utils.singleton_meta import SingletonMeta
 
 
+DEFAULT_CONTAINER_NAME = "default_container"
+
 class DependencyContainer(metaclass=SingletonMeta):
 
-    def __init__(self):
+    def __init__(self, name=None):
+        self.name = name if name is not None else DEFAULT_CONTAINER_NAME
         self._registrations = {}
         self._singleton_instances = {}
         self._scoped_instances = {}
 
     @classmethod
-    def get_instance(cls):
-        return cls()
+    def get_instance(cls, name=None):
+        if name is None:
+            name = DEFAULT_CONTAINER_NAME
+
+        if (cls, name) not in cls._instances:
+            cls._instances[(cls, name)] = cls(name)
+
+        return cls._instances[(cls, name)]
 
     def register_transient(self, interface, class_):
         if interface in self._registrations:

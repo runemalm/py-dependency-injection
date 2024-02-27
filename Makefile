@@ -29,7 +29,7 @@ help:
 
 .PHONY: test
 test: ## run test suite
-	PYTHONPATH=./src:./tests pipenv run pytest $(TESTS)
+	PYTHONPATH=./src:./tests pipenv run pytest -n 1 $(TESTS)
 
 ################################################################################
 # RELEASE
@@ -37,7 +37,7 @@ test: ## run test suite
 
 .PHONY: build
 build: ## build the python package
-	python setup.py sdist bdist_wheel
+	pipenv run python setup.py sdist bdist_wheel
 
 .PHONY: clean
 clean: ## clean the build
@@ -47,19 +47,19 @@ clean: ## clean the build
 
 .PHONY: upload-test
 upload-test: ## upload package to testpypi repository
-	TWINE_USERNAME=$(PYPI_USERNAME_TEST) TWINE_PASSWORD=$(PYPI_PASSWORD_TEST) twine upload --repository testpypi --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+	TWINE_USERNAME=$(PYPI_USERNAME_TEST) TWINE_PASSWORD=$(PYPI_PASSWORD_TEST) pipenv run twine upload --repository testpypi --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
 
 .PHONY: upload
 upload: ## upload package to pypi repository
-	TWINE_USERNAME=$(PYPI_USERNAME) TWINE_PASSWORD=$(PYPI_PASSWORD) twine upload --skip-existing dist/*
+	TWINE_USERNAME=$(PYPI_USERNAME) TWINE_PASSWORD=$(PYPI_PASSWORD) pipenv run twine upload --skip-existing dist/*
 
 .PHONY: sphinx-quickstart
 sphinx-quickstart: ## run the sphinx quickstart
-	docker run -it --rm -v $(PWD)/docs:/docs sphinxdoc/sphinx sphinx-quickstart
+	pipenv run docker run -it --rm -v $(PWD)/docs:/docs sphinxdoc/sphinx sphinx-quickstart
 
 .PHONY: sphinx-html
 sphinx-html: ## build the sphinx html
-	make -C docs html
+	pipenv run make -C docs html
 
 .PHONY: sphinx-rebuild
 sphinx-rebuild: ## re-build the sphinx docs
@@ -67,7 +67,7 @@ sphinx-rebuild: ## re-build the sphinx docs
 
 .PHONY: sphinx-autobuild
 sphinx-autobuild: ## activate autobuild of docs
-	sphinx-autobuild docs docs/_build/html --watch $(SRC)
+	pipenv run sphinx-autobuild docs docs/_build/html --watch $(SRC)
 
 ################################################################################
 # PIPENV

@@ -1,11 +1,12 @@
 import functools
 import inspect
 
-from dependency_injection.container import DependencyContainer
+from dependency_injection.container import DEFAULT_CONTAINER_NAME, \
+    DependencyContainer
 from dependency_injection.scope import DEFAULT_SCOPE_NAME
 
 
-def inject(container=DependencyContainer.get_instance(), scope_name=DEFAULT_SCOPE_NAME):
+def inject(container_name=DEFAULT_CONTAINER_NAME, scope_name=DEFAULT_SCOPE_NAME):
 
     def decorator_inject(func):
         @functools.wraps(func)
@@ -16,6 +17,8 @@ def inject(container=DependencyContainer.get_instance(), scope_name=DEFAULT_SCOP
             # Iterate over the parameter names and inject dependencies into kwargs
             for param_name in param_names:
                 if param_name != 'self' and param_name not in kwargs:
+                    # get container
+                    container = DependencyContainer.get_instance(container_name)
                     # Resolve the dependency based on the parameter name
                     dependency_type = inspect.signature(func).parameters[param_name].annotation
                     kwargs[param_name] = container.resolve(dependency_type, scope_name=scope_name)
