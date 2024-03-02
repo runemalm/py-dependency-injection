@@ -29,77 +29,101 @@ $ pip install py-dependency-injection
 
 The following examples demonstrates how to use the library.
 
-### Example: Obtaining the Default Dependency Container
+### Obtaining the default dependency container
 
 ```python
-# Retrieve the default container, typically recommended for a single-application setup.
+# Typically all you need for a single-application setup.
 
 from dependency_injection.container import DependencyContainer
-
 
 dependency_container = DependencyContainer.get_instance()
 ```
 
-### Example: Obtaining a Second Dependency Container
+### Obtaining multiple dependency containers
 
 ```python
-# Create additional containers if needed, especially for multi-application scenarios.
+# Typically needed for multi-application scenarios.
 
 from dependency_injection.container import DependencyContainer
 
-
-a_second_dependency_container = DependencyContainer.get_instance(name="a_second_dependency_container")
+second_container = DependencyContainer.get_instance(name="second_container")
+third_container = DependencyContainer.get_instance(name="third_container")
+# ...
 ```
 
-### Example: Registering Dependencies
+### Registering dependencies with the container
 
 ```python
-# Register dependencies with three available scopes: transient, scoped, or singleton.
+# Register dependencies using one of the three available scopes; 
+# transient, scoped, or singleton
 
 dependency_container.register_transient(SomeInterface, SomeClass)
 dependency_container.register_scoped(AnotherInterface, AnotherClass)
 dependency_container.register_singleton(ThirdInterface, ThirdClass)
 ```
 
-### Example: Resolving Dependencies
+### Resolving dependencies using the container
 
 ```python
 # Resolve transient instance (created anew for each call).
 transient_instance = dependency_container.resolve(SomeInterface)
 
-# Resolve scoped instance (consistent within a specific scope, e.g. a scope for the application action being run).
-scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="application_action_scope")
+# Resolve scoped instance (consistent within a specific scope).
+scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="some_scope")
 
 # Resolve singleton instance (consistent across the entire application).
 singleton_instance = dependency_container.resolve(ThirdInterface)
 ```
 
-### Example: Constructor Injection
+### Constructor injection
 
 ```python
-# Class instances resolved through the container have dependencies injected into their constructors.
+# Class instances resolved through the container have 
+# dependencies injected into their constructors automatically.
 
 class Foo:
 
-    def __init__(self, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+    def __init__(
+        self, 
+        transient_instance: SomeInterface, 
+        scoped_instance: AnotherInterface, 
+        singleton_instance: ThirdInterface
+    ):
         self._transient_instance = transient_instance
         self._scoped_instance = scoped_instance
         self._singleton_instance = singleton_instance
 ```
 
-### Example: Method Injection
+### Method injection with @inject decorator
 
 ```python
-# Inject dependencies into instance methods using the `@inject` decorator.
-# You may pass 'container_name' and 'scope_name' as decorator arguments.
+# The decorator can be applied to classmethods and staticmethods.
+# Instance method injection is not allowed.
 
 from dependency_injection.decorator import inject
 
-
 class Foo:
 
+    # Class method
+    @classmethod
     @inject()
-    def bar(self, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+    def bar_class(cls, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+        transient_instance.do_something()
+        scoped_instance.do_something()
+        singleton_instance.do_something()
+
+    # Static method
+    @staticmethod
+    @inject()
+    def bar_static_method(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+        transient_instance.do_something()
+        scoped_instance.do_something()
+        singleton_instance.do_something()
+
+    # Injecting with non-default container and scope
+    @staticmethod
+    @inject(container_name="second_container", scope_name="some_scope")
+    def bar_with_decorator_arguments(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
         transient_instance.do_something()
         scoped_instance.do_something()
         singleton_instance.do_something()
@@ -114,6 +138,42 @@ For the latest documentation, visit [readthedocs](https://py-dependency-injectio
 To contribute, create a pull request on the develop branch following the [git flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model.
   
 ## Release Notes
+
+### [1.0.0-alpha.3](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.3) (2024-03-02)
+
+- **Breaking Change**: Restriction on `@inject` Decorator: Starting from this version, the `@inject` decorator can now only be used on static class methods and class methods. This change is introduced due to potential pitfalls associated with resolving and injecting dependencies directly into class instance methods using the dependency container.
+
+    **Reasoning:**
+  
+    Resolving and injecting dependencies into instance methods can lead to unexpected behaviors and may violate the principles of dependency injection. Instance methods often rely on the state of the object, and injecting dependencies from the container directly can obscure the dependencies required for a method. Additionally, it may introduce difficulties in testing and make the code harder to reason about.
+
+    By restricting the usage of the `@inject` decorator to static and class methods, we aim to encourage a cleaner separation of concerns, making it more explicit when dependencies are injected and providing better clarity on the dependencies required by a method.
+
+    **Before:**
+    ```python
+    class Foo:
+    
+        @inject()
+        def instance_method(self, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+            # ...
+    ```
+
+    **After:**
+    ```python
+    class Foo:
+    
+        @classmethod
+        @inject()
+        def class_method(cls, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+            # ...
+
+        @staticmethod
+        @inject()
+        def static_method(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+            # ...
+    ```
+
+- Documentation Update: The documentation has been updated to reflect the new restriction on the usage of the `@inject` decorator. Users are advised to review the documentation for updated examples and guidelines regarding method injection.
 
 ### [1.0.0-alpha.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.2) (2024-02-27)
 

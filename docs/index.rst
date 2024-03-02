@@ -46,13 +46,6 @@ To get started quickly, take a look at the following example showcasing the basi
 
 Explore the :doc:`user guide<gettingstarted>` to dive deeper into using the library effectively.
 
-GitHub Repository
-=================
-
-Find the source code, contribute, and report issues on our `GitHub Repository <https://github.com/runemalm/py-dependency-injection>`_.
-
-Now, let's embark on a journey to harness the power of dependency injection with py-dependency-injection!
-
 .. gettingstarted-docs:
 .. toctree::
   :maxdepth: 1

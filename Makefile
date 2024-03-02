@@ -45,6 +45,10 @@ clean: ## clean the build
 	rm -rf build dist py_dependency_injection.egg-info
 	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
+.PHONY: bump_version
+bump_version: ## Bump the version
+	pipenv run bump2version --dry-run release --allow-dirty --verbose
+
 .PHONY: upload-test
 upload-test: ## upload package to testpypi repository
 	TWINE_USERNAME=$(PYPI_USERNAME_TEST) TWINE_PASSWORD=$(PYPI_PASSWORD_TEST) pipenv run twine upload --repository testpypi --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*

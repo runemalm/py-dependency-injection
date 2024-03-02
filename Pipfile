@@ -13,6 +13,7 @@ sphinx-autobuild = "2021.3.14"
 sphinxcontrib-napoleon = "0.7"
 wheel = "0.41.2"
 pytest-xdist = "*"
+bump2version = "*"
 
 [requires]
 python_version = ">=3.7"
