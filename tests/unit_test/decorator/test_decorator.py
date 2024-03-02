@@ -98,7 +98,7 @@ class TestDecorator(UnitTestCase):
         Garage.park()
 
         # assert
-        self.assertEquals(second_container_vehicle, Garage.vehicle)
+        self.assertEqual(second_container_vehicle, Garage.vehicle)
 
     def test_class_method_decorator_scope_name_is_honoured(
         self,
@@ -163,7 +163,7 @@ class TestDecorator(UnitTestCase):
         Garage.park()
 
         # assert
-        self.assertEquals(second_container_vehicle, Garage.vehicle)
+        self.assertEqual(second_container_vehicle, Garage.vehicle)
 
     def test_static_method_decorator_scope_name_is_honoured(
         self,
