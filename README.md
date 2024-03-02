@@ -60,6 +60,13 @@ third_container = DependencyContainer.get_instance(name="third_container")
 dependency_container.register_transient(SomeInterface, SomeClass)
 dependency_container.register_scoped(AnotherInterface, AnotherClass)
 dependency_container.register_singleton(ThirdInterface, ThirdClass)
+
+# Registering dependencies with constructor arguments
+dependency_container.register_transient(
+    SomeInterface,
+    SomeClass,
+    constructor_args={"arg1": value1, "arg2": value2}
+)
 ```
 
 ### Resolving dependencies using the container
