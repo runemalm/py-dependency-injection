@@ -60,6 +60,13 @@ third_container = DependencyContainer.get_instance(name="third_container")
 dependency_container.register_transient(SomeInterface, SomeClass)
 dependency_container.register_scoped(AnotherInterface, AnotherClass)
 dependency_container.register_singleton(ThirdInterface, ThirdClass)
+
+# Registering dependencies with constructor arguments
+dependency_container.register_transient(
+    SomeInterface,
+    SomeClass,
+    constructor_args={"arg1": value1, "arg2": value2}
+)
 ```
 
 ### Resolving dependencies using the container
@@ -138,6 +145,21 @@ For the latest documentation, visit [readthedocs](https://py-dependency-injectio
 To contribute, create a pull request on the develop branch following the [git flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model.
   
 ## Release Notes
+
+### [1.0.0-alpha.4](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.4) (2024-03-02)
+
+- **New Feature**: Support for constructor arguments in dependency registration: In this release, we introduce the ability to specify constructor arguments when registering dependencies with the container. This feature provides more flexibility when configuring dependencies, allowing users to customize the instantiation of classes during registration.
+
+    **Usage Example:**
+    ```python
+    # Registering a dependency with constructor arguments
+    dependency_container.register_transient(
+        SomeInterface, SomeClass,
+        constructor_args={"arg1": value1, "arg2": value2}
+    )
+    ```
+
+    Users can now pass specific arguments to be used during the instantiation of the dependency. This is particularly useful when a class requires dynamic or configuration-dependent parameters.
 
 ### [1.0.0-alpha.3](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.3) (2024-03-02)
 

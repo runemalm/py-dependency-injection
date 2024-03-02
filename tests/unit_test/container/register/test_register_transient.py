@@ -1,9 +1,7 @@
 import pytest
 
 from dependency_injection.container import DependencyContainer
-from unit_test.car import Car
 from unit_test.unit_test_case import UnitTestCase
-from unit_test.vehicle import Vehicle
 
 
 class TestRegisterTransient(UnitTestCase):
@@ -12,6 +10,12 @@ class TestRegisterTransient(UnitTestCase):
         self,
     ):
         # arrange
+        class Vehicle:
+            pass
+
+        class Car(Vehicle):
+            pass
+
         dependency_container = DependencyContainer.get_instance()
         interface = Vehicle
         dependency_class = Car
@@ -19,13 +23,18 @@ class TestRegisterTransient(UnitTestCase):
         # act
         dependency_container.register_transient(interface, dependency_class)
 
-        # assert
-        # (no exception thrown)
+        # assert (no exception thrown)
 
     def test_register_transient_fails_when_already_registered(
         self,
     ):
         # arrange
+        class Vehicle:
+            pass
+
+        class Car(Vehicle):
+            pass
+
         dependency_container = DependencyContainer.get_instance()
         interface = Vehicle
         dependency_class = Car
