@@ -30,6 +30,9 @@ project = 'py-dependency-injection'
 copyright = '2024, David Runemalm'
 author = 'David Runemalm'
 
+# The version
+version = '1.0'
+
 # The full version, including alpha/beta/rc tags
 release = '1.0.0-alpha.3'
 
