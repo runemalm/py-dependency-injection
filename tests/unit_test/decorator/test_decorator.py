@@ -1,5 +1,6 @@
-from dependency_injection.container import DEFAULT_CONTAINER_NAME, \
-    DependencyContainer
+import pytest
+
+from dependency_injection.container import DependencyContainer
 from dependency_injection.decorator import inject
 from unit_test.car import Car
 from unit_test.unit_test_case import UnitTestCase
@@ -8,45 +9,53 @@ from unit_test.vehicle import Vehicle
 
 class TestDecorator(UnitTestCase):
 
-    def test_injects_dependencies_into_method_signature(
-        self,
-    ):
+    def test_decoration_on_class_method(self):
+
         # arrange
-        dependency_container = DependencyContainer.get_instance(name="test-container")
+        dependency_container = DependencyContainer.get_instance()
         interface = Vehicle
         dependency_class = Car
 
         dependency_container.register_transient(interface, dependency_class)
 
+        class Garage:
+            vehicle: Vehicle
+
+            @classmethod
+            @inject()
+            def park(cls, vehicle: Vehicle):
+                cls.vehicle = vehicle
+
         # act
-        foo = Foo()
-        foo.bar_1()
+        Garage.park()
 
         # assert
-        self.assertIsNotNone(foo.vehicle_1)
-        self.assertIsInstance(foo.vehicle_1, Vehicle)
+        self.assertIsNotNone(Garage.vehicle)
 
-    def test_injects_dependencies_from_different_scopes_correctly(
-        self,
-    ):
+    def test_decoration_on_static_method(self):
+
         # arrange
-        dependency_container = DependencyContainer.get_instance(name="test-container")
+        dependency_container = DependencyContainer.get_instance()
         interface = Vehicle
         dependency_class = Car
 
-        dependency_container.register_scoped(interface, dependency_class)
+        dependency_container.register_transient(interface, dependency_class)
+
+        class Garage:
+            vehicle: Vehicle
+
+            @staticmethod
+            @inject()
+            def park(vehicle: Vehicle):
+                Garage.vehicle = vehicle
 
         # act
-        foo = Foo()
-        foo.bar_1()
-        foo.bar_2()
+        Garage.park()
 
         # assert
-        self.assertIsNotNone(foo.vehicle_1)
-        self.assertIsNotNone(foo.vehicle_2)
-        self.assertNotEqual(foo.vehicle_1, foo.vehicle_2)
+        self.assertIsNotNone(Garage.vehicle)
 
-    def test_injects_using_default_container_and_scope_if_omitted_in_decorator_arguments(
+    def test_decoration_on_instance_method_raises(
         self,
     ):
         # arrange
@@ -54,87 +63,140 @@ class TestDecorator(UnitTestCase):
         interface = Vehicle
         dependency_class = Car
 
-        dependency_container.register_scoped(interface, dependency_class)
+        dependency_container.register_transient(interface, dependency_class)
 
-        # act
-        foo = Foo()
-        foo.bar_3()
+        with pytest.raises(TypeError, match="@inject decorator can only be applied to class methods or static methods."):
+            class Garage:
+                @inject()
+                def park(self, vehicle: Vehicle):
+                    pass
 
-        # assert
-        self.assertIsNotNone(foo.vehicle_3)
-        self.assertIsInstance(foo.vehicle_3, Vehicle)
-        self.assertEqual(foo.vehicle_3, dependency_container.resolve(interface))
-
-    def test_injects_same_scoped_dependency_when_no_container_or_scope_name_in_decorator_arguments(
+    def test_class_method_decorator_container_name_is_honoured(
         self,
     ):
         # arrange
-        dependency_container = DependencyContainer.get_instance()
         interface = Vehicle
         dependency_class = Car
 
-        dependency_container.register_scoped(interface, dependency_class)
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_singleton(interface, dependency_class)
+
+        second_container = DependencyContainer.get_instance("second")
+        second_container.register_singleton(interface, dependency_class)
+
+        second_container_vehicle = second_container.resolve(interface)
+
+        class Garage:
+            vehicle: Vehicle
+
+            @classmethod
+            @inject(container_name="second")
+            def park(cls, vehicle: Vehicle):
+                cls.vehicle = vehicle
 
         # act
-        foo = Foo()
-        foo.bar_3()
-        foo.bar_4()
+        Garage.park()
 
         # assert
-        self.assertIsNotNone(foo.vehicle_3)
-        self.assertIsNotNone(foo.vehicle_4)
-        self.assertEqual(foo.vehicle_3, foo.vehicle_4)
+        self.assertEquals(second_container_vehicle, Garage.vehicle)
 
-    def test_injects_different_scoped_dependencies_when_no_container_but_different_scope_names_in_decorator_arguments(
+    def test_class_method_decorator_scope_name_is_honoured(
         self,
     ):
         # arrange
-        dependency_container = DependencyContainer.get_instance()
         interface = Vehicle
         dependency_class = Car
 
+        dependency_container = DependencyContainer.get_instance()
         dependency_container.register_scoped(interface, dependency_class)
 
+        first_scope_vehicle = dependency_container.resolve(interface, scope_name="first_scope")
+        second_scope_vehicle = dependency_container.resolve(interface, scope_name="second_scope")
+
+        class Garage:
+            first_vehicle: Vehicle
+            second_vehicle: Vehicle
+
+            @classmethod
+            @inject(scope_name="first_scope")
+            def park_first(cls, vehicle: Vehicle):
+                cls.first_vehicle = vehicle
+
+            @classmethod
+            @inject(scope_name="second_scope")
+            def park_second(cls, vehicle: Vehicle):
+                cls.second_vehicle = vehicle
+
         # act
-        foo = Foo()
-        foo.bar_5()
-        foo.bar_6()
+        Garage.park_first()
+        Garage.park_second()
 
         # assert
-        self.assertIsNotNone(foo.vehicle_5)
-        self.assertIsNotNone(foo.vehicle_6)
-        self.assertNotEqual(foo.vehicle_5, foo.vehicle_6)
+        self.assertEqual(first_scope_vehicle, Garage.first_vehicle)
+        self.assertEqual(second_scope_vehicle, Garage.second_vehicle)
+        self.assertNotEqual(Garage.first_vehicle, Garage.second_vehicle)
 
-class Foo:
+    def test_static_method_decorator_container_name_is_honoured(
+        self,
+    ):
+        # arrange
+        interface = Vehicle
+        dependency_class = Car
 
-    def __init__(self):
-        self.vehicle_1 = None
-        self.vehicle_2 = None
-        self.vehicle_3 = None
-        self.vehicle_4 = None
-        self.vehicle_5 = None
-        self.vehicle_6 = None
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_singleton(interface, dependency_class)
 
-    @inject(container_name="test-container", scope_name="test-scope-1")
-    def bar_1(self, vehicle: Vehicle):
-        self.vehicle_1 = vehicle
+        second_container = DependencyContainer.get_instance("second")
+        second_container.register_singleton(interface, dependency_class)
 
-    @inject(container_name="test-container", scope_name="test-scope-2")
-    def bar_2(self, vehicle: Vehicle):
-        self.vehicle_2 = vehicle
+        second_container_vehicle = second_container.resolve(interface)
 
-    @inject()
-    def bar_3(self, vehicle: Vehicle):
-        self.vehicle_3 = vehicle
+        class Garage:
+            vehicle: Vehicle
 
-    @inject()
-    def bar_4(self, vehicle: Vehicle):
-        self.vehicle_4 = vehicle
+            @staticmethod
+            @inject(container_name="second")
+            def park(vehicle: Vehicle):
+                Garage.vehicle = vehicle
 
-    @inject(scope_name="scope-5")
-    def bar_5(self, vehicle: Vehicle):
-        self.vehicle_5 = vehicle
+        # act
+        Garage.park()
 
-    @inject(scope_name="scope-6")
-    def bar_6(self, vehicle: Vehicle):
-        self.vehicle_6 = vehicle
+        # assert
+        self.assertEquals(second_container_vehicle, Garage.vehicle)
+
+    def test_static_method_decorator_scope_name_is_honoured(
+        self,
+    ):
+        # arrange
+        interface = Vehicle
+        dependency_class = Car
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_scoped(interface, dependency_class)
+
+        first_scope_vehicle = dependency_container.resolve(interface, scope_name="first_scope")
+        second_scope_vehicle = dependency_container.resolve(interface, scope_name="second_scope")
+
+        class Garage:
+            first_vehicle: Vehicle
+            second_vehicle: Vehicle
+
+            @staticmethod
+            @inject(scope_name="first_scope")
+            def park_first(vehicle: Vehicle):
+                Garage.first_vehicle = vehicle
+
+            @staticmethod
+            @inject(scope_name="second_scope")
+            def park_second(vehicle: Vehicle):
+                Garage.second_vehicle = vehicle
+
+        # act
+        Garage.park_first()
+        Garage.park_second()
+
+        # assert
+        self.assertEqual(first_scope_vehicle, Garage.first_vehicle)
+        self.assertEqual(second_scope_vehicle, Garage.second_vehicle)
+        self.assertNotEqual(Garage.first_vehicle, Garage.second_vehicle)
