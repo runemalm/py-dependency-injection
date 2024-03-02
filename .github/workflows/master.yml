@@ -41,7 +41,7 @@ jobs:
           path: dist/
 
       - name: Publish to Test PyPI
-        uses: pypa/gh-action-pypi-publish@releases/v1
+        uses: pypa/gh-action-pypi-publish@release/v1.8.12
         with:
           user: __token__
           password: ${{ secrets.TEST_PYPI_TOKEN }}
@@ -69,12 +69,12 @@ jobs:
           echo "::set-output name=RELEASE_VERSION::$version"
       
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@releases/v1
+        uses: pypa/gh-action-pypi-publish@release/v1.8.12
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
           repository_url: https://upload.pypi.org/legacy/
-          skip_existing: true
+          skip_existing: false
 
       - name: Set up Git
         run: |
