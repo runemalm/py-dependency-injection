@@ -7,7 +7,7 @@ on:
 
 jobs:
   unittests:
-    name: Run tests
+    name: Run unittests
     runs-on: ubuntu-latest
 
     strategy:
@@ -23,3 +23,66 @@ jobs:
         uses: ./.github/actions/unittests
         with:
           python-version: ${{ matrix.python-version }}
+
+  prerelease:
+    name: Pre-release (test-pypi)
+    needs: unittests
+    if: success()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build package
+        run: python setup.py sdist bdist_wheel
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: py-dependency-injection
+          path: dist/
+
+      - name: Publish to Test PyPI
+        uses: pypa/gh-action-pypi-publish@releases/v1.8
+        with:
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+          skip_existing: true
+
+  release:
+    name: Release (pypi)
+    needs: prerelease
+    if: success()
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.event == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: py-dependency-injection
+          path: dist/
+
+      - name: Extract version from setup.py
+        id: extract-version
+        run: |
+          version=$(grep -Eo "version=['\"]([^'\"]+)['\"]" setup.py | awk -F"'" '{print $2}')
+          echo "Using version: $version"
+          echo "::set-output name=RELEASE_VERSION::$version"
+      
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@releases/v1.8
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
+          repository_url: https://upload.pypi.org/legacy/
+          skip_existing: true
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          
+      - name: Create and push tag
+        run: |
+          git tag -a v${{ steps.extract-version.outputs.RELEASE_VERSION }} -m "Release version v${{ steps.extract-version.outputs.RELEASE_VERSION }}"
+          git push origin v${{ steps.extract-version.outputs.RELEASE_VERSION }}
