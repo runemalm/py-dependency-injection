@@ -29,77 +29,101 @@ $ pip install py-dependency-injection
 
 The following examples demonstrates how to use the library.
 
-### Example: Obtaining the Default Dependency Container
+### Obtaining the default dependency container
 
 ```python
-# Retrieve the default container, typically recommended for a single-application setup.
+# Typically all you need for a single-application setup.
 
 from dependency_injection.container import DependencyContainer
-
 
 dependency_container = DependencyContainer.get_instance()
 ```
 
-### Example: Obtaining a Second Dependency Container
+### Obtaining multiple dependency containers
 
 ```python
-# Create additional containers if needed, especially for multi-application scenarios.
+# Typically needed for multi-application scenarios.
 
 from dependency_injection.container import DependencyContainer
 
-
-a_second_dependency_container = DependencyContainer.get_instance(name="a_second_dependency_container")
+second_container = DependencyContainer.get_instance(name="second_container")
+third_container = DependencyContainer.get_instance(name="third_container")
+# ...
 ```
 
-### Example: Registering Dependencies
+### Registering dependencies with the container
 
 ```python
-# Register dependencies with three available scopes: transient, scoped, or singleton.
+# Register dependencies using one of the three available scopes; 
+# transient, scoped, or singleton
 
 dependency_container.register_transient(SomeInterface, SomeClass)
 dependency_container.register_scoped(AnotherInterface, AnotherClass)
 dependency_container.register_singleton(ThirdInterface, ThirdClass)
 ```
 
-### Example: Resolving Dependencies
+### Resolving dependencies using the container
 
 ```python
 # Resolve transient instance (created anew for each call).
 transient_instance = dependency_container.resolve(SomeInterface)
 
-# Resolve scoped instance (consistent within a specific scope, e.g. a scope for the application action being run).
-scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="application_action_scope")
+# Resolve scoped instance (consistent within a specific scope).
+scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="some_scope")
 
 # Resolve singleton instance (consistent across the entire application).
 singleton_instance = dependency_container.resolve(ThirdInterface)
 ```
 
-### Example: Constructor Injection
+### Constructor injection
 
 ```python
-# Class instances resolved through the container have dependencies injected into their constructors.
+# Class instances resolved through the container have 
+# dependencies injected into their constructors automatically.
 
 class Foo:
 
-    def __init__(self, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+    def __init__(
+        self, 
+        transient_instance: SomeInterface, 
+        scoped_instance: AnotherInterface, 
+        singleton_instance: ThirdInterface
+    ):
         self._transient_instance = transient_instance
         self._scoped_instance = scoped_instance
         self._singleton_instance = singleton_instance
 ```
 
-### Example: Method Injection
+### Method injection with @inject decorator
 
 ```python
-# Inject dependencies into instance methods using the `@inject` decorator.
-# You may pass 'container_name' and 'scope_name' as decorator arguments.
+# The decorator can be applied to classmethods and staticmethods.
+# Instance method injection is not allowed.
 
 from dependency_injection.decorator import inject
 
-
 class Foo:
 
+    # Class method
+    @classmethod
     @inject()
-    def bar(self, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+    def bar_class(cls, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+        transient_instance.do_something()
+        scoped_instance.do_something()
+        singleton_instance.do_something()
+
+    # Static method
+    @staticmethod
+    @inject()
+    def bar_static_method(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+        transient_instance.do_something()
+        scoped_instance.do_something()
+        singleton_instance.do_something()
+
+    # Injecting with non-default container and scope
+    @staticmethod
+    @inject(container_name="second_container", scope_name="some_scope")
+    def bar_with_decorator_arguments(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
         transient_instance.do_something()
         scoped_instance.do_something()
         singleton_instance.do_something()
