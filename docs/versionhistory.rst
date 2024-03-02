@@ -2,6 +2,42 @@
 Version history
 ###############
 
+**1.0.0-alpha.3 (2024-03-02)**
+
+- **Breaking Change**: Restriction on `@inject` Decorator: Starting from this version, the `@inject` decorator can now only be used on static class methods and class methods. This change is introduced due to potential pitfalls associated with resolving and injecting dependencies directly into class instance methods using the dependency container.
+
+    **Reasoning:**
+  
+    Resolving and injecting dependencies into instance methods can lead to unexpected behaviors and may violate the principles of dependency injection. Instance methods often rely on the state of the object, and injecting dependencies from the container directly can obscure the dependencies required for a method. Additionally, it may introduce difficulties in testing and make the code harder to reason about.
+
+    By restricting the usage of the `@inject` decorator to static and class methods, we aim to encourage a cleaner separation of concerns, making it more explicit when dependencies are injected and providing better clarity on the dependencies required by a method.
+
+    **Before:**::
+
+        class Foo:
+        
+            @inject()
+            def instance_method(self, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+                # ...
+
+    **After:**::
+
+        class Foo:
+        
+            @classmethod
+            @inject()
+            def class_method(cls, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+                # ...
+
+            @staticmethod
+            @inject()
+            def static_method(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
+                # ...
+
+- Documentation Update: The documentation has been updated to reflect the new restriction on the usage of the `@inject` decorator. Users are advised to review the documentation for updated examples and guidelines regarding method injection.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.3>`_
+
 **1.0.0-alpha.2 (2024-02-27)**
 
 - Python Version Support: Added support for Python versions 3.7, 3.9, 3.10, 3.11, and 3.12.
