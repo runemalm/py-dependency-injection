@@ -2,6 +2,22 @@
 Version history
 ###############
 
+**1.0.0-alpha.4 (2024-03-02)**
+
+- **New Feature**: Support for constructor arguments in dependency registration: In this release, we introduce the ability to specify constructor arguments when registering dependencies with the container. This feature provides more flexibility when configuring dependencies, allowing users to customize the instantiation of classes during registration.
+
+    **Usage Example:**::
+    
+        # Registering a dependency with constructor arguments
+        dependency_container.register_transient(
+            SomeInterface, SomeClass,
+            constructor_args={"arg1": value1, "arg2": value2}
+        )
+
+    Users can now pass specific arguments to be used during the instantiation of the dependency. This is particularly useful when a class requires dynamic or configuration-dependent parameters.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.4>`_
+
 **1.0.0-alpha.3 (2024-03-02)**
 
 - **Breaking Change**: Restriction on `@inject` Decorator: Starting from this version, the `@inject` decorator can now only be used on static class methods and class methods. This change is introduced due to potential pitfalls associated with resolving and injecting dependencies directly into class instance methods using the dependency container.

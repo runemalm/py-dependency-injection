@@ -1,9 +1,7 @@
 import pytest
 
 from dependency_injection.container import DependencyContainer
-from unit_test.car import Car
 from unit_test.unit_test_case import UnitTestCase
-from unit_test.vehicle import Vehicle
 
 
 class TestRegisterScoped(UnitTestCase):
@@ -12,6 +10,12 @@ class TestRegisterScoped(UnitTestCase):
         self,
     ):
         # arrange
+        class Vehicle:
+            pass
+
+        class Car(Vehicle):
+            pass
+
         dependency_container = DependencyContainer.get_instance()
         interface = Vehicle
         dependency_class = Car
@@ -26,6 +30,12 @@ class TestRegisterScoped(UnitTestCase):
         self,
     ):
         # arrange
+        class Vehicle:
+            pass
+
+        class Car(Vehicle):
+            pass
+
         dependency_container = DependencyContainer.get_instance()
         interface = Vehicle
         dependency_class = Car
