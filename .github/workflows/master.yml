@@ -55,7 +55,7 @@ jobs:
   release:
     name: Release (pypi)
     needs: prerelease
-    if: success() && (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'workflow_dispatch')
+    if: success() && (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
 
     steps:
