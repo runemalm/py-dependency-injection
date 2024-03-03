@@ -146,6 +146,16 @@ To contribute, create a pull request on the develop branch following the [git fl
   
 ## Release Notes
 
+### [1.0.0-alpha.5](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.5) (2024-03-03)
+
+- **Critical Package Integrity Fix**: This release addresses a critical issue that affected the packaging of the Python library in all previous alpha releases (1.0.0-alpha.1 to 1.0.0-alpha.4). The problem involved missing source files in the distribution, rendering the library incomplete and non-functional.
+
+**Action Required:** Users are strongly advised to upgrade to version 1.0.0-alpha.5 to ensure the correct functioning of the library. All previous alpha releases are affected by this issue.
+
+**Note:** No functional changes or new features have been introduced in this release, and its primary purpose is to rectify the consistent packaging problem.
+
+For installation and upgrade instructions, please refer to the [Installation](#installation) section in the README.
+
 ### [1.0.0-alpha.4](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.4) (2024-03-02)
 
 - **New Feature**: Support for constructor arguments in dependency registration: In this release, we introduce the ability to specify constructor arguments when registering dependencies with the container. This feature provides more flexibility when configuring dependencies, allowing users to customize the instantiation of classes during registration.
