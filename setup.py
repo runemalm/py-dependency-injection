@@ -6,11 +6,11 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='py-dependency-injection',
-    version='1.0.0-alpha.4',
+    version='1.0.0-alpha.5',
     author='David Runemalm, 2024',
     author_email='david.runemalm@gmail.com',
     description=
-    'A simple dependency injection library for python.',
+    'A dependency injection library for Python.',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/runemalm/py-dependency-injection',
@@ -18,11 +18,11 @@ setup(
         "Documentation": "https://py-dependency-injection.readthedocs.io/en/latest/",
         "Bug Tracker": "https://github.com/runemalm/py-dependency-injection/issues",
     },
-    package_dir={'': '.'},
-    packages=find_packages(
-        where='.',
-        include=['dependency_injection*',],
-        exclude=['tests*',]
+    package_dir={'': 'src'},
+    packages = find_packages(
+        where = 'src',
+        include = ['dependency_injection*', ],
+        exclude = ['tests*', ]
     ),
     license='GNU General Public License v3.0',
     install_requires=[
