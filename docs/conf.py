@@ -34,7 +34,7 @@ author = 'David Runemalm'
 version = '1.0'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0-alpha.4'
+release = '1.0.0-alpha.6'
 
 
 # -- General configuration ---------------------------------------------------
