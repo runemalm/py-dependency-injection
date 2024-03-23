@@ -46,3 +46,20 @@ class TestResolveTransient(UnitTestCase):
 
         # assert
         self.assertNotEqual(resolved_dependency_1, resolved_dependency_2)
+
+    def test_resolve_transient_when_registered_with_dependency_and_implementation_being_the_same_returns_an_instance(
+        self,
+    ):
+        # arrange
+        class Vehicle:
+            pass
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency = Vehicle
+        dependency_container.register_transient(dependency)
+
+        # act
+        resolved_dependency = dependency_container.resolve(dependency)
+
+        # assert
+        self.assertIsInstance(resolved_dependency, Vehicle)

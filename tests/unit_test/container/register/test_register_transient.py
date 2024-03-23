@@ -43,3 +43,18 @@ class TestRegisterTransient(UnitTestCase):
         # act + assert
         with pytest.raises(ValueError, match="is already registered"):
             dependency_container.register_transient(dependency, implementation)
+
+    def test_register_transient_when_dependency_and_implementation_being_the_same(
+        self,
+    ):
+        # arrange
+        class Vehicle:
+            pass
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency = Vehicle
+
+        # act
+        dependency_container.register_transient(dependency)
+
+        # assert (no exception thrown)

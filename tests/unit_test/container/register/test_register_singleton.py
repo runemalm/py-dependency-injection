@@ -44,3 +44,18 @@ class TestRegisterSingleton(UnitTestCase):
         # act + assert
         with pytest.raises(ValueError, match="is already registered"):
             dependency_container.register_singleton(dependency, implementation)
+
+    def test_register_singleton_when_dependency_and_implementation_being_the_same(
+        self,
+    ):
+        # arrange
+        class Vehicle:
+            pass
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency = Vehicle
+
+        # act
+        dependency_container.register_singleton(dependency)
+
+        # assert (no exception thrown)

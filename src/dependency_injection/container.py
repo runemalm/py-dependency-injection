@@ -29,17 +29,23 @@ class DependencyContainer(metaclass=SingletonMeta):
 
         return cls._instances[(cls, name)]
 
-    def register_transient(self, dependency: Type, implementation: Type, constructor_args: Optional[Dict[str, Any]] = None) -> None:
+    def register_transient(self, dependency: Type, implementation: Optional[Type] = None, constructor_args: Optional[Dict[str, Any]] = None) -> None:
+        if implementation is None:
+            implementation = dependency
         if dependency in self._registrations:
             raise ValueError(f"Dependency {dependency} is already registered.")
         self._registrations[dependency] = Registration(dependency, implementation, Scope.TRANSIENT, constructor_args)
 
-    def register_scoped(self, dependency: Type, implementation: Type, constructor_args: Optional[Dict[str, Any]] = None) -> None:
+    def register_scoped(self, dependency: Type, implementation: Optional[Type] = None, constructor_args: Optional[Dict[str, Any]] = None) -> None:
+        if implementation is None:
+            implementation = dependency
         if dependency in self._registrations:
             raise ValueError(f"Dependency {dependency} is already registered.")
         self._registrations[dependency] = Registration(dependency, implementation, Scope.SCOPED, constructor_args)
 
-    def register_singleton(self, dependency: Type, implementation: Type, constructor_args: Optional[Dict[str, Any]] = None) -> None:
+    def register_singleton(self, dependency: Type, implementation: Optional[Type] = None, constructor_args: Optional[Dict[str, Any]] = None) -> None:
+        if implementation is None:
+            implementation = dependency
         if dependency in self._registrations:
             raise ValueError(f"Dependency {dependency} is already registered.")
         self._registrations[dependency] = Registration(dependency, implementation, Scope.SINGLETON, constructor_args)
