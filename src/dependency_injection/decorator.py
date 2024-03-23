@@ -1,22 +1,25 @@
 import functools
 import inspect
+from typing import Any, Callable, TypeVar
 
 from dependency_injection.container import DEFAULT_CONTAINER_NAME, \
     DependencyContainer
 from dependency_injection.scope import DEFAULT_SCOPE_NAME
 
+F = TypeVar('F', bound=Callable[..., Any])
 
-def inject(container_name=DEFAULT_CONTAINER_NAME, scope_name=DEFAULT_SCOPE_NAME):
 
-    def is_instance_method(func):
+def inject(container_name=DEFAULT_CONTAINER_NAME, scope_name=DEFAULT_SCOPE_NAME) -> Callable[[F], F]:
+
+    def is_instance_method(func: Callable[..., Any]) -> bool:
         parameters = inspect.signature(func).parameters
         is_instance_method = len(parameters) > 0 and list(parameters.values())[0].name == 'self'
         return is_instance_method
 
-    def decorator_inject(func):
+    def decorator_inject(func: F) -> F:
 
         @functools.wraps(func)
-        def wrapper_inject(*args, **kwargs):
+        def wrapper_inject(*args: Any, **kwargs: Any) -> Any:
 
             # Get the parameter names from the function signature
             sig = inspect.signature(func)

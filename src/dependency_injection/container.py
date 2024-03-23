@@ -1,9 +1,12 @@
 import inspect
-from typing import Any, Dict, Type
+
+from typing import Any, Dict, Optional, TypeVar, Type
 
 from dependency_injection.registration import Registration
 from dependency_injection.scope import DEFAULT_SCOPE_NAME, Scope
 from dependency_injection.utils.singleton_meta import SingletonMeta
+
+Self = TypeVar('Self', bound='DependencyContainer')
 
 
 DEFAULT_CONTAINER_NAME = "default_container"
@@ -17,7 +20,7 @@ class DependencyContainer(metaclass=SingletonMeta):
         self._scoped_instances = {}
 
     @classmethod
-    def get_instance(cls, name: str=None):
+    def get_instance(cls, name: str=None) -> Self:
         if name is None:
             name = DEFAULT_CONTAINER_NAME
 
@@ -26,22 +29,22 @@ class DependencyContainer(metaclass=SingletonMeta):
 
         return cls._instances[(cls, name)]
 
-    def register_transient(self, dependency: Type, implementation: Type, constructor_args=None):
+    def register_transient(self, dependency: Type, implementation: Type, constructor_args: Optional[Dict[str, Any]] = None) -> None:
         if dependency in self._registrations:
             raise ValueError(f"Dependency {dependency} is already registered.")
         self._registrations[dependency] = Registration(dependency, implementation, Scope.TRANSIENT, constructor_args)
 
-    def register_scoped(self, dependency: Type, implementation: Type, constructor_args=None):
+    def register_scoped(self, dependency: Type, implementation: Type, constructor_args: Optional[Dict[str, Any]] = None) -> None:
         if dependency in self._registrations:
             raise ValueError(f"Dependency {dependency} is already registered.")
         self._registrations[dependency] = Registration(dependency, implementation, Scope.SCOPED, constructor_args)
 
-    def register_singleton(self, dependency: Type, implementation: Type, constructor_args=None):
+    def register_singleton(self, dependency: Type, implementation: Type, constructor_args: Optional[Dict[str, Any]] = None) -> None:
         if dependency in self._registrations:
             raise ValueError(f"Dependency {dependency} is already registered.")
         self._registrations[dependency] = Registration(dependency, implementation, Scope.SINGLETON, constructor_args)
 
-    def resolve(self, dependency: Type, scope_name=DEFAULT_SCOPE_NAME):
+    def resolve(self, dependency: Type, scope_name: str = DEFAULT_SCOPE_NAME) -> Type:
         if scope_name not in self._scoped_instances:
             self._scoped_instances[scope_name] = {}
 
@@ -106,7 +109,7 @@ class DependencyContainer(metaclass=SingletonMeta):
                         f"Constructor argument '{arg_name}' has an incompatible type. "
                         f"Expected type: {expected_type}, provided type: {type(arg_value)}.")
 
-    def _inject_dependencies(self, implementation, scope_name=None, constructor_args=None):
+    def _inject_dependencies(self, implementation: Type, scope_name: str = None, constructor_args: Optional[Dict[str, Any]] = None) -> Type:
         constructor = inspect.signature(implementation.__init__)
         params = constructor.parameters
 
