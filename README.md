@@ -6,7 +6,7 @@
 
 A dependency injection library for Python.
 
-## Features:
+## Features
 
 - Dependency Container
 - Dependency Scopes
@@ -16,19 +16,19 @@ A dependency injection library for Python.
 - Factory registration
 - Instance registration
 
-## Python Compatibility:
+## Python Compatibility
 
 This library is compatible with the following Python versions:
 
 - 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
   
-## Installation:
+## Installation
   
 ```bash
 $ pip install py-dependency-injection
 ```
 
-## Usage:
+## Usage
 
 The following examples demonstrates how to use the library.
 
@@ -49,14 +49,18 @@ third_container = DependencyContainer.get_instance(name="third_container")
 
 ```python
 dependency_container.register_transient(Fruit, Apple)
-dependency_container.register_scoped(Beverage, Milk)
+dependency_container.register_scoped(Beverage, Cream)
 dependency_container.register_singleton(Vehicle, Car)
 ```
 
 ### Register with constructor arguments
 
 ```python
-dependency_container.register_transient(Fruit, Apple, constructor_args={"brand": "Gala", "price": 5.00})
+dependency_container.register_transient(
+    Fruit, 
+    Apple, 
+    constructor_args={"brand": "Gala", "price": 5.00}
+)
 ```
 
 ### Register with factory
@@ -86,7 +90,7 @@ dependency_container.register_instance(Vehicle, instance)
 
 ```python
 dependency_container.register_transient(Fruit, Apple, tags={Eatable, Delicious})
-dependency_container.register_scoped(Beverage, Milk, tags={Eatable})
+dependency_container.register_scoped(Beverage, Cream, tags={Eatable})
 dependency_container.register_singleton(Vehicle, Car, tags={Driveable, Comfortable})
 ```
 
@@ -122,7 +126,7 @@ dependency_container = DependencyContainer.get_instance()
 
 dependency_container.register_transient(Place)
 dependency_container.register_transient(Fruit, Apple)
-dependency_container.register_scoped(Beverage, Milk)
+dependency_container.register_scoped(Beverage, Cream)
 dependency_container.register_singleton(Vehicle, Car)
 
 place = dependency_container.resolve(Place)
@@ -159,15 +163,15 @@ class Place:
         vehicle.drive()
 ```
 
-## Documentation:
+## Documentation
   
 For the latest documentation, visit [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/).
 
-## Contribution:
+## Contribution
 
 To contribute, create a pull request on the develop branch following the [git flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model.
   
-## Release Notes:
+## Release Notes
 
 ### [1.0.0-alpha.6](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.6) (2024-03-23)
 
