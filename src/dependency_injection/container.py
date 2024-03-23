@@ -1,6 +1,6 @@
 import inspect
 
-from typing import Any, Dict, List, Optional, TypeVar, Type
+from typing import Any, Callable, Dict, List, Optional, TypeVar, Type
 
 from dependency_injection.registration import Registration
 from dependency_injection.scope import DEFAULT_SCOPE_NAME, Scope
@@ -50,6 +50,11 @@ class DependencyContainer(metaclass=SingletonMeta):
             raise ValueError(f"Dependency {dependency} is already registered.")
         self._registrations[dependency] = Registration(dependency, implementation, Scope.SINGLETON, tags, constructor_args)
 
+    def register_factory(self, dependency: Type, factory: Callable[[Any], Any], factory_args: Optional[Dict[str, Any]] = None, tags: Optional[set] = None) -> None:
+        if dependency in self._registrations:
+            raise ValueError(f"Dependency {dependency} is already registered.")
+        self._registrations[dependency] = Registration(dependency, None, Scope.FACTORY, None, tags, factory, factory_args)
+
     def register_instance(self, dependency: Type, instance: Any, tags: Optional[set] = None) -> None:
         if dependency in self._registrations:
             raise ValueError(f"Dependency {dependency} is already registered.")
@@ -93,11 +98,15 @@ class DependencyContainer(metaclass=SingletonMeta):
                     )
                 )
             return self._singleton_instances[dependency]
+        elif scope == Scope.FACTORY:
+            factory = registration.factory
+            factory_args = registration.factory_args or {}
+            return factory(**factory_args)
 
         raise ValueError(f"Invalid dependency scope: {scope}")
 
     def resolve_all(self, tags: Optional[set] = None) -> List[Any]:
-        tags = [] if not tags else tags
+        tags = tags or []
         resolved_dependencies = []
         for registration in self._registrations.values():
             if not len(tags) or tags.intersection(registration.tags):
