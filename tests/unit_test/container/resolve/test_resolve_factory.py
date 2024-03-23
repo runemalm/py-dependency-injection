@@ -80,3 +80,24 @@ class TestResolveTransient(UnitTestCase):
         self.assertIsInstance(resolved_dependency, Car)
         self.assertEqual("red", resolved_dependency.color)
         self.assertEqual(6327, resolved_dependency.mileage)
+
+    def test_resolve_factory_registered_with_lambda(
+        self,
+    ):
+        # arrange
+        class Vehicle:
+            pass
+
+        class Car(Vehicle):
+            def __init__(self, color: str):
+                self.color = color
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_factory(Vehicle, factory=lambda: Car(color="red"))
+
+        # act
+        resolved_dependency = dependency_container.resolve(Vehicle)
+
+        # assert
+        self.assertIsInstance(resolved_dependency, Car)
+        self.assertEqual(resolved_dependency.color, "red")
