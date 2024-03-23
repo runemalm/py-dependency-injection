@@ -15,12 +15,12 @@ class TestResolveSingleton(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
-        dependency_container.register_singleton(interface, dependency_class)
+        dependency = Vehicle
+        implementation = Car
+        dependency_container.register_singleton(dependency, implementation)
 
         # act
-        resolved_dependency = dependency_container.resolve(interface)
+        resolved_dependency = dependency_container.resolve(dependency)
 
         # assert
         self.assertIsInstance(resolved_dependency, Car)
@@ -36,13 +36,30 @@ class TestResolveSingleton(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer()
-        interface = Vehicle
-        dependency_class = Car
-        dependency_container.register_singleton(interface, dependency_class)
+        dependency = Vehicle
+        implementation = Car
+        dependency_container.register_singleton(dependency, implementation)
 
         # act
-        resolved_dependency_1 = dependency_container.resolve(interface)
-        resolved_dependency_2 = dependency_container.resolve(interface)
+        resolved_dependency_1 = dependency_container.resolve(dependency)
+        resolved_dependency_2 = dependency_container.resolve(dependency)
 
         # assert
         self.assertEqual(resolved_dependency_1, resolved_dependency_2)
+
+    def test_resolve_singleton_when_registered_with_dependency_and_implementation_being_the_same_returns_an_instance(
+        self,
+    ):
+        # arrange
+        class Vehicle:
+            pass
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency = Vehicle
+        dependency_container.register_singleton(dependency)
+
+        # act
+        resolved_dependency = dependency_container.resolve(dependency)
+
+        # assert
+        self.assertIsInstance(resolved_dependency, Vehicle)

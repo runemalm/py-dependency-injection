@@ -67,6 +67,23 @@ dependency_container.register_transient(
     SomeClass,
     constructor_args={"arg1": value1, "arg2": value2}
 )
+
+# Registering dependencies with a factory
+dependency_container.register_factory(
+    SomeInterface,
+    lambda: SomeClass(arg1=value1, arg2=value2)
+)
+
+# Registering dependencies with an instance
+instance = SomeClass(arg1=value1, arg2=value2)
+dependency_container.register_instance(SomeInterface, instance)
+
+# Registering dependencies with tags
+dependency_container.register_transient(
+    SomeInterface,
+    SomeClass,
+    tags={SomeAdjective, AnotherAdjective}
+)
 ```
 
 ### Resolving dependencies using the container
@@ -80,6 +97,9 @@ scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="som
 
 # Resolve singleton instance (consistent across the entire application).
 singleton_instance = dependency_container.resolve(ThirdInterface)
+
+# Resolve all instances with a specific tag
+tagged_instances = dependency_container.resolve_all(tags={SomeAdjective})
 ```
 
 ### Constructor injection
@@ -145,6 +165,12 @@ For the latest documentation, visit [readthedocs](https://py-dependency-injectio
 To contribute, create a pull request on the develop branch following the [git flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model.
   
 ## Release Notes
+
+### [1.0.0-alpha.6](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.6) (2024-03-23)
+
+- **Factory Registration:** Added support for registering dependencies using factory functions for dynamic instantiation.
+- **Instance Registration:** Enabled registering existing instances as dependencies.
+- **Tag-based Registration and Resolution:** Introduced the ability to register and resolve dependencies using tags for flexible dependency management.
 
 ### [1.0.0-alpha.5](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.5) (2024-03-03)
 

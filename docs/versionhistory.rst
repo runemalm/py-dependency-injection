@@ -2,6 +2,16 @@
 Version history
 ###############
 
+**1.0.0-alpha.6 (2024-03-23)**
+
+- **Factory Registration:** Added support for registering dependencies using factory functions for dynamic instantiation.
+
+- **Instance Registration:** Enabled registering existing instances as dependencies.
+
+- **Tag-based Registration and Resolution:** Introduced the ability to register and resolve dependencies using tags for flexible dependency management.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.6>`_
+
 **1.0.0-alpha.5 (2024-03-03)**
 
 - **Critical Package Integrity Fix**: This release addresses a critical issue that affected the packaging of the Python library in all previous alpha releases (1.0.0-alpha.1 to 1.0.0-alpha.4). The problem involved missing source files in the distribution, rendering the library incomplete and non-functional.

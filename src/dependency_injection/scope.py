@@ -7,3 +7,4 @@ class Scope(Enum):
     TRANSIENT = "transient"
     SCOPED = "scoped"
     SINGLETON = "singleton"
+    FACTORY = "factory"

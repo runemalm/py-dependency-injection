@@ -17,10 +17,10 @@ class TestDecorator(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
-        dependency_container.register_transient(interface, dependency_class)
+        dependency_container.register_transient(dependency, implementation)
 
         class Garage:
             vehicle: Vehicle
@@ -46,10 +46,10 @@ class TestDecorator(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
-        dependency_container.register_transient(interface, dependency_class)
+        dependency_container.register_transient(dependency, implementation)
 
         class Garage:
             vehicle: Vehicle
@@ -76,10 +76,10 @@ class TestDecorator(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
-        dependency_container.register_transient(interface, dependency_class)
+        dependency_container.register_transient(dependency, implementation)
 
         with pytest.raises(TypeError, match="@inject decorator can only be applied to class methods or static methods."):
             class Garage:
@@ -97,16 +97,16 @@ class TestDecorator(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_singleton(interface, dependency_class)
+        dependency_container.register_singleton(dependency, implementation)
 
         second_container = DependencyContainer.get_instance("second")
-        second_container.register_singleton(interface, dependency_class)
+        second_container.register_singleton(dependency, implementation)
 
-        second_container_vehicle = second_container.resolve(interface)
+        second_container_vehicle = second_container.resolve(dependency)
 
         class Garage:
             vehicle: Vehicle
@@ -132,14 +132,14 @@ class TestDecorator(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_scoped(interface, dependency_class)
+        dependency_container.register_scoped(dependency, implementation)
 
-        first_scope_vehicle = dependency_container.resolve(interface, scope_name="first_scope")
-        second_scope_vehicle = dependency_container.resolve(interface, scope_name="second_scope")
+        first_scope_vehicle = dependency_container.resolve(dependency, scope_name="first_scope")
+        second_scope_vehicle = dependency_container.resolve(dependency, scope_name="second_scope")
 
         class Garage:
             first_vehicle: Vehicle
@@ -174,16 +174,16 @@ class TestDecorator(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_singleton(interface, dependency_class)
+        dependency_container.register_singleton(dependency, implementation)
 
         second_container = DependencyContainer.get_instance("second")
-        second_container.register_singleton(interface, dependency_class)
+        second_container.register_singleton(dependency, implementation)
 
-        second_container_vehicle = second_container.resolve(interface)
+        second_container_vehicle = second_container.resolve(dependency)
 
         class Garage:
             vehicle: Vehicle
@@ -209,14 +209,14 @@ class TestDecorator(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_scoped(interface, dependency_class)
+        dependency_container.register_scoped(dependency, implementation)
 
-        first_scope_vehicle = dependency_container.resolve(interface, scope_name="first_scope")
-        second_scope_vehicle = dependency_container.resolve(interface, scope_name="second_scope")
+        first_scope_vehicle = dependency_container.resolve(dependency, scope_name="first_scope")
+        second_scope_vehicle = dependency_container.resolve(dependency, scope_name="second_scope")
 
         class Garage:
             first_vehicle: Vehicle
