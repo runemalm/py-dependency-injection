@@ -15,8 +15,8 @@ class TestRegisterWithArgs(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
         # act + assert (no exception)
-        dependency_container.register_transient(interface, dependency_class, constructor_args={"color": "red", "mileage": 3800})
+        dependency_container.register_transient(dependency, implementation, constructor_args={"color": "red", "mileage": 3800})

@@ -17,11 +17,11 @@ class TestRegisterTransient(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
 
         # act
-        dependency_container.register_transient(interface, dependency_class)
+        dependency_container.register_transient(dependency, implementation)
 
         # assert (no exception thrown)
 
@@ -36,10 +36,10 @@ class TestRegisterTransient(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
-        dependency_container.register_transient(interface, dependency_class)
+        dependency = Vehicle
+        implementation = Car
+        dependency_container.register_transient(dependency, implementation)
 
         # act + assert
         with pytest.raises(ValueError, match="is already registered"):
-            dependency_container.register_transient(interface, dependency_class)
+            dependency_container.register_transient(dependency, implementation)

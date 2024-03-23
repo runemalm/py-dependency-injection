@@ -19,15 +19,15 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
         dependency_container.register_transient(
-            interface=interface,
-            class_=dependency_class,
+            dependency=dependency,
+            implementation=implementation,
             constructor_args={"color": "red", "make": "Volvo"})
 
         # act
-        resolved_dependency = dependency_container.resolve(interface)
+        resolved_dependency = dependency_container.resolve(dependency)
 
         # assert
         self.assertEqual("red", resolved_dependency.color)
@@ -46,11 +46,11 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
         dependency_container.register_transient(
-            interface=interface,
-            class_=dependency_class,
+            dependency=dependency,
+            implementation=implementation,
             constructor_args={"color": "red", "make": "Volvo", "extra": "argument"})
 
         # act
@@ -58,7 +58,7 @@ class TestResolveWithArgs(UnitTestCase):
                 ValueError,
                 match="Invalid constructor argument 'extra' for class 'Car'. "
                       "The class does not have a constructor parameter with this name."):
-            dependency_container.resolve(interface)
+            dependency_container.resolve(dependency)
 
     def test_resolve_with_missing_constructor_arg_raises(
         self,
@@ -73,16 +73,16 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
         dependency_container.register_transient(
-            interface=interface,
-            class_=dependency_class,
+            dependency=dependency,
+            implementation=implementation,
             constructor_args={"color": "red"})
 
         # act
         with pytest.raises(ValueError, match="Missing required constructor arguments: make for class 'Car'."):
-            dependency_container.resolve(interface)
+            dependency_container.resolve(dependency)
 
     def test_resolve_with_wrong_constructor_arg_type_raises(
         self,
@@ -97,11 +97,11 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
         dependency_container.register_transient(
-            interface=interface,
-            class_=dependency_class,
+            dependency=dependency,
+            implementation=implementation,
             constructor_args={"color": "red", "make": -1})
 
         # act
@@ -109,7 +109,7 @@ class TestResolveWithArgs(UnitTestCase):
                 TypeError,
                 match="Constructor argument 'make' has an incompatible type. "
                       "Expected type: <class 'str'>, provided type: <class 'int'>."):
-            dependency_container.resolve(interface)
+            dependency_container.resolve(dependency)
 
     def test_resolve_when_no_constructor_arg_type_is_ok(
         self,
@@ -124,12 +124,12 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        interface = Vehicle
-        dependency_class = Car
+        dependency = Vehicle
+        implementation = Car
         dependency_container.register_transient(
-            interface=interface,
-            class_=dependency_class,
+            dependency=dependency,
+            implementation=implementation,
             constructor_args={"color": "red", "make": -1})
 
         # act + assert (no exception)
-        dependency_container.resolve(interface)
+        dependency_container.resolve(dependency)
