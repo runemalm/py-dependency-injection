@@ -50,6 +50,12 @@ class DependencyContainer(metaclass=SingletonMeta):
             raise ValueError(f"Dependency {dependency} is already registered.")
         self._registrations[dependency] = Registration(dependency, implementation, Scope.SINGLETON, tags, constructor_args)
 
+    def register_instance(self, dependency: Type, instance: Any, tags: Optional[set] = None) -> None:
+        if dependency in self._registrations:
+            raise ValueError(f"Dependency {dependency} is already registered.")
+        self._registrations[dependency] = Registration(dependency, type(instance), Scope.SINGLETON, constructor_args={}, tags=tags)
+        self._singleton_instances[dependency] = instance
+
     def resolve(self, dependency: Type, scope_name: str = DEFAULT_SCOPE_NAME) -> Type:
         if scope_name not in self._scoped_instances:
             self._scoped_instances[scope_name] = {}
