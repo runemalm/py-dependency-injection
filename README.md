@@ -12,8 +12,11 @@ A dependency injection library for Python.
 - Dependency Scopes
 - Constructor Injection
 - Method Injection
+- Tags
+- Factory registration
+- Instance registration
 
-## Python Compatibility
+## Python Compatibility:
 
 This library is compatible with the following Python versions:
 
@@ -29,131 +32,131 @@ $ pip install py-dependency-injection
 
 The following examples demonstrates how to use the library.
 
-### Obtaining the default dependency container
+### Getting default container
 
 ```python
-# Typically all you need for a single-application setup.
-
-from dependency_injection.container import DependencyContainer
-
 dependency_container = DependencyContainer.get_instance()
 ```
 
-### Obtaining multiple dependency containers
+### Getting more containers
 
 ```python
-# Typically needed for multi-application scenarios.
-
-from dependency_injection.container import DependencyContainer
-
-second_container = DependencyContainer.get_instance(name="second_container")
+another_container = DependencyContainer.get_instance(name="another_container")
 third_container = DependencyContainer.get_instance(name="third_container")
-# ...
 ```
 
-### Registering dependencies with the container
+### Register with one of three available scopes
 
 ```python
-# Register dependencies using one of the three available scopes; 
-# transient, scoped, or singleton
-
-dependency_container.register_transient(SomeInterface, SomeClass)
-dependency_container.register_scoped(AnotherInterface, AnotherClass)
-dependency_container.register_singleton(ThirdInterface, ThirdClass)
-
-# Registering dependencies with constructor arguments
-dependency_container.register_transient(
-    SomeInterface,
-    SomeClass,
-    constructor_args={"arg1": value1, "arg2": value2}
-)
-
-# Registering dependencies with a factory
-dependency_container.register_factory(
-    SomeInterface,
-    lambda: SomeClass(arg1=value1, arg2=value2)
-)
-
-# Registering dependencies with an instance
-instance = SomeClass(arg1=value1, arg2=value2)
-dependency_container.register_instance(SomeInterface, instance)
-
-# Registering dependencies with tags
-dependency_container.register_transient(
-    SomeInterface,
-    SomeClass,
-    tags={SomeAdjective, AnotherAdjective}
-)
+dependency_container.register_transient(Fruit, Apple)
+dependency_container.register_scoped(Beverage, Milk)
+dependency_container.register_singleton(Vehicle, Car)
 ```
 
-### Resolving dependencies using the container
+### Register with constructor arguments
 
 ```python
-# Resolve transient instance (created anew for each call).
-transient_instance = dependency_container.resolve(SomeInterface)
+dependency_container.register_transient(Fruit, Apple, constructor_args={"brand": "Gala", "price": 5.00})
+```
 
-# Resolve scoped instance (consistent within a specific scope).
-scoped_instance = dependency_container.resolve(AnotherInterface, scope_name="some_scope")
+### Register with factory
 
-# Resolve singleton instance (consistent across the entire application).
-singleton_instance = dependency_container.resolve(ThirdInterface)
+```python
+class CarFactory:
+    @classmethod
+    def create(cls, color: str, mileage: int) -> Car:
+        return Car(color=color, mileage=mileage)
 
-# Resolve all instances with a specific tag
-tagged_instances = dependency_container.resolve_all(tags={SomeAdjective})
+def create_car(color: str, mileage: int) -> Car:
+    return Car(color=color, mileage=mileage)
+
+dependency_container.register_factory(Vehicle, CarFactory.create, factory_args={"color": "red", "mileage": 3800})
+dependency_container.register_factory(Vehicle, create_car, factory_args={"color": "red", "mileage": 3800})
+dependency_container.register_factory(Vehicle, lambda: Car(color="red", mileage=3800))
+```
+
+### Register instance
+
+```python
+instance = Car(color="red", mileage=3800)
+dependency_container.register_instance(Vehicle, instance)
+```
+
+### Register with tags
+
+```python
+dependency_container.register_transient(Fruit, Apple, tags={Eatable, Delicious})
+dependency_container.register_scoped(Beverage, Milk, tags={Eatable})
+dependency_container.register_singleton(Vehicle, Car, tags={Driveable, Comfortable})
+```
+
+### Resolve dependencies
+
+```python
+transient_dependency = dependency_container.resolve(Fruit)
+scoped_dependency = dependency_container.resolve(Beverage, scope_name="dinner")
+singleton_dependency = dependency_container.resolve(Vehicle)
+```
+
+### Resolve dependencies with tags
+
+```python
+tagged_dependencies = dependency_container.resolve_all(tags={Eatable, Delicious})
 ```
 
 ### Constructor injection
 
 ```python
-# Class instances resolved through the container have 
-# dependencies injected into their constructors automatically.
-
-class Foo:
-
+class Place:
     def __init__(
         self, 
-        transient_instance: SomeInterface, 
-        scoped_instance: AnotherInterface, 
-        singleton_instance: ThirdInterface
+        fruit: Fruit, 
+        beverage: Beverage, 
+        vehicle: Vehicle
     ):
-        self._transient_instance = transient_instance
-        self._scoped_instance = scoped_instance
-        self._singleton_instance = singleton_instance
+        self.fruit = fruit
+        self.beverage = beverage
+        self.vehicle = vehicle
+
+dependency_container = DependencyContainer.get_instance()
+
+dependency_container.register_transient(Place)
+dependency_container.register_transient(Fruit, Apple)
+dependency_container.register_scoped(Beverage, Milk)
+dependency_container.register_singleton(Vehicle, Car)
+
+place = dependency_container.resolve(Place)
+
+place.fruit.eat()
+place.beverage.drink()
+place.vehicle.drive()
 ```
 
-### Method injection with @inject decorator
+### Method injection
 
 ```python
-# The decorator can be applied to classmethods and staticmethods.
-# Instance method injection is not allowed.
+class Place:
 
-from dependency_injection.decorator import inject
-
-class Foo:
-
-    # Class method
     @classmethod
     @inject()
-    def bar_class(cls, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
-        transient_instance.do_something()
-        scoped_instance.do_something()
-        singleton_instance.do_something()
+    def do_it(cls, fruit: Fruit, beverage: Beverage, vehicle: Vehicle):
+        fruit.eat()
+        beverage.drink()
+        vehicle.drive()
 
-    # Static method
     @staticmethod
     @inject()
-    def bar_static_method(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
-        transient_instance.do_something()
-        scoped_instance.do_something()
-        singleton_instance.do_something()
+    def do_it_again(fruit: Fruit, beverage: Beverage, vehicle: Vehicle):
+        fruit.eat()
+        beverage.drink()
+        vehicle.drive()
 
-    # Injecting with non-default container and scope
     @staticmethod
-    @inject(container_name="second_container", scope_name="some_scope")
-    def bar_with_decorator_arguments(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
-        transient_instance.do_something()
-        scoped_instance.do_something()
-        singleton_instance.do_something()
+    @inject(container_name="friend", scope_name="dinner")
+    def do_it_at_friends_place_at_dinner(fruit: Fruit, beverage: Beverage, vehicle: Vehicle):
+        fruit.eat()
+        beverage.drink()
+        vehicle.drive()
 ```
 
 ## Documentation:
@@ -164,74 +167,26 @@ For the latest documentation, visit [readthedocs](https://py-dependency-injectio
 
 To contribute, create a pull request on the develop branch following the [git flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model.
   
-## Release Notes
+## Release Notes:
 
 ### [1.0.0-alpha.6](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.6) (2024-03-23)
 
-- **Factory Registration:** Added support for registering dependencies using factory functions for dynamic instantiation.
-- **Instance Registration:** Enabled registering existing instances as dependencies.
-- **Tag-based Registration and Resolution:** Introduced the ability to register and resolve dependencies using tags for flexible dependency management.
+- Factory Registration: Added support for registering dependencies using factory functions for dynamic instantiation.
+- Instance Registration: Enabled registering existing instances as dependencies.
+- Tag-based Registration and Resolution: Introduced the ability to register and resolve dependencies using tags for flexible dependency management.
 
 ### [1.0.0-alpha.5](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.5) (2024-03-03)
 
-- **Critical Package Integrity Fix**: This release addresses a critical issue that affected the packaging of the Python library in all previous alpha releases (1.0.0-alpha.1 to 1.0.0-alpha.4). The problem involved missing source files in the distribution, rendering the library incomplete and non-functional.
-
-**Action Required:** Users are strongly advised to upgrade to version 1.0.0-alpha.5 to ensure the correct functioning of the library. All previous alpha releases are affected by this issue.
-
-**Note:** No functional changes or new features have been introduced in this release, and its primary purpose is to rectify the consistent packaging problem.
-
-For installation and upgrade instructions, please refer to the [Installation](#installation) section in the README.
+- **Critical Package Integrity Fix**: This release addresses a critical issue that affected the packaging of the Python library in all previous alpha releases (1.0.0-alpha.1 to 1.0.0-alpha.4). The problem involved missing source files in the distribution, rendering the library incomplete and non-functional. Users are strongly advised to upgrade to version 1.0.0-alpha.5 to ensure the correct functioning of the library. All previous alpha releases are affected by this issue.
 
 ### [1.0.0-alpha.4](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.4) (2024-03-02)
 
-- **New Feature**: Support for constructor arguments in dependency registration: In this release, we introduce the ability to specify constructor arguments when registering dependencies with the container. This feature provides more flexibility when configuring dependencies, allowing users to customize the instantiation of classes during registration.
-
-    **Usage Example:**
-    ```python
-    # Registering a dependency with constructor arguments
-    dependency_container.register_transient(
-        SomeInterface, SomeClass,
-        constructor_args={"arg1": value1, "arg2": value2}
-    )
-    ```
-
-    Users can now pass specific arguments to be used during the instantiation of the dependency. This is particularly useful when a class requires dynamic or configuration-dependent parameters.
+- Constructor Arguments: Support for constructor arguments added to dependency registration.
 
 ### [1.0.0-alpha.3](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.3) (2024-03-02)
 
-- **Breaking Change**: Restriction on `@inject` Decorator: Starting from this version, the `@inject` decorator can now only be used on static class methods and class methods. This change is introduced due to potential pitfalls associated with resolving and injecting dependencies directly into class instance methods using the dependency container.
-
-    **Reasoning:**
-  
-    Resolving and injecting dependencies into instance methods can lead to unexpected behaviors and may violate the principles of dependency injection. Instance methods often rely on the state of the object, and injecting dependencies from the container directly can obscure the dependencies required for a method. Additionally, it may introduce difficulties in testing and make the code harder to reason about.
-
-    By restricting the usage of the `@inject` decorator to static and class methods, we aim to encourage a cleaner separation of concerns, making it more explicit when dependencies are injected and providing better clarity on the dependencies required by a method.
-
-    **Before:**
-    ```python
-    class Foo:
-    
-        @inject()
-        def instance_method(self, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
-            # ...
-    ```
-
-    **After:**
-    ```python
-    class Foo:
-    
-        @classmethod
-        @inject()
-        def class_method(cls, transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
-            # ...
-
-        @staticmethod
-        @inject()
-        def static_method(transient_instance: SomeInterface, scoped_instance: AnotherInterface, singleton_instance: ThirdInterface):
-            # ...
-    ```
-
-- Documentation Update: The documentation has been updated to reflect the new restriction on the usage of the `@inject` decorator. Users are advised to review the documentation for updated examples and guidelines regarding method injection.
+- **Breaking Change**: Starting from this version, the `@inject` decorator can only be used on static class methods and class methods. It can't be used on instance methods anymore.
+- Documentation Update: The documentation has been updated to reflect the new restriction on the usage of the decorator.
 
 ### [1.0.0-alpha.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.2) (2024-02-27)
 
