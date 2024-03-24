@@ -5,7 +5,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestRegisterFactory(UnitTestCase):
-
     def test_register_with_factory_class_method_when_not_previously_registered(
         self,
     ):
@@ -49,7 +48,11 @@ class TestRegisterFactory(UnitTestCase):
         dependency_container = DependencyContainer.get_instance()
 
         # act + assert (no exception)
-        dependency_container.register_factory(Vehicle, factory=CarFactory.create, factory_args={"color": "red", "mileage": 3800})
+        dependency_container.register_factory(
+            Vehicle,
+            factory=CarFactory.create,
+            factory_args={"color": "red", "mileage": 3800},
+        )
 
     def test_register_with_lambda_method(
         self,

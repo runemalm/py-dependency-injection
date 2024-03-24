@@ -21,9 +21,9 @@ A dependency injection library for Python.
 This library is compatible with the following Python versions:
 
 - 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
-  
+
 ## Installation
-  
+
 ```bash
 $ pip install py-dependency-injection
 ```
@@ -57,8 +57,8 @@ dependency_container.register_singleton(Vehicle, Car)
 
 ```python
 dependency_container.register_transient(
-    Fruit, 
-    Apple, 
+    Fruit,
+    Apple,
     constructor_args={"brand": "Gala", "price": 5.00}
 )
 ```
@@ -113,9 +113,9 @@ tagged_dependencies = dependency_container.resolve_all(tags={Eatable, Delicious}
 ```python
 class Place:
     def __init__(
-        self, 
-        fruit: Fruit, 
-        beverage: Beverage, 
+        self,
+        fruit: Fruit,
+        beverage: Beverage,
         vehicle: Vehicle
     ):
         self.fruit = fruit
@@ -164,13 +164,13 @@ class Place:
 ```
 
 ## Documentation
-  
+
 For the latest documentation, visit [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/).
 
 ## Contribution
 
 To contribute, create a pull request on the develop branch following the [git flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model.
-  
+
 ## Release Notes
 
 ### [1.0.0-alpha.6](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.6) (2024-03-23)

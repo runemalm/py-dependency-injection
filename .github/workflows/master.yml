@@ -9,10 +9,8 @@ on:
 jobs:
   format-and-lint:
       steps:
-        - name: Check formatting with black
-          run: pipenv run black --check .
-        - name: Lint with flake8
-          run: pipenv run flake8 .
+        - name: Run pre-commit hooks with linting and format checks
+          run: pipenv run pre-commit run --all-files
 
   unittests:
     name: Run unittests
@@ -26,7 +24,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Run unittests
         uses: ./.github/actions/unittests
         with:
@@ -78,7 +76,7 @@ jobs:
           version=$(grep -Eo "version=['\"]([^'\"]+)['\"]" setup.py | awk -F"'" '{print $2}')
           echo "Using version: $version"
           echo "::set-output name=RELEASE_VERSION::$version"
-      
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -91,7 +89,7 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          
+
       - name: Create and push tag
         run: |
           git tag -a v${{ steps.extract-version.outputs.RELEASE_VERSION }} -m "Release version v${{ steps.extract-version.outputs.RELEASE_VERSION }}"

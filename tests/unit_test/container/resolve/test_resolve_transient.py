@@ -3,7 +3,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestResolveTransient(UnitTestCase):
-
     def test_resolve_transient_returns_an_instance(
         self,
     ):
@@ -47,7 +46,7 @@ class TestResolveTransient(UnitTestCase):
         # assert
         self.assertNotEqual(resolved_dependency_1, resolved_dependency_2)
 
-    def test_resolve_transient_when_registered_with_dependency_and_implementation_being_the_same_returns_an_instance(
+    def test_returns_an_instance_when_registered_without_implementation_arg(
         self,
     ):
         # arrange

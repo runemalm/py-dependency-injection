@@ -5,7 +5,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestRegisterSingleton(UnitTestCase):
-
     def test_register_singleton_succeeds_when_not_previously_registered(
         self,
     ):

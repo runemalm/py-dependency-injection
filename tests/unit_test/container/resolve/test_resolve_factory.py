@@ -3,7 +3,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestResolveTransient(UnitTestCase):
-
     def test_resolve_factory_returns_an_instance(
         self,
     ):
@@ -71,7 +70,11 @@ class TestResolveTransient(UnitTestCase):
                 return Car(color=color, mileage=mileage)
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_factory(Vehicle, factory=CarFactory.create, factory_args={"color": "red", "mileage": 6327})
+        dependency_container.register_factory(
+            Vehicle,
+            factory=CarFactory.create,
+            factory_args={"color": "red", "mileage": 6327},
+        )
 
         # act
         resolved_dependency = dependency_container.resolve(Vehicle)

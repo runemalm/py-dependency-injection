@@ -8,10 +8,8 @@ on:
 jobs:
   format-and-lint:
     steps:
-      - name: Check formatting with black
-        run: pipenv run black --check .
-      - name: Lint with flake8
-        run: pipenv run flake8 .
+      - name: Run pre-commit hooks with linting and format checks
+        run: pipenv run pre-commit run --all-files
 
   unittests:
     name: Run tests

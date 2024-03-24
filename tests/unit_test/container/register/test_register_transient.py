@@ -5,8 +5,7 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestRegisterTransient(UnitTestCase):
-
-    def test_register_transient_succeeds_when_not_previously_registered(
+    def test_succeeds_when_not_previously_registered(
         self,
     ):
         # arrange
@@ -25,7 +24,7 @@ class TestRegisterTransient(UnitTestCase):
 
         # assert (no exception thrown)
 
-    def test_register_transient_fails_when_already_registered(
+    def test_fails_when_already_registered(
         self,
     ):
         # arrange
@@ -44,7 +43,7 @@ class TestRegisterTransient(UnitTestCase):
         with pytest.raises(ValueError, match="is already registered"):
             dependency_container.register_transient(dependency, implementation)
 
-    def test_register_transient_success_when_dependency_and_implementation_same(
+    def test_success_when_dependency_and_implementation_same(
         self,
     ):
         # arrange
@@ -59,7 +58,7 @@ class TestRegisterTransient(UnitTestCase):
 
         # assert (no exception thrown)
 
-    def test_register_transient_fails_when_already_registered_and_dependency_and_implementation_same(
+    def test_fails_when_already_registered_and_dependency_and_implementation_same(
         self,
     ):
         # arrange
@@ -76,7 +75,7 @@ class TestRegisterTransient(UnitTestCase):
         with pytest.raises(ValueError, match="is already registered"):
             dependency_container.register_transient(Vehicle)
 
-    def test_register_transient_success_when_other_dependency_registered_of_implementation_ancestor_class(
+    def test_success_when_other_dependency_registered_of_implementation_ancestor_class(
         self,
     ):
         # arrange

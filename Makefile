@@ -79,15 +79,23 @@ sphinx-autobuild: ## activate autobuild of docs
 
 .PHONY: black
 black: ## run black auto-formatting
-	pipenv run black $(SRC)
+	pipenv run black $(SRC) $(TESTS) --line-length=88
 
 .PHONY: black-check
 black-check: ## check code don't violate black formatting rules
-	pipenv run black --check $(SRC)
+	pipenv run black --check $(SRC) --line-length=88
 
 .PHONY: flake
 flake: ## lint code with flake
 	pipenv run flake8 $(SRC)
+
+.PHONY: pre-commit-install
+pre-commit-install: ## install the pre-commit git hook
+	pipenv run pre-commit install
+
+.PHONY: pre-commit-run
+pre-commit-run: ## run the pre-commit hooks
+	pipenv run pre-commit run --all-files
 
 ################################################################################
 # PIPENV
@@ -95,7 +103,7 @@ flake: ## lint code with flake
 
 .PHONY: pipenv-install
 pipenv-install: ## setup the virtual environment
-	pipenv --python 3.7 install --dev
+	pipenv install --dev
 
 .PHONY: pipenv-packages-install
 pipenv-packages-install: ## install a package (uses PACKAGE)
