@@ -7,6 +7,22 @@ on:
   workflow_dispatch:
 
 jobs:
+  pre-commit:
+    name: Run pre-commit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+
   unittests:
     name: Run unittests
     runs-on: ubuntu-latest
@@ -19,7 +35,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Run unittests
         uses: ./.github/actions/unittests
         with:
@@ -71,7 +87,7 @@ jobs:
           version=$(grep -Eo "version=['\"]([^'\"]+)['\"]" setup.py | awk -F"'" '{print $2}')
           echo "Using version: $version"
           echo "::set-output name=RELEASE_VERSION::$version"
-      
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -84,7 +100,7 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          
+
       - name: Create and push tag
         run: |
           git tag -a v${{ steps.extract-version.outputs.RELEASE_VERSION }} -m "Release version v${{ steps.extract-version.outputs.RELEASE_VERSION }}"

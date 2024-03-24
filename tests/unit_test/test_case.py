@@ -4,7 +4,6 @@ from dependency_injection.container import DependencyContainer
 
 
 class TestCase(TestCaseBase):
-
     def tearDown(self):
         super().tearDown()
 

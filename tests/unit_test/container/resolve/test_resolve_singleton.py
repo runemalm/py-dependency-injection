@@ -3,8 +3,7 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestResolveSingleton(UnitTestCase):
-
-    def test_resolve_singleton_returns_instance(
+    def test_returns_instance_when_resolved(
         self,
     ):
         # arrange
@@ -25,7 +24,7 @@ class TestResolveSingleton(UnitTestCase):
         # assert
         self.assertIsInstance(resolved_dependency, Car)
 
-    def test_resolve_singleton_twice_returns_same_instance(
+    def test_returns_same_instance_when_resolving_twice(
         self,
     ):
         # arrange
@@ -47,7 +46,7 @@ class TestResolveSingleton(UnitTestCase):
         # assert
         self.assertEqual(resolved_dependency_1, resolved_dependency_2)
 
-    def test_resolve_singleton_when_registered_with_dependency_and_implementation_being_the_same_returns_an_instance(
+    def test_returns_an_instance_when_registered_without_implementation_arg(
         self,
     ):
         # arrange

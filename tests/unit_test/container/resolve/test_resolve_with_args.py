@@ -5,7 +5,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestResolveWithArgs(UnitTestCase):
-
     def test_resolve_passes_constructor_args(
         self,
     ):
@@ -24,7 +23,8 @@ class TestResolveWithArgs(UnitTestCase):
         dependency_container.register_transient(
             dependency=dependency,
             implementation=implementation,
-            constructor_args={"color": "red", "make": "Volvo"})
+            constructor_args={"color": "red", "make": "Volvo"},
+        )
 
         # act
         resolved_dependency = dependency_container.resolve(dependency)
@@ -51,13 +51,15 @@ class TestResolveWithArgs(UnitTestCase):
         dependency_container.register_transient(
             dependency=dependency,
             implementation=implementation,
-            constructor_args={"color": "red", "make": "Volvo", "extra": "argument"})
+            constructor_args={"color": "red", "make": "Volvo", "extra": "argument"},
+        )
 
         # act
         with pytest.raises(
-                ValueError,
-                match="Invalid constructor argument 'extra' for class 'Car'. "
-                      "The class does not have a constructor parameter with this name."):
+            ValueError,
+            match="Invalid constructor argument 'extra' for class 'Car'. "
+            "The class does not have a constructor parameter with this name.",
+        ):
             dependency_container.resolve(dependency)
 
     def test_resolve_with_missing_constructor_arg_raises(
@@ -78,10 +80,14 @@ class TestResolveWithArgs(UnitTestCase):
         dependency_container.register_transient(
             dependency=dependency,
             implementation=implementation,
-            constructor_args={"color": "red"})
+            constructor_args={"color": "red"},
+        )
 
         # act
-        with pytest.raises(ValueError, match="Missing required constructor arguments: make for class 'Car'."):
+        with pytest.raises(
+            ValueError,
+            match="Missing required constructor arguments: make for class 'Car'.",
+        ):
             dependency_container.resolve(dependency)
 
     def test_resolve_with_wrong_constructor_arg_type_raises(
@@ -102,13 +108,15 @@ class TestResolveWithArgs(UnitTestCase):
         dependency_container.register_transient(
             dependency=dependency,
             implementation=implementation,
-            constructor_args={"color": "red", "make": -1})
+            constructor_args={"color": "red", "make": -1},
+        )
 
         # act
         with pytest.raises(
-                TypeError,
-                match="Constructor argument 'make' has an incompatible type. "
-                      "Expected type: <class 'str'>, provided type: <class 'int'>."):
+            TypeError,
+            match="Constructor argument 'make' has an incompatible type. "
+            "Expected type: <class 'str'>, provided type: <class 'int'>.",
+        ):
             dependency_container.resolve(dependency)
 
     def test_resolve_when_no_constructor_arg_type_is_ok(
@@ -129,7 +137,8 @@ class TestResolveWithArgs(UnitTestCase):
         dependency_container.register_transient(
             dependency=dependency,
             implementation=implementation,
-            constructor_args={"color": "red", "make": -1})
+            constructor_args={"color": "red", "make": -1},
+        )
 
         # act + assert (no exception)
         dependency_container.resolve(dependency)

@@ -14,6 +14,10 @@ sphinxcontrib-napoleon = "0.7"
 wheel = "0.41.2"
 pytest-xdist = "*"
 bump2version = "*"
+black = "*"
+flake8 = "*"
+importlib-metadata = "==4.13.0"
+pre-commit = "*"
 
 [requires]
-python_version = ">=3.7"
+python_version = "3.7.17"

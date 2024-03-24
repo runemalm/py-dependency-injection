@@ -3,7 +3,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestResolveAll(UnitTestCase):
-
     def test_returns_dependency_with_tag(
         self,
     ):
@@ -53,9 +52,18 @@ class TestResolveAll(UnitTestCase):
 
         # assert
         self.assertEqual(len(resolved_dependencies), 3)
-        self.assertTrue(any(isinstance(dependency, Vehicle) for dependency in resolved_dependencies))
-        self.assertTrue(any(isinstance(dependency, Car) for dependency in resolved_dependencies))
-        self.assertTrue(any(isinstance(dependency, Innovation) for dependency in resolved_dependencies))
+        self.assertTrue(
+            any(isinstance(dependency, Vehicle) for dependency in resolved_dependencies)
+        )
+        self.assertTrue(
+            any(isinstance(dependency, Car) for dependency in resolved_dependencies)
+        )
+        self.assertTrue(
+            any(
+                isinstance(dependency, Innovation)
+                for dependency in resolved_dependencies
+            )
+        )
 
     def test_does_not_return_dependency_without_tag(
         self,
@@ -86,8 +94,12 @@ class TestResolveAll(UnitTestCase):
 
         # assert
         self.assertEqual(len(resolved_dependencies), 2)
-        self.assertTrue(any(isinstance(dependency, Vehicle) for dependency in resolved_dependencies))
-        self.assertTrue(any(isinstance(dependency, Car) for dependency in resolved_dependencies))
+        self.assertTrue(
+            any(isinstance(dependency, Vehicle) for dependency in resolved_dependencies)
+        )
+        self.assertTrue(
+            any(isinstance(dependency, Car) for dependency in resolved_dependencies)
+        )
 
     def test_returns_all_dependencies_when_no_tag_specified(
         self,
@@ -118,6 +130,15 @@ class TestResolveAll(UnitTestCase):
 
         # assert
         self.assertEqual(len(resolved_dependencies), 3)
-        self.assertTrue(any(isinstance(dependency, Vehicle) for dependency in resolved_dependencies))
-        self.assertTrue(any(isinstance(dependency, Car) for dependency in resolved_dependencies))
-        self.assertTrue(any(isinstance(dependency, Innovation) for dependency in resolved_dependencies))
+        self.assertTrue(
+            any(isinstance(dependency, Vehicle) for dependency in resolved_dependencies)
+        )
+        self.assertTrue(
+            any(isinstance(dependency, Car) for dependency in resolved_dependencies)
+        )
+        self.assertTrue(
+            any(
+                isinstance(dependency, Innovation)
+                for dependency in resolved_dependencies
+            )
+        )

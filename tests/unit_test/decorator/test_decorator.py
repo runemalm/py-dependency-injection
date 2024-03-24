@@ -6,9 +6,7 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestDecorator(UnitTestCase):
-
     def test_decoration_on_class_method(self):
-
         # arrange
         class Vehicle:
             pass
@@ -37,7 +35,6 @@ class TestDecorator(UnitTestCase):
         self.assertIsNotNone(Garage.vehicle)
 
     def test_decoration_on_static_method(self):
-
         # arrange
         class Vehicle:
             pass
@@ -81,7 +78,12 @@ class TestDecorator(UnitTestCase):
 
         dependency_container.register_transient(dependency, implementation)
 
-        with pytest.raises(TypeError, match="@inject decorator can only be applied to class methods or static methods."):
+        with pytest.raises(
+            TypeError,
+            match="@inject decorator can only be applied to "
+            "class methods or static methods.",
+        ):
+
             class Garage:
                 @inject()
                 def park(self, vehicle: Vehicle):
@@ -138,8 +140,12 @@ class TestDecorator(UnitTestCase):
         dependency_container = DependencyContainer.get_instance()
         dependency_container.register_scoped(dependency, implementation)
 
-        first_scope_vehicle = dependency_container.resolve(dependency, scope_name="first_scope")
-        second_scope_vehicle = dependency_container.resolve(dependency, scope_name="second_scope")
+        first_scope_vehicle = dependency_container.resolve(
+            dependency, scope_name="first_scope"
+        )
+        second_scope_vehicle = dependency_container.resolve(
+            dependency, scope_name="second_scope"
+        )
 
         class Garage:
             first_vehicle: Vehicle
@@ -215,8 +221,12 @@ class TestDecorator(UnitTestCase):
         dependency_container = DependencyContainer.get_instance()
         dependency_container.register_scoped(dependency, implementation)
 
-        first_scope_vehicle = dependency_container.resolve(dependency, scope_name="first_scope")
-        second_scope_vehicle = dependency_container.resolve(dependency, scope_name="second_scope")
+        first_scope_vehicle = dependency_container.resolve(
+            dependency, scope_name="first_scope"
+        )
+        second_scope_vehicle = dependency_container.resolve(
+            dependency, scope_name="second_scope"
+        )
 
         class Garage:
             first_vehicle: Vehicle

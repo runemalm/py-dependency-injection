@@ -3,7 +3,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestResolveInstance(UnitTestCase):
-
     def test_resolve_instance_returns_instance(
         self,
     ):

@@ -3,7 +3,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestObtainInstance(UnitTestCase):
-
     def test_obtain_instance_without_name_returns_default_container(
         self,
     ):
@@ -31,7 +30,9 @@ class TestObtainInstance(UnitTestCase):
     ):
         # act
         dependency_container = DependencyContainer.get_instance(name="second_container")
-        dependency_container_in_second_call = DependencyContainer.get_instance(name="second_container")
+        dependency_container_in_second_call = DependencyContainer.get_instance(
+            name="second_container"
+        )
 
         # assert
         self.assertEqual(dependency_container, dependency_container_in_second_call)
@@ -40,8 +41,14 @@ class TestObtainInstance(UnitTestCase):
         self,
     ):
         # act
-        dependency_container_with_first_name = DependencyContainer.get_instance(name="first_container")
-        dependency_container_with_second_name = DependencyContainer.get_instance(name="second-container")
+        dependency_container_with_first_name = DependencyContainer.get_instance(
+            name="first_container"
+        )
+        dependency_container_with_second_name = DependencyContainer.get_instance(
+            name="second-container"
+        )
 
         # assert
-        self.assertNotEqual(dependency_container_with_first_name, dependency_container_with_second_name)
+        self.assertNotEqual(
+            dependency_container_with_first_name, dependency_container_with_second_name
+        )

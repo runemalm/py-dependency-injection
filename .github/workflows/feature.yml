@@ -6,6 +6,21 @@ on:
       - 'feature/*'
 
 jobs:
+  pre-commit:
+    name: Run pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+
   unittests:
     name: Run tests
     runs-on: ubuntu-latest
@@ -18,7 +33,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Run unittests
         uses: ./.github/actions/unittests
         with:

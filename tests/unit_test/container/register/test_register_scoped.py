@@ -5,7 +5,6 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestRegisterScoped(UnitTestCase):
-
     def test_register_scoped_succeeds_when_not_previously_registered(
         self,
     ):
@@ -59,4 +58,3 @@ class TestRegisterScoped(UnitTestCase):
         dependency_container.register_scoped(dependency)
 
         # assert (no exception thrown)
-
