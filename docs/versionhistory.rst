@@ -2,6 +2,15 @@
 Version history
 ###############
 
+**1.0.0-alpha.7 (2024-03-24)**
+
+- Documentation Update: Updated the documentation to provide clearer instructions and more comprehensive examples.
+- Preparing for Beta Release: Made necessary adjustments and refinements in preparation for the upcoming first beta release.
+
+This release focuses on enhancing the documentation and making final preparations for the transition to the beta phase. If you have any more updates or need further assistance, feel free to reach out!
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.7>`_
+
 **1.0.0-alpha.6 (2024-03-23)**
 
 - Factory Registration: Added support for registering dependencies using factory functions for dynamic instantiation.
