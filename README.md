@@ -78,7 +78,7 @@ def create_connection(host: str, port: int) -> Connection:
 dependency_container.register_factory(Connection, create_connection, factory_args={"host": "localhost", "port": 5432})
 ```
 
-Besides functions, you can also use lambdas and class functions. Read more in the [documentation](https://py-dependency-injection.readthedocs.io/en/latest/).
+Besides functions, you can also use lambdas and class functions. Read more in the [documentation](https://py-dependency-injection.readthedocs.io/en/latest/userguide.html#using-factory-functions).
 
 ### Registering and Using Instances
 
@@ -142,7 +142,7 @@ my_order = Order.create()
 OrderController.place_order(order=my_order)  # The repository instance will be automatically injected
 ```
 
-You can also specify container- and scope names in the decorator arguments. Read more in the [documentation](https://py-dependency-injection.readthedocs.io/en/latest/).
+You can also specify container and scope using the decorator arguments `container_name` and `scope_name`.
 
 ## Documentation
 
