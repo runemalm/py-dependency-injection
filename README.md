@@ -8,15 +8,16 @@ A dependency injection library for Python.
 
 ## Features
 
-- Dependency Container
-- Dependency Scopes
-- Constructor Injection
-- Method Injection
-- Tags
-- Factory registration
-- Instance registration
+- **Dependency Container:** Manage and resolve object dependencies with a flexible and easy-to-use container.
+- **Dependency Scopes:** Define different scopes for dependencies, allowing for fine-grained control over their lifecycle.
+- **Constructor Injection:** Inject dependencies into constructors, promoting cleaner and more modular code.
+- **Method Injection:** Inject dependencies into methods, enabling more flexible dependency management within class instances.
+- **Tags:** Register and resolve dependencies using tags, facilitating flexible and dynamic dependency management.
+- **Factory Registration:** Register dependencies using factory functions for dynamic instantiation.
+- **Instance Registration:** Register existing instances as dependencies, providing more control over object creation.
+- **Python Compatibility:** Compatible with Python versions 3.7 to 3.12, ensuring broad compatibility with existing and future Python projects.
 
-## Python Compatibility
+## Compatibility
 
 This library is compatible with the following Python versions:
 
@@ -28,140 +29,120 @@ This library is compatible with the following Python versions:
 $ pip install py-dependency-injection
 ```
 
-## Usage
+## Basic Usage
 
 The following examples demonstrates how to use the library.
 
-### Getting default container
+### Creating a Dependency Container
 
 ```python
+# Get the default dependency container
 dependency_container = DependencyContainer.get_instance()
-```
 
-### Getting more containers
-
-```python
+# Create additional named containers if needed
 another_container = DependencyContainer.get_instance(name="another_container")
-third_container = DependencyContainer.get_instance(name="third_container")
 ```
 
-### Register with one of three available scopes
+### Registering Dependencies with Scopes
 
 ```python
-dependency_container.register_transient(Fruit, Apple)
-dependency_container.register_scoped(Beverage, Cream)
-dependency_container.register_singleton(Vehicle, Car)
+# Register a transient dependency (a new instance every time)
+dependency_container.register_transient(Connection, PostgresConnection)
+
+# Register a scoped dependency (a new instance per scope)
+dependency_container.register_scoped(Connection, PostgresConnection, scope_name="http_request")
+
+# Register a singleton dependency (a single instance for the container's lifetime)
+dependency_container.register_singleton(Connection, PostgresConnection)
 ```
 
-### Register with constructor arguments
+### Using Constructor Arguments
 
 ```python
+# Register a dependency with constructor arguments
 dependency_container.register_transient(
-    Fruit,
-    Apple,
-    constructor_args={"brand": "Gala", "price": 5.00}
+    Connection,
+    PostgresConnection,
+    constructor_args={"host": "localhost", "port": 5432}
 )
 ```
 
-### Register with factory
+### Using Factory Functions
 
 ```python
-class CarFactory:
-    @classmethod
-    def create(cls, color: str, mileage: int) -> Car:
-        return Car(color=color, mileage=mileage)
+# Define a factory function
+def create_connection(host: str, port: int) -> Connection:
+    return PostgresConnection(host=host, port=port)
 
-def create_car(color: str, mileage: int) -> Car:
-    return Car(color=color, mileage=mileage)
-
-dependency_container.register_factory(Vehicle, CarFactory.create, factory_args={"color": "red", "mileage": 3800})
-dependency_container.register_factory(Vehicle, create_car, factory_args={"color": "red", "mileage": 3800})
-dependency_container.register_factory(Vehicle, lambda: Car(color="red", mileage=3800))
+# Register the factory function
+dependency_container.register_factory(Connection, create_connection, factory_args={"host": "localhost", "port": 5432})
 ```
 
-### Register instance
+Besides functions, you can also use lambdas and class functions. Read more in the [documentation](https://py-dependency-injection.readthedocs.io/en/latest/).
+
+### Registering and Using Instances
 
 ```python
-instance = Car(color="red", mileage=3800)
-dependency_container.register_instance(Vehicle, instance)
+# Create an instance
+my_connection = PostgresConnection(host="localhost", port=5432)
+
+# Register the instance
+dependency_container.register_instance(Connection, my_connection)
+
+# Resolve the instance
+resolved_connection = dependency_container.resolve(Connection)
+print(resolved_connection.host)  # Output: localhost
 ```
 
-### Register with tags
+### Registering and Resolving with Tags
 
 ```python
-dependency_container.register_transient(Fruit, Apple, tags={Eatable, Delicious})
-dependency_container.register_scoped(Beverage, Cream, tags={Eatable})
-dependency_container.register_singleton(Vehicle, Car, tags={Driveable, Comfortable})
+# Register dependencies with tags
+dependency_container.register_transient(Connection, PostgresConnection, tags={"Querying", "Startable"})
+dependency_container.register_scoped(BusConnection, KafkaBusConnection, tags={"Publishing", "Startable"})
+
+# Resolve dependencies by tags
+startable_dependencies = dependency_container.resolve_all(tags={"Startable"})
+for dependency in startable_dependencies:
+    dependency.start()
 ```
 
-### Resolve dependencies
+### Using Constructor Injection
 
 ```python
-transient_dependency = dependency_container.resolve(Fruit)
-scoped_dependency = dependency_container.resolve(Beverage, scope_name="dinner")
-singleton_dependency = dependency_container.resolve(Vehicle)
+class OrderRepository:
+    def __init__(self, connection: Connection):
+        self.connection = connection
+
+# Register dependencies
+dependency_container.register_transient(OrderRepository)
+dependency_container.register_singleton(Connection, PostgresConnection)
+
+# Resolve the OrderRepository with injected dependencies
+repository = dependency_container.resolve(OrderRepository)
+print(repository.connection.__class__.__name__)  # Output: PostgresConnection
 ```
 
-### Resolve dependencies with tags
+### Using Method Injection
 
 ```python
-tagged_dependencies = dependency_container.resolve_all(tags={Eatable, Delicious})
-```
-
-### Constructor injection
-
-```python
-class Place:
-    def __init__(
-        self,
-        fruit: Fruit,
-        beverage: Beverage,
-        vehicle: Vehicle
-    ):
-        self.fruit = fruit
-        self.beverage = beverage
-        self.vehicle = vehicle
-
-dependency_container = DependencyContainer.get_instance()
-
-dependency_container.register_transient(Place)
-dependency_container.register_transient(Fruit, Apple)
-dependency_container.register_scoped(Beverage, Cream)
-dependency_container.register_singleton(Vehicle, Car)
-
-place = dependency_container.resolve(Place)
-
-place.fruit.eat()
-place.beverage.drink()
-place.vehicle.drive()
-```
-
-### Method injection
-
-```python
-class Place:
-
-    @classmethod
-    @inject()
-    def do_it(cls, fruit: Fruit, beverage: Beverage, vehicle: Vehicle):
-        fruit.eat()
-        beverage.drink()
-        vehicle.drive()
-
+class OrderController:
     @staticmethod
     @inject()
-    def do_it_again(fruit: Fruit, beverage: Beverage, vehicle: Vehicle):
-        fruit.eat()
-        beverage.drink()
-        vehicle.drive()
+    def place_order(order: Order, repository: OrderRepository):
+        order.status = "placed"
+        repository.save(order)
 
-    @staticmethod
-    @inject(container_name="another_container", scope_name="another_scope")
-    def do_it_with_another_container_and_scope(fruit: Fruit, beverage: Beverage, vehicle: Vehicle):
-        fruit.eat()
-        beverage.drink()
-        vehicle.drive()
+# Register the dependency
+dependency_container.register_transient(OrderRepository)
+dependency_container.register_singleton(Connection, PostgresConnection)
+
+# Use method injection to inject the dependency
+my_order = Order.create()
+OrderController.place_order(order=my_order)  # The repository instance will be automatically injected
 ```
+
+You can also specify container- and scope names in the decorator arguments. Read more in the [documentation](https://py-dependency-injection.readthedocs.io/en/latest/).
 
 ## Documentation
 
