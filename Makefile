@@ -74,6 +74,22 @@ sphinx-autobuild: ## activate autobuild of docs
 	pipenv run sphinx-autobuild docs docs/_build/html --watch $(SRC)
 
 ################################################################################
+# FORMAT & LINT
+################################################################################
+
+.PHONY: black
+black: ## run black auto-formatting
+	pipenv run black $(SRC)
+
+.PHONY: black-check
+black-check: ## check code don't violate black formatting rules
+	pipenv run black --check $(SRC)
+
+.PHONY: flake
+flake: ## lint code with flake
+	pipenv run flake8 $(SRC)
+
+################################################################################
 # PIPENV
 ################################################################################
 

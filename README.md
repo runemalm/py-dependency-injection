@@ -156,8 +156,8 @@ class Place:
         vehicle.drive()
 
     @staticmethod
-    @inject(container_name="friend", scope_name="dinner")
-    def do_it_at_friends_place_at_dinner(fruit: Fruit, beverage: Beverage, vehicle: Vehicle):
+    @inject(container_name="another_container", scope_name="another_scope")
+    def do_it_with_another_container_and_scope(fruit: Fruit, beverage: Beverage, vehicle: Vehicle):
         fruit.eat()
         beverage.drink()
         vehicle.drive()

@@ -7,6 +7,13 @@ on:
   workflow_dispatch:
 
 jobs:
+  format-and-lint:
+      steps:
+        - name: Check formatting with black
+          run: pipenv run black --check .
+        - name: Lint with flake8
+          run: pipenv run flake8 .
+
   unittests:
     name: Run unittests
     runs-on: ubuntu-latest
