@@ -13,12 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - Setup Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.7'
 
-      - Run pre-commit
+      - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
 
   unittests:
