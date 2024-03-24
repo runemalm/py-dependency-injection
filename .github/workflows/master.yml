@@ -7,13 +7,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  format-and-lint-check:
-    name: Run tests
+  pre-commit:
+    name: Run pre-commit
     runs-on: ubuntu-latest
-
     steps:
-      - name: Run pre-commit hooks with linting and format checks
-        run: pipenv run pre-commit run --all-files
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+
+      - Run pre-commit
+        uses: pre-commit/action@v3.0.1
 
   unittests:
     name: Run unittests
