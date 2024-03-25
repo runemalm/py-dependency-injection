@@ -2,12 +2,14 @@
 Version history
 ###############
 
+.. warning::
+
+   This library is currently in the alpha stage of development. Expect changes and improvements as we work towards a stable release.
+
 **1.0.0-alpha.7 (2024-03-24)**
 
 - Documentation Update: Updated the documentation to provide clearer instructions and more comprehensive examples.
 - Preparing for Beta Release: Made necessary adjustments and refinements in preparation for the upcoming first beta release.
-
-This release focuses on enhancing the documentation and making final preparations for the transition to the beta phase. If you have any more updates or need further assistance, feel free to reach out!
 
 `View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.7>`_
 

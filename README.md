@@ -4,153 +4,72 @@
 
 # py-dependency-injection
 
-A dependency injection library for Python.
+A simple yet powerful dependency injection library for Python.
 
 ## Features
 
-- **Dependency Container:** Manage and resolve object dependencies with a flexible and easy-to-use container.
-- **Dependency Scopes:** Define different scopes for dependencies, allowing for fine-grained control over their lifecycle.
-- **Constructor Injection:** Inject dependencies into constructors, promoting cleaner and more modular code.
-- **Method Injection:** Inject dependencies into methods, enabling more flexible dependency management within class instances.
-- **Tags:** Register and resolve dependencies using tags, facilitating flexible and dynamic dependency management.
-- **Factory Registration:** Register dependencies using factory functions for dynamic instantiation.
-- **Instance Registration:** Register existing instances as dependencies, providing more control over object creation.
-- **Python Compatibility:** Compatible with Python versions 3.7 to 3.12, ensuring broad compatibility with existing and future Python projects.
+- **Scoped Registrations:** Define the lifetime of your dependencies as transient, scoped, or singleton.
+- **Constructor Injection:** Automatically resolve and inject dependencies when creating instances.
+- **Method Injection:** Inject dependencies into methods using a simple decorator.
+- **Factory Functions:** Register factory functions, classes, or lambdas to create dependencies.
+- **Instance Registration:** Register existing instances as dependencies.
+- **Tag-based Registration and Resolution:** Organize and resolve dependencies based on tags.
+- **Multiple Containers:** Support for using multiple dependency containers.
 
 ## Compatibility
 
-This library is compatible with the following Python versions:
-
-- 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
+Compatible with Python versions 3.7, 3.8, 3.9, 3.10, 3.11 and 3.12.
 
 ## Installation
+
+Install py-dependency-injection using [pip](https://pip.pypa.io/en/stable/):
 
 ```bash
 $ pip install py-dependency-injection
 ```
 
-## Basic Usage
+## Quick Start
 
-The following examples demonstrates how to use the library.
-
-### Creating a Dependency Container
+Here's a quick example to get you started:
 
 ```python
-# Get the default dependency container
-dependency_container = DependencyContainer.get_instance()
+from py_dependency_injection import DependencyContainer
 
-# Create additional named containers if needed
-another_container = DependencyContainer.get_instance(name="another_container")
-```
+# Define your dependencies and implementations
+class Connection:
+    pass
 
-### Registering Dependencies with Scopes
+class PostgresConnection(Connection):
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
 
-```python
-# Register a transient dependency (a new instance every time)
-dependency_container.register_transient(Connection, PostgresConnection)
+# Create a dependency container
+container = DependencyContainer.get_instance()
 
-# Register a scoped dependency (a new instance per scope)
-dependency_container.register_scoped(Connection, PostgresConnection, scope_name="http_request")
-
-# Register a singleton dependency (a single instance for the container's lifetime)
-dependency_container.register_singleton(Connection, PostgresConnection)
-```
-
-### Using Constructor Arguments
-
-```python
-# Register a dependency with constructor arguments
-dependency_container.register_transient(
+# Register your dependencies
+container.register_singleton(
     Connection,
     PostgresConnection,
     constructor_args={"host": "localhost", "port": 5432}
 )
+
+# Resolve and use your dependencies
+connection = container.resolve(Connection)
+print(connection.host)  # Output: localhost
 ```
-
-### Using Factory Functions
-
-```python
-# Define a factory function
-def create_connection(host: str, port: int) -> Connection:
-    return PostgresConnection(host=host, port=port)
-
-# Register the factory function
-dependency_container.register_factory(Connection, create_connection, factory_args={"host": "localhost", "port": 5432})
-```
-
-Besides functions, you can also use lambdas and class functions. Read more in the [documentation](https://py-dependency-injection.readthedocs.io/en/latest/userguide.html#using-factory-functions).
-
-### Registering and Using Instances
-
-```python
-# Create an instance
-my_connection = PostgresConnection(host="localhost", port=5432)
-
-# Register the instance
-dependency_container.register_instance(Connection, my_connection)
-
-# Resolve the instance
-resolved_connection = dependency_container.resolve(Connection)
-print(resolved_connection.host)  # Output: localhost
-```
-
-### Registering and Resolving with Tags
-
-```python
-# Register dependencies with tags
-dependency_container.register_transient(Connection, PostgresConnection, tags={"Querying", "Startable"})
-dependency_container.register_scoped(BusConnection, KafkaBusConnection, tags={"Publishing", "Startable"})
-
-# Resolve dependencies by tags
-startable_dependencies = dependency_container.resolve_all(tags={"Startable"})
-for dependency in startable_dependencies:
-    dependency.start()
-```
-
-### Using Constructor Injection
-
-```python
-class OrderRepository:
-    def __init__(self, connection: Connection):
-        self.connection = connection
-
-# Register dependencies
-dependency_container.register_transient(OrderRepository)
-dependency_container.register_singleton(Connection, PostgresConnection)
-
-# Resolve the OrderRepository with injected dependencies
-repository = dependency_container.resolve(OrderRepository)
-print(repository.connection.__class__.__name__)  # Output: PostgresConnection
-```
-
-### Using Method Injection
-
-```python
-class OrderController:
-    @staticmethod
-    @inject()
-    def place_order(order: Order, repository: OrderRepository):
-        order.status = "placed"
-        repository.save(order)
-
-# Register the dependency
-dependency_container.register_transient(OrderRepository)
-dependency_container.register_singleton(Connection, PostgresConnection)
-
-# Use method injection to inject the dependency
-my_order = Order.create()
-OrderController.place_order(order=my_order)  # The repository instance will be automatically injected
-```
-
-You can also specify container and scope using the decorator arguments `container_name` and `scope_name`.
 
 ## Documentation
 
-For the latest documentation, visit [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/).
+For detailed documentation, including advanced usage and examples, please visit our [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/) page.
 
 ## Contribution
 
-To contribute, create a pull request on the develop branch following the [git flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model.
+Contributions are welcome! Please feel free to submit pull requests or open issues to improve the library.
+
+## License
+
+`py-dependency-injection` is released under the GPL 3 license. See [LICENSE](LICENSE) for more details.
 
 ## Release Notes
 
