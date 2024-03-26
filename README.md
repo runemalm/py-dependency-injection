@@ -13,12 +13,13 @@ A simple dependency injection library for Python.
 - **Method Injection:** Inject dependencies into methods using a simple decorator.
 - **Factory Functions:** Register factory functions, classes, or lambdas to create dependencies.
 - **Instance Registration:** Register existing instances as dependencies.
-- **Tag-based Registration and Resolution:** Organize and resolve dependencies based on tags.
+- **Tag-Based Registration and Resolution:** Organize and resolve dependencies based on tags.
 - **Multiple Containers:** Support for using multiple dependency containers.
 
 ## Compatibility
 
-Compatible with the following Python versions:
+Compatible and tested with the following Python versions:
+
 - 3.7
 - 3.8
 - 3.9
@@ -61,13 +62,9 @@ user_repository = container.resolve(UserRepository)
 
 For more advanced usage and examples, please visit our [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/) page.
 
-## Contribution
-
-Contributions are welcome! Please feel free to submit pull requests or open issues to improve the library.
-
 ## Source Code
 
-You can find the source code for `py-dependency-injection` on [GitHub](https://github.com/runemalm/py-dependency-injection). Feel free to explore, contribute, or fork the repository.
+You can find the source code for `py-dependency-injection` on [GitHub](https://github.com/runemalm/py-dependency-injection).
 
 ## License
 

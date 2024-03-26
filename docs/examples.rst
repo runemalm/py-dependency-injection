@@ -60,7 +60,8 @@ Registering with constructor arguments
 Resolving with factory functions
 ################################
 
-Any `callable <https://docs.python.org/3/glossary.html#term-callable>`_ can be used as factory function.
+.. note::
+    Any `callable <https://docs.python.org/3/glossary.html#term-callable>`_ can be used as factory function.
 
 .. code-block:: python
 
@@ -236,4 +237,5 @@ Using method injection
         order=Order.create()
     )
 
-Pass decorator arguments ``container_name`` and ``scope_name`` if needed.
+.. note::
+    You can pass ``container_name`` and ``scope_name`` arguments to the ``@inject`` decorator to specify anything other than the default container and/or scope.
