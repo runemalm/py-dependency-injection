@@ -1,14 +1,21 @@
 py-dependency-injection
 =======================
 
-A simple yet powerful dependency injection library for Python.
+A prototypical dependency injection library for Python.
 
-Introduction
-------------
+Purpose
+-------
 
-Welcome to py-dependency-injection, a robust dependency injection library designed for Python applications. This library offers a straightforward approach to managing dependencies, enabling you to create more modular, testable, and maintainable code. It's well-suited for a variety of projects, from simple scripts to complex applications.
+Dependency injection is a powerful design pattern that promotes loose coupling and enhances testability in software applications. `py-dependency-injection` is a prototypical implementation of this pattern, designed to provide the essential features needed for effective dependency management in both small scripts and larger software projects.
 
-py-dependency-injection provides essential features such as dependency scopes, constructor and method injection, factory and instance registration, and tag-based resolution. These tools allow you to decouple your application components effectively, making your codebase more organized and easier to manage.
+This library is particularly suited for beginners exploring the concept of dependency injection, as it offers a straightforward and easy-to-understand implementation. It serves as an excellent starting point for learning the pattern and can also be used as a foundational base for frameworks requiring a more specialized interface for dependency injection.
+
+Key Advantages
+--------------
+
+- **Suitable for Learning:** Ideal for beginners exploring the concept of dependency injection.
+- **Base Implementation for Frameworks:** Can be used as a foundational base for frameworks requiring a more specialized interface for dependency injection.
+- **Standalone Solution:** Can be used on its own as a dependency injection solution in any software project.
 
 Features
 --------
@@ -20,6 +27,11 @@ Features
 - Factory Registration
 - Instance Registration
 - Tag-Based Resolution
+
+Documentation
+-------------
+
+For a detailed guide on how to use `py-dependency-injection`, please refer to the examples.
 
 .. userguide-docs:
 .. toctree::
