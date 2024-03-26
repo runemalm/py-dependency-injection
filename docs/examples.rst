@@ -168,15 +168,15 @@ Registering and resolving with tags
         }
     )
 
-    # Resolve all dependencies with tag
-    tagged_dependencies = dependency_container.resolve_all(
+    # Resolve all dependencies with a specific tag
+    resolved_dependencies = dependency_container.resolve_all(
         tags={
             Startable
         }
     )
 
     # Use resolved dependencies
-    for dependency in tagged_dependencies:
+    for dependency in resolved_dependencies:
         dependency.start()
 
 
@@ -238,4 +238,4 @@ Using method injection
     )
 
 .. note::
-    You can pass ``container_name`` and ``scope_name`` arguments to the ``@inject`` decorator to specify anything other than the default container and/or scope.
+    You can pass ``container_name`` and ``scope_name`` arguments to the ``@inject`` decorator to specify container and/or scope. If none of the arguments are passed, the `default container` and the `default scope` will be used.
