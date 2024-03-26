@@ -10,8 +10,8 @@ Welcome to py-dependency-injection, a robust dependency injection library design
 
 py-dependency-injection provides essential features such as dependency scopes, constructor and method injection, factory and instance registration, and tag-based resolution. These tools allow you to decouple your application components effectively, making your codebase more organized and easier to manage.
 
-Key Features
-------------
+Features
+--------
 
 - Dependency Containers
 - Dependency Scopes
@@ -49,4 +49,4 @@ Key Features
 
   py-modindex
 
-You can find the source code at our `GitHub <https://github.com/runemalm/py-dependency-injection>`_ repository.
+You can find the source code for `py-dependency-injection` on `GitHub <https://github.com/runemalm/py-dependency-injection>`_.
