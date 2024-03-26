@@ -4,7 +4,7 @@
 
 # py-dependency-injection
 
-A dependency injection library for Python.
+A simple dependency injection library for Python.
 
 ## Features
 
@@ -18,11 +18,15 @@ A dependency injection library for Python.
 
 ## Compatibility
 
-Compatible with Python versions 3.7, 3.8, 3.9, 3.10, 3.11 and 3.12.
+Compatible with the following Python versions:
+- 3.7
+- 3.8
+- 3.9
+- 3.10
+- 3.11
+- 3.12
 
 ## Installation
-
-Install py-dependency-injection using [pip](https://pip.pypa.io/en/stable/):
 
 ```bash
 $ pip install py-dependency-injection
@@ -35,37 +39,35 @@ Here's a quick example to get you started:
 ```python
 from py_dependency_injection import DependencyContainer
 
-# Define your dependencies and implementations
 class Connection:
     pass
 
 class PostgresConnection(Connection):
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
+    pass
 
-# Create a dependency container
+class UserRepository:
+    def __init__(connection: Connection):
+        self._connection = connection
+
 container = DependencyContainer.get_instance()
 
-# Register your dependencies
-container.register_singleton(
-    Connection,
-    PostgresConnection,
-    constructor_args={"host": "localhost", "port": 5432}
-)
+container.register_singleton(Connection, PostgresConnection)
+container.register_transient(UserRepository)
 
-# Resolve and use your dependencies
-connection = container.resolve(Connection)
-print(connection.host)  # Output: localhost
+user_repository = container.resolve(UserRepository)
 ```
 
 ## Documentation
 
-For detailed documentation, including advanced usage and examples, please visit our [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/) page.
+For more advanced usage and examples, please visit our [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/) page.
 
 ## Contribution
 
 Contributions are welcome! Please feel free to submit pull requests or open issues to improve the library.
+
+## Source Code
+
+You can find the source code for `py-dependency-injection` on [GitHub](https://github.com/runemalm/py-dependency-injection). Feel free to explore, contribute, or fork the repository.
 
 ## License
 
