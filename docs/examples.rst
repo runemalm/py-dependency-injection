@@ -2,6 +2,8 @@
 Creating dependency containers
 ##############################
 
+In this example, we demonstrate how to create and retrieve dependency containers using the `DependencyContainer` class. This is useful when you want to manage dependencies in different contexts or areas of your application.
+
 .. code-block:: python
 
     # Get the default dependency container
@@ -16,6 +18,8 @@ Creating dependency containers
 ####################################
 Registering dependencies with scopes
 ####################################
+
+This example shows how to register dependencies with different scopes (transient, scoped, and singleton). This is important for controlling the lifecycle and reuse of your dependencies.
 
 .. code-block:: python
 
@@ -43,6 +47,8 @@ Registering dependencies with scopes
 Registering with constructor arguments
 ######################################
 
+Here, we illustrate how to register a dependency with constructor arguments. This allows you to provide specific values or configurations to your dependencies when they are instantiated.
+
 .. code-block:: python
 
     # Register with constructor arguments
@@ -60,8 +66,10 @@ Registering with constructor arguments
 Resolving with factory functions
 ################################
 
+In this section, we demonstrate how to register and resolve dependencies using the factory pattern. This provides flexibility in how your dependencies are created and configured. You can use factory functions, factory classes and factory lambdas.
+
 .. note::
-    Any `callable <https://docs.python.org/3/glossary.html#term-callable>`_ can be used as factory function.
+    Any `callable <https://docs.python.org/3/glossary.html#term-callable>`_ can be used as factory.
 
 .. code-block:: python
 
@@ -123,6 +131,8 @@ Resolving with factory functions
 Registering and using instances
 ###############################
 
+This example demonstrates how to register and use instances of your dependencies. This is useful when you want to provide a specific instance of a dependency for use throughout your application.
+
 .. code-block:: python
 
     # Create instance
@@ -146,6 +156,8 @@ Registering and using instances
 Registering and resolving with tags
 ###################################
 
+In this example, we show how to register and resolve dependencies using tags. This allows you to categorize and retrieve specific groups of dependencies based on their tags.
+
 .. code-block:: python
 
     # Register with tags
@@ -168,7 +180,7 @@ Registering and resolving with tags
         }
     )
 
-    # Resolve all dependencies with a specific tag
+    # Resolve all dependencies with the 'Startable' tag
     resolved_dependencies = dependency_container.resolve_all(
         tags={
             Startable
@@ -183,6 +195,8 @@ Registering and resolving with tags
 ###########################
 Using constructor injection
 ###########################
+
+This example illustrates how to use constructor injection to automatically inject dependencies into your classes. This is a common pattern for managing dependencies in object-oriented programming. This is probably how you'll want to resolve 99% of the dependencies in your software application.
 
 .. code-block:: python
 
@@ -213,6 +227,14 @@ Using constructor injection
 Using method injection
 ######################
 
+This example demonstrates how to use method injection to inject dependencies into methods at runtime. This is useful for dynamically providing dependencies to class- or static methods, without affecting the entire class.
+
+.. note::
+    You can pass the arguments ``container_name`` and ``scope_name`` to ``@inject``.
+
+.. note::
+    The ``@inject`` has to be applied to the function after the ``@classmethod`` or ``@staticmethod``.
+
 .. code-block:: python
 
     class OrderController:
@@ -236,6 +258,3 @@ Using method injection
     OrderController.place_order(
         order=Order.create()
     )
-
-.. note::
-    You can pass ``container_name`` and ``scope_name`` arguments to the ``@inject`` decorator to specify container and/or scope. If none of the arguments are passed, the `default container` and the `default scope` will be used.

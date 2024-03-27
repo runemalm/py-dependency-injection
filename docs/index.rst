@@ -1,3 +1,7 @@
+.. warning::
+
+   This library is currently in the alpha stage of development. Expect changes and improvements as we work towards a stable release.
+
 py-dependency-injection
 =======================
 
@@ -15,28 +19,12 @@ Key Advantages
 
 - **Suitable for Learning:** Ideal for beginners exploring the concept of dependency injection.
 - **Base Implementation for Frameworks:** Can be used as a foundational base for frameworks requiring a more specialized interface for dependency injection.
-- **Standalone Solution:** Can be used on its own as a dependency injection solution in any software project.
-
-Features
---------
-
-- Dependency Containers
-- Dependency Scopes
-- Constructor Injection
-- Method Injection
-- Factory Registration
-- Instance Registration
-- Tag-Based Resolution
-
-Documentation
--------------
-
-For a detailed guide on how to use `py-dependency-injection`, please refer to the examples.
+- **Standalone Solution:** Can also be used on its own, as a fully-featured dependency injection solution in any software project.
 
 .. userguide-docs:
 .. toctree::
   :maxdepth: 1
-  :caption: User guide
+  :caption: User Guide
 
   userguide
 
@@ -47,12 +35,12 @@ For a detailed guide on how to use `py-dependency-injection`, please refer to th
 
   examples
 
-.. versionhistory-docs:
+.. releases-docs:
 .. toctree::
   :maxdepth: 1
   :caption: Releases
 
-  versionhistory
+  releases
 
 .. apireference-docs:
 .. toctree::
@@ -61,4 +49,4 @@ For a detailed guide on how to use `py-dependency-injection`, please refer to th
 
   py-modindex
 
-You can find the source code for `py-dependency-injection` on `GitHub <https://github.com/runemalm/py-dependency-injection>`_.
+You can find the source code for `py-dependency-injection` in our `GitHub repository <https://github.com/runemalm/py-dependency-injection>`_.

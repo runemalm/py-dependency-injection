@@ -1,6 +1,9 @@
-############
+###############
+Getting Started
+###############
+
 Installation
-############
+---------------
 
 Install using `pip <http://pypi.python.org/pypi/pip/>`_::
 

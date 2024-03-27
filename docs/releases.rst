@@ -1,10 +1,10 @@
-###############
-Version history
-###############
-
 .. warning::
 
    This library is currently in the alpha stage of development. Expect changes and improvements as we work towards a stable release.
+
+###############
+Version History
+###############
 
 **1.0.0-alpha.7 (2024-03-24)**
 
