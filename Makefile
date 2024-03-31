@@ -74,16 +74,16 @@ sphinx-autobuild: ## activate autobuild of docs
 	pipenv run sphinx-autobuild docs docs/_build/html --watch $(SRC)
 
 ################################################################################
-# FORMAT & LINT
+# PRE-COMMIT HOOKS
 ################################################################################
 
 .PHONY: black
 black: ## run black auto-formatting
-	pipenv run black $(SRC) $(TESTS) --line-length=88
+	pipenv run black $(SRC) $(TESTS)
 
 .PHONY: black-check
 black-check: ## check code don't violate black formatting rules
-	pipenv run black --check $(SRC) --line-length=88
+	pipenv run black --check $(SRC)
 
 .PHONY: flake
 flake: ## lint code with flake
