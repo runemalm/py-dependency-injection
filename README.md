@@ -18,14 +18,9 @@ A prototypical dependency injection library for Python.
 
 ## Compatibility
 
-Compatible with the following Python versions:
+The library is compatible with the following Python versions:
 
-- 3.7
-- 3.8
-- 3.9
-- 3.10
-- 3.11
-- 3.12
+- 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
 
 ## Installation
 
@@ -38,24 +33,40 @@ $ pip install py-dependency-injection
 Here's a quick example to get you started:
 
 ```python
-from py_dependency_injection import DependencyContainer
+from dependency_injection.container import DependencyContainer
 
+# Define an abstract Connection
 class Connection:
     pass
 
+# Define a specific implementation of the Connection
 class PostgresConnection(Connection):
-    pass
+    def connect(self):
+        print("Connecting to PostgreSQL database...")
 
+# Define a repository that depends on some type of Connection
 class UserRepository:
-    def __init__(connection: Connection):
+    def __init__(self, connection: Connection):
         self._connection = connection
 
+    def fetch_users(self):
+        self._connection.connect()
+        print("Fetching users from the database...")
+
+# Get an instance of the (default) DependencyContainer
 container = DependencyContainer.get_instance()
 
+# Register the specific connection type as a singleton instance
 container.register_singleton(Connection, PostgresConnection)
+
+# Register UserRepository as a transient (new instance every time)
 container.register_transient(UserRepository)
 
+# Resolve an instance of UserRepository, automatically injecting the required Connection
 user_repository = container.resolve(UserRepository)
+
+# Use the resolved user_repository to perform an operation
+user_repository.find_all()
 ```
 
 ## Documentation
