@@ -35,15 +35,16 @@ Here's a quick example to get you started:
 ```python
 from dependency_injection.container import DependencyContainer
 
-# Define dependency abstraction
+# Define an abstract Connection
 class Connection:
     pass
 
-# Define dependency implementations
+# Define a specific implementation of the Connection
 class PostgresConnection(Connection):
     def connect(self):
         print("Connecting to PostgreSQL database...")
 
+# Define a repository that depends on some type of Connection
 class UserRepository:
     def __init__(self, connection: Connection):
         self._connection = connection
@@ -52,17 +53,19 @@ class UserRepository:
         self._connection.connect()
         print("Fetching users from the database...")
 
-# Get a dependency container
+# Get an instance of the (default) DependencyContainer
 container = DependencyContainer.get_instance()
 
-# Register dependencies
+# Register the specific connection type as a singleton instance
 container.register_singleton(Connection, PostgresConnection)
+
+# Register UserRepository as a transient (new instance every time)
 container.register_transient(UserRepository)
 
-# Resolve dependencies
+# Resolve an instance of UserRepository, automatically injecting the required Connection
 user_repository = container.resolve(UserRepository)
 
-# Use the dependencies
+# Use the resolved user_repository to perform an operation
 user_repository.find_all()
 ```
 
