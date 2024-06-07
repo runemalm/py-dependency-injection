@@ -6,6 +6,12 @@
 Version History
 ###############
 
+**1.0.0-alpha.8 (2024-06-07)**
+
+- Bug Fix: Fixed an issue in the dependency resolution logic where registered constructor arguments were not properly merged with automatically injected dependencies. This ensures that constructor arguments specified during registration are correctly combined with dependencies resolved by the container.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.8>`_
+
 **1.0.0-alpha.7 (2024-03-24)**
 
 - Documentation Update: Updated the documentation to provide clearer instructions and more comprehensive examples.
