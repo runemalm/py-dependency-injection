@@ -6,6 +6,8 @@ In this example, we demonstrate how to create and retrieve dependency containers
 
 .. code-block:: python
 
+    from dependency_injection.container import DependencyContainer
+
     # Get the default dependency container
     dependency_container = DependencyContainer.get_instance()
 
