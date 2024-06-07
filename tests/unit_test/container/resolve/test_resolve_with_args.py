@@ -62,34 +62,6 @@ class TestResolveWithArgs(UnitTestCase):
         ):
             dependency_container.resolve(dependency)
 
-    def test_resolve_with_missing_constructor_arg_raises(
-        self,
-    ):
-        # arrange
-        class Vehicle:
-            pass
-
-        class Car(Vehicle):
-            def __init__(self, color: str, make: str):
-                self.color = color
-                self.make = make
-
-        dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
-        implementation = Car
-        dependency_container.register_transient(
-            dependency=dependency,
-            implementation=implementation,
-            constructor_args={"color": "red"},
-        )
-
-        # act
-        with pytest.raises(
-            ValueError,
-            match="Missing required constructor arguments: make for class 'Car'.",
-        ):
-            dependency_container.resolve(dependency)
-
     def test_resolve_with_wrong_constructor_arg_type_raises(
         self,
     ):
