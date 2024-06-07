@@ -4,22 +4,21 @@
 
 # py-dependency-injection
 
-A dependency injection library for Python.
+A prototypical dependency injection library for Python.
 
 ## Features
 
-- **Dependency Container:** Manage and resolve object dependencies with a flexible and easy-to-use container.
-- **Dependency Scopes:** Define different scopes for dependencies, allowing for fine-grained control over their lifecycle.
-- **Constructor Injection:** Inject dependencies into constructors, promoting cleaner and more modular code.
-- **Method Injection:** Inject dependencies into methods, enabling more flexible dependency management within class instances.
-- **Tags:** Register and resolve dependencies using tags, facilitating flexible and dynamic dependency management.
-- **Factory Registration:** Register dependencies using factory functions for dynamic instantiation.
-- **Instance Registration:** Register existing instances as dependencies, providing more control over object creation.
-- **Python Compatibility:** Compatible with Python versions 3.7 to 3.12, ensuring broad compatibility with existing and future Python projects.
+- **Scoped Registrations:** Define the lifetime of your dependencies as transient, scoped, or singleton.
+- **Constructor Injection:** Automatically resolve and inject dependencies when creating instances.
+- **Method Injection:** Inject dependencies into methods using a simple decorator.
+- **Factory Functions:** Register factory functions, classes, or lambdas to create dependencies.
+- **Instance Registration:** Register existing instances as dependencies.
+- **Tag-Based Registration and Resolution:** Organize and resolve dependencies based on tags.
+- **Multiple Containers:** Support for using multiple dependency containers.
 
 ## Compatibility
 
-This library is compatible with the following Python versions:
+The library is compatible with the following Python versions:
 
 - 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
 
@@ -29,137 +28,69 @@ This library is compatible with the following Python versions:
 $ pip install py-dependency-injection
 ```
 
-## Basic Usage
+## Quick Start
 
-The following examples demonstrates how to use the library.
-
-### Creating a Dependency Container
+Here's a quick example to get you started:
 
 ```python
-# Get the default dependency container
-dependency_container = DependencyContainer.get_instance()
+from dependency_injection.container import DependencyContainer
 
-# Create additional named containers if needed
-another_container = DependencyContainer.get_instance(name="another_container")
-```
+# Define an abstract Connection
+class Connection:
+    pass
 
-### Registering Dependencies with Scopes
+# Define a specific implementation of the Connection
+class PostgresConnection(Connection):
+    def connect(self):
+        print("Connecting to PostgreSQL database...")
 
-```python
-# Register a transient dependency (a new instance every time)
-dependency_container.register_transient(Connection, PostgresConnection)
-
-# Register a scoped dependency (a new instance per scope)
-dependency_container.register_scoped(Connection, PostgresConnection, scope_name="http_request")
-
-# Register a singleton dependency (a single instance for the container's lifetime)
-dependency_container.register_singleton(Connection, PostgresConnection)
-```
-
-### Using Constructor Arguments
-
-```python
-# Register a dependency with constructor arguments
-dependency_container.register_transient(
-    Connection,
-    PostgresConnection,
-    constructor_args={"host": "localhost", "port": 5432}
-)
-```
-
-### Using Factory Functions
-
-```python
-# Define a factory function
-def create_connection(host: str, port: int) -> Connection:
-    return PostgresConnection(host=host, port=port)
-
-# Register the factory function
-dependency_container.register_factory(Connection, create_connection, factory_args={"host": "localhost", "port": 5432})
-```
-
-Besides functions, you can also use lambdas and class functions. Read more in the [documentation](https://py-dependency-injection.readthedocs.io/en/latest/userguide.html#using-factory-functions).
-
-### Registering and Using Instances
-
-```python
-# Create an instance
-my_connection = PostgresConnection(host="localhost", port=5432)
-
-# Register the instance
-dependency_container.register_instance(Connection, my_connection)
-
-# Resolve the instance
-resolved_connection = dependency_container.resolve(Connection)
-print(resolved_connection.host)  # Output: localhost
-```
-
-### Registering and Resolving with Tags
-
-```python
-# Register dependencies with tags
-dependency_container.register_transient(Connection, PostgresConnection, tags={"Querying", "Startable"})
-dependency_container.register_scoped(BusConnection, KafkaBusConnection, tags={"Publishing", "Startable"})
-
-# Resolve dependencies by tags
-startable_dependencies = dependency_container.resolve_all(tags={"Startable"})
-for dependency in startable_dependencies:
-    dependency.start()
-```
-
-### Using Constructor Injection
-
-```python
-class OrderRepository:
+# Define a repository that depends on some type of Connection
+class UserRepository:
     def __init__(self, connection: Connection):
-        self.connection = connection
+        self._connection = connection
 
-# Register dependencies
-dependency_container.register_transient(OrderRepository)
-dependency_container.register_singleton(Connection, PostgresConnection)
+    def fetch_users(self):
+        self._connection.connect()
+        print("Fetching users from the database...")
 
-# Resolve the OrderRepository with injected dependencies
-repository = dependency_container.resolve(OrderRepository)
-print(repository.connection.__class__.__name__)  # Output: PostgresConnection
+# Get an instance of the (default) DependencyContainer
+container = DependencyContainer.get_instance()
+
+# Register the specific connection type as a singleton instance
+container.register_singleton(Connection, PostgresConnection)
+
+# Register UserRepository as a transient (new instance every time)
+container.register_transient(UserRepository)
+
+# Resolve an instance of UserRepository, automatically injecting the required Connection
+user_repository = container.resolve(UserRepository)
+
+# Use the resolved user_repository to perform an operation
+user_repository.find_all()
 ```
-
-### Using Method Injection
-
-```python
-class OrderController:
-    @staticmethod
-    @inject()
-    def place_order(order: Order, repository: OrderRepository):
-        order.status = "placed"
-        repository.save(order)
-
-# Register the dependency
-dependency_container.register_transient(OrderRepository)
-dependency_container.register_singleton(Connection, PostgresConnection)
-
-# Use method injection to inject the dependency
-my_order = Order.create()
-OrderController.place_order(order=my_order)  # The repository instance will be automatically injected
-```
-
-You can also specify container and scope using the decorator arguments `container_name` and `scope_name`.
 
 ## Documentation
 
-For the latest documentation, visit [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/).
+For more advanced usage and examples, please visit our [readthedocs](https://py-dependency-injection.readthedocs.io/en/latest/) page.
 
-## Contribution
+## License
 
-To contribute, create a pull request on the develop branch following the [git flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model.
+`py-dependency-injection` is released under the GPL 3 license. See [LICENSE](LICENSE) for more details.
+
+## Source Code
+
+You can find the source code for `py-dependency-injection` on [GitHub](https://github.com/runemalm/py-dependency-injection).
 
 ## Release Notes
+
+### [1.0.0-alpha.8](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.8) (2024-06-07)
+
+- Bug Fix: Fixed an issue in the dependency resolution logic where registered constructor arguments were not properly merged with automatically injected dependencies. This ensures that constructor arguments specified during registration are correctly combined with dependencies resolved by the container.
 
 ### [1.0.0-alpha.7](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.7) (2024-03-24)
 
 - Documentation Update: Updated the documentation to provide clearer instructions and more comprehensive examples.
 - Preparing for Beta Release: Made necessary adjustments and refinements in preparation for the upcoming first beta release.
-
-This release focuses on enhancing the documentation and making final preparations for the transition to the beta phase. If you have any more updates or need further assistance, feel free to reach out!
 
 ### [1.0.0-alpha.6](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.6) (2024-03-23)
 

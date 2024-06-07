@@ -35,7 +35,7 @@ author = "David Runemalm"
 version = "1.0"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0.0-alpha.7"
+release = "1.0.0-alpha.8"
 
 
 # -- General configuration ---------------------------------------------------
@@ -84,6 +84,6 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/", None),
+    "python": ("https://docs.python.org/3", None),
     "sqlalchemy": ("http://docs.sqlalchemy.org/en/latest/", None),
 }

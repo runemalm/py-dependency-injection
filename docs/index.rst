@@ -1,52 +1,46 @@
+.. warning::
+
+   This library is currently in the alpha stage of development. Expect changes and improvements as we work towards a stable release.
+
 py-dependency-injection
 =======================
 
-Welcome to the documentation for the `py-dependency-injection` library.
+A prototypical dependency injection library for Python.
 
-Introduction
-============
+Purpose
+-------
 
-The `py-dependency-injection` library simplifies and enhances the management of dependencies in your Python projects. Whether you're new to the concept of dependency injection or an experienced developer seeking an efficient solution, this guide is designed to help you grasp the fundamentals and leverage the features offered by the library.
+Dependency injection is a powerful design pattern that promotes loose coupling and enhances testability in software applications. `py-dependency-injection` is a prototypical implementation of this pattern, designed to provide the essential features needed for effective dependency management in both small scripts and larger software projects.
 
-Features
-============
+This library is particularly suited for beginners exploring the concept of dependency injection, as it offers a straightforward and easy-to-understand implementation. It serves as an excellent starting point for learning the pattern and can also be used as a foundational base for frameworks requiring a more specialized interface for dependency injection.
 
-- **Dependency Container:** Manage and resolve object dependencies with a flexible and easy-to-use container.
-- **Dependency Scopes:** Define different scopes for dependencies, allowing for fine-grained control over their lifecycle.
-- **Constructor Injection:** Inject dependencies into constructors, promoting cleaner and more modular code.
-- **Method Injection:** Inject dependencies into methods, enabling more flexible dependency management within class instances.
-- **Tags:** Register and resolve dependencies using tags, facilitating flexible and dynamic dependency management.
-- **Factory Registration:** Register dependencies using factory functions for dynamic instantiation.
-- **Instance Registration:** Register existing instances as dependencies, providing more control over object creation.
-- **Python Compatibility:** Compatible with Python versions 3.7 to 3.12, ensuring broad compatibility with existing and future Python projects.
+Key Advantages
+--------------
+
+- **Suitable for Learning:** Ideal for beginners exploring the concept of dependency injection.
+- **Base Implementation for Frameworks:** Can be used as a foundational base for frameworks requiring a more specialized interface for dependency injection.
+- **Standalone Solution:** Can also be used on its own, as a fully-featured dependency injection solution in any software project.
 
 .. userguide-docs:
 .. toctree::
   :maxdepth: 1
-  :caption: User guide
+  :caption: User Guide
 
   userguide
 
-.. concepts-docs:
+.. examples-docs:
 .. toctree::
   :maxdepth: 1
-  :caption: Basic Concepts
+  :caption: Examples
 
-  concepts
+  examples
 
-.. versionhistory-docs:
+.. releases-docs:
 .. toctree::
   :maxdepth: 1
   :caption: Releases
 
-  versionhistory
-
-.. community-docs:
-.. toctree::
-  :maxdepth: 1
-  :caption: Community
-
-  community
+  releases
 
 .. apireference-docs:
 .. toctree::
@@ -54,3 +48,5 @@ Features
   :caption: API Reference
 
   py-modindex
+
+You can find the source code for `py-dependency-injection` in our `GitHub repository <https://github.com/runemalm/py-dependency-injection>`_.
