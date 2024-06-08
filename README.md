@@ -4,7 +4,7 @@
 
 # py-dependency-injection
 
-A prototypical dependency injection library for Python.
+A dependency injection library for Python.
 
 ## Features
 

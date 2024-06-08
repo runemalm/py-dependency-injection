@@ -9,7 +9,7 @@ setup(
     version="1.0.0-alpha.8",
     author="David Runemalm, 2024",
     author_email="david.runemalm@gmail.com",
-    description="A prototypical dependency injection library for Python.",
+    description="A dependency injection library for Python.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/runemalm/py-dependency-injection",
