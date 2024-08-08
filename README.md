@@ -83,6 +83,11 @@ You can find the source code for `py-dependency-injection` on [GitHub](https://g
 
 ## Release Notes
 
+### [1.0.0-alpha.9](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.9) (2024-08-08)
+
+- **Breaking Change**: Removed constructor injection when resolving dataclasses.
+- **Enhancement**: Added dependency container getter and setter for registrations. Also added new `RegistrationSerializer` class for for serializing and deserializing them. These additions provide a more flexible way to interact with the container's registrations.
+
 ### [1.0.0-alpha.8](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.8) (2024-06-07)
 
 - **Bug Fix**: Fixed an issue in the dependency resolution logic where registered constructor arguments were not properly merged with automatically injected dependencies. This ensures that constructor arguments specified during registration are correctly combined with dependencies resolved by the container.
