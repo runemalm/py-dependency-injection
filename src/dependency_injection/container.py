@@ -1,4 +1,5 @@
 import inspect
+from dataclasses import is_dataclass
 
 from typing import Any, Callable, Dict, List, Optional, TypeVar, Type
 
@@ -176,6 +177,9 @@ class DependencyContainer(metaclass=SingletonMeta):
         scope_name: str = None,
         constructor_args: Optional[Dict[str, Any]] = None,
     ) -> Type:
+        if is_dataclass(implementation):
+            return implementation()  # Do not inject into dataclasses
+
         constructor = inspect.signature(implementation.__init__)
         params = constructor.parameters
 
