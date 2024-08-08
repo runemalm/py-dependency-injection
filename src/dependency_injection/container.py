@@ -1,4 +1,5 @@
 import inspect
+from dataclasses import is_dataclass
 
 from typing import Any, Callable, Dict, List, Optional, TypeVar, Type
 
@@ -18,6 +19,7 @@ class DependencyContainer(metaclass=SingletonMeta):
         self._registrations = {}
         self._singleton_instances = {}
         self._scoped_instances = {}
+        self._has_resolved = False
 
     @classmethod
     def get_instance(cls, name: str = None) -> Self:
@@ -28,6 +30,16 @@ class DependencyContainer(metaclass=SingletonMeta):
             cls._instances[(cls, name)] = cls(name)
 
         return cls._instances[(cls, name)]
+
+    def get_registrations(self) -> Dict[Type, Registration]:
+        return self._registrations
+
+    def set_registrations(self, registrations) -> None:
+        if self._has_resolved:
+            raise Exception(
+                "You can't set registrations after a dependency has been resolved."
+            )
+        self._registrations = registrations
 
     def register_transient(
         self,
@@ -98,6 +110,8 @@ class DependencyContainer(metaclass=SingletonMeta):
         self._singleton_instances[dependency] = instance
 
     def resolve(self, dependency: Type, scope_name: str = DEFAULT_SCOPE_NAME) -> Type:
+        self._has_resolved = True
+
         if scope_name not in self._scoped_instances:
             self._scoped_instances[scope_name] = {}
 
@@ -176,6 +190,9 @@ class DependencyContainer(metaclass=SingletonMeta):
         scope_name: str = None,
         constructor_args: Optional[Dict[str, Any]] = None,
     ) -> Type:
+        if is_dataclass(implementation):
+            return implementation()  # Do not inject into dataclasses
+
         constructor = inspect.signature(implementation.__init__)
         params = constructor.parameters
 
