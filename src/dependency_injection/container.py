@@ -154,12 +154,30 @@ class DependencyContainer(metaclass=SingletonMeta):
 
         raise ValueError(f"Invalid dependency scope: {scope}")
 
-    def resolve_all(self, tags: Optional[set] = None) -> List[Any]:
-        tags = tags or []
+    def resolve_all(
+        self, tags: Optional[set] = None, match_all_tags: bool = False
+    ) -> List[Any]:
+        tags = tags or set()
         resolved_dependencies = []
+
         for registration in self._registrations.values():
-            if not len(tags) or tags.intersection(registration.tags):
+            if not tags:
+                # If no tags are provided, resolve all dependencies
                 resolved_dependencies.append(self.resolve(registration.dependency))
+            else:
+                if match_all_tags:
+                    # Match dependencies that have all the specified tags
+                    if registration.tags and tags.issubset(registration.tags):
+                        resolved_dependencies.append(
+                            self.resolve(registration.dependency)
+                        )
+                else:
+                    # Match dependencies that have any of the specified tags
+                    if registration.tags and tags.intersection(registration.tags):
+                        resolved_dependencies.append(
+                            self.resolve(registration.dependency)
+                        )
+
         return resolved_dependencies
 
     def _validate_constructor_args(

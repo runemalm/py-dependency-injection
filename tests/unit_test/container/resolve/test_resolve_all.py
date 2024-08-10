@@ -65,6 +65,44 @@ class TestResolveAll(UnitTestCase):
             )
         )
 
+    def test_returns_only_dependencies_matching_all_tags_when_match_all_tags_is_true(
+        self,
+    ):
+        # arrange
+        class Driveable:
+            pass
+
+        class Transporting:
+            pass
+
+        class Vehicle:
+            pass
+
+        class Car(Vehicle):
+            pass
+
+        class Innovation:
+            pass
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_transient(Vehicle, tags={Driveable, Transporting})
+        dependency_container.register_transient(Car, tags={Driveable, Transporting})
+        dependency_container.register_transient(Innovation, tags={Driveable})
+
+        # act
+        resolved_dependencies = dependency_container.resolve_all(
+            tags={Driveable, Transporting}, match_all_tags=True
+        )
+
+        # assert
+        self.assertEqual(len(resolved_dependencies), 2)
+        self.assertTrue(
+            any(isinstance(dependency, Vehicle) for dependency in resolved_dependencies)
+        )
+        self.assertTrue(
+            any(isinstance(dependency, Car) for dependency in resolved_dependencies)
+        )
+
     def test_does_not_return_dependency_without_tag(
         self,
     ):
