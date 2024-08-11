@@ -188,3 +188,22 @@ class TestResolveWithInjection(UnitTestCase):
         self.assertEqual(len(resolved_dependency.white_colors), 1)
         self.assertIsInstance(resolved_dependency.white_colors[0], White)
         self.assertNotIsInstance(resolved_dependency.white_colors[0], NonWhite)
+
+    def test_resolve_injects_empty_list_if_no_tags_match(self):
+        # arrange
+        class PrimaryPort:
+            pass
+
+        class Application:
+            def __init__(self, primary_ports: List[Tagged[PrimaryPort]]):
+                self.primary_ports = primary_ports
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_transient(Application)
+
+        # act
+        resolved_dependency = dependency_container.resolve(Application)
+
+        # assert
+        self.assertIsInstance(resolved_dependency, Application)
+        self.assertEqual(len(resolved_dependency.primary_ports), 0)
