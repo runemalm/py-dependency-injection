@@ -3,6 +3,9 @@ from dataclasses import is_dataclass
 
 from typing import Any, Callable, Dict, List, Optional, TypeVar, Type
 
+from dependency_injection.tags.all_tagged import AllTagged
+from dependency_injection.tags.any_tagged import AnyTagged
+from dependency_injection.tags.tagged import Tagged
 from dependency_injection.registration import Registration
 from dependency_injection.scope import DEFAULT_SCOPE_NAME, Scope
 from dependency_injection.utils.singleton_meta import SingletonMeta
@@ -225,12 +228,47 @@ class DependencyContainer(metaclass=SingletonMeta):
                     # **kwargs parameter
                     pass
                 else:
-                    # Check if constructor_args has an argument with the same name
+                    # Priority 1: Check if constructor_args has argument with same name
                     if constructor_args and param_name in constructor_args:
                         dependencies[param_name] = constructor_args[param_name]
                     else:
-                        dependencies[param_name] = self.resolve(
-                            param_info.annotation, scope_name=scope_name
-                        )
+                        # Priority 2: Handle List[Tagged], List[AnyTagged[...]], ...
+                        tagged_dependencies = []
+                        if (
+                            hasattr(param_info.annotation, "__origin__")
+                            and param_info.annotation.__origin__ is list
+                        ):
+                            inner_type = param_info.annotation.__args__[0]
+
+                            if isinstance(inner_type, Tagged):
+                                tagged_dependencies = self.resolve_all(
+                                    tags={inner_type.tag}
+                                )
+
+                            elif isinstance(inner_type, AnyTagged):
+                                tagged_dependencies = self.resolve_all(
+                                    tags=inner_type.tags, match_all_tags=False
+                                )
+
+                            elif isinstance(inner_type, AllTagged):
+                                tagged_dependencies = self.resolve_all(
+                                    tags=inner_type.tags, match_all_tags=True
+                                )
+
+                            dependencies[param_name] = tagged_dependencies
+
+                        else:
+                            # Priority 3: Regular type resolution
+                            try:
+                                dependencies[param_name] = self.resolve(
+                                    param_info.annotation, scope_name=scope_name
+                                )
+                            except KeyError:
+                                raise ValueError(
+                                    f"Cannot resolve dependency for parameter "
+                                    f"'{param_name}' of type "
+                                    f"'{param_info.annotation}' in class "
+                                    f"'{implementation.__name__}'."
+                                )
 
         return implementation(**dependencies)
