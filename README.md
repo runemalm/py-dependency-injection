@@ -83,6 +83,10 @@ You can find the source code for `py-dependency-injection` on [GitHub](https://g
 
 ## Release Notes
 
+### [1.0.0-alpha.10](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.10) (2024-08-11)
+
+- **Tagged Constructor Injection**: Introduced support for constructor injection using the `Tagged`, `AnyTagged`, and `AllTagged` classes. This allows for seamless injection of dependencies that have been registered with specific tags, enhancing flexibility and control in managing your application's dependencies.
+
 ### [1.0.0-alpha.9](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.9) (2024-08-08)
 
 - **Breaking Change**: Removed constructor injection when resolving dataclasses.
