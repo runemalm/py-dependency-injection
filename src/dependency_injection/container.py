@@ -222,37 +222,39 @@ class DependencyContainer(metaclass=SingletonMeta):
         dependencies = {}
         for param_name, param_info in params.items():
             if param_name != "self":
-                # Check for *args and **kwargs
                 if param_info.kind == inspect.Parameter.VAR_POSITIONAL:
-                    # *args parameter
                     pass
                 elif param_info.kind == inspect.Parameter.VAR_KEYWORD:
-                    # **kwargs parameter
                     pass
                 else:
-                    # Priority 1: Check if constructor_args has argument with same name
                     if constructor_args and param_name in constructor_args:
                         dependencies[param_name] = constructor_args[param_name]
                     else:
-                        # Priority 2: Handle List[Tagged], List[AnyTagged[...]], ...
-                        tagged_dependencies = []
                         if (
                             hasattr(param_info.annotation, "__origin__")
                             and param_info.annotation.__origin__ is list
                         ):
                             inner_type = param_info.annotation.__args__[0]
 
-                            if isinstance(inner_type, Tagged):
+                            tagged_dependencies = []
+                            if isinstance(inner_type, type) and issubclass(
+                                inner_type, Tagged
+                            ):
+                                tagged_type = inner_type.tag
                                 tagged_dependencies = self.resolve_all(
-                                    tags={inner_type.tag}
+                                    tags={tagged_type}
                                 )
 
-                            elif isinstance(inner_type, AnyTagged):
+                            elif isinstance(inner_type, type) and issubclass(
+                                inner_type, AnyTagged
+                            ):
                                 tagged_dependencies = self.resolve_all(
                                     tags=inner_type.tags, match_all_tags=False
                                 )
 
-                            elif isinstance(inner_type, AllTagged):
+                            elif isinstance(inner_type, type) and issubclass(
+                                inner_type, AllTagged
+                            ):
                                 tagged_dependencies = self.resolve_all(
                                     tags=inner_type.tags, match_all_tags=True
                                 )
@@ -260,7 +262,6 @@ class DependencyContainer(metaclass=SingletonMeta):
                             dependencies[param_name] = tagged_dependencies
 
                         else:
-                            # Priority 3: Regular type resolution
                             try:
                                 dependencies[param_name] = self.resolve(
                                     param_info.annotation, scope_name=scope_name
