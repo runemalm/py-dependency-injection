@@ -225,6 +225,56 @@ This example illustrates how to use constructor injection to automatically injec
     print(repository.connection.__class__.__name__)  # Output: PostgresConnection
 
 
+######################################################
+Using constructor injection with tagged dependencies
+######################################################
+
+This example demonstrates how to use constructor injection to automatically inject tagged dependencies into your classes. By leveraging tags, you can group and categorize dependencies, enabling automatic injection based on specific criteria.
+
+.. code-block:: python
+
+    class PrimaryPort:
+        pass
+
+    class SecondaryPort:
+        pass
+
+    class HttpAdapter(PrimaryPort):
+        pass
+
+    class PostgresCarRepository(SecondaryPort):
+        pass
+
+    class Application:
+        def __init__(self, primary_ports: List[Tagged[PrimaryPort]], secondary_ports: List[Tagged[SecondaryPort]]):
+            self.primary_ports = primary_ports
+            self.secondary_ports = secondary_ports
+
+    # Register dependencies with tags
+    dependency_container.register_transient(HttpAdapter, tags={PrimaryPort})
+    dependency_container.register_transient(PostgresCarRepository, tags={SecondaryPort})
+
+    # Register the Application class to have its dependencies injected
+    dependency_container.register_transient(Application)
+
+    # Resolve the Application class, with tagged dependencies automatically injected
+    application = dependency_container.resolve(Application)
+
+    # Use the injected dependencies
+    print(f"Primary ports: {len(application.primary_ports)}")  # Output: Primary ports: 1
+    print(f"Secondary ports: {len(application.secondary_ports)}")  # Output: Secondary ports: 1
+    print(f"Primary port instance: {type(application.primary_ports[0]).__name__}")  # Output: HttpAdapter
+    print(f"Secondary port instance: {type(application.secondary_ports[0]).__name__}")  # Output: PostgresCarRepository
+
+
+In this example, the `Application` class expects lists of instances tagged with `PrimaryPort` and `SecondaryPort`. By tagging and registering these dependencies, the container automatically injects the correct instances into the `Application` class when it is resolved.
+
+Tags offer a powerful way to manage dependencies, ensuring that the right instances are injected based on your application's needs.
+
+.. note::
+    You can also use the ``AnyTagged`` and ``AllTagged`` classes to inject dependencies based on more complex tagging logic. ``AnyTagged`` allows injection of any dependency matching one or more specified tags, while ``AllTagged`` requires the dependency to match all specified tags before injection. This provides additional flexibility in managing and resolving dependencies in your application.
+
+
 ######################
 Using method injection
 ######################
