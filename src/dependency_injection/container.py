@@ -26,8 +26,7 @@ class DependencyContainer(metaclass=SingletonMeta):
 
     @classmethod
     def get_instance(cls, name: str = None) -> Self:
-        if name is None:
-            name = DEFAULT_CONTAINER_NAME
+        name = name or DEFAULT_CONTAINER_NAME
 
         if (cls, name) not in cls._instances:
             cls._instances[(cls, name)] = cls(name)
@@ -51,11 +50,7 @@ class DependencyContainer(metaclass=SingletonMeta):
         tags: Optional[set] = None,
         constructor_args: Optional[Dict[str, Any]] = None,
     ) -> None:
-        if implementation is None:
-            implementation = dependency
-        if dependency in self._registrations:
-            raise ValueError(f"Dependency {dependency} is already registered.")
-        self._registrations[dependency] = Registration(
+        self._register(
             dependency, implementation, Scope.TRANSIENT, tags, constructor_args
         )
 
@@ -66,13 +61,7 @@ class DependencyContainer(metaclass=SingletonMeta):
         tags: Optional[set] = None,
         constructor_args: Optional[Dict[str, Any]] = None,
     ) -> None:
-        if implementation is None:
-            implementation = dependency
-        if dependency in self._registrations:
-            raise ValueError(f"Dependency {dependency} is already registered.")
-        self._registrations[dependency] = Registration(
-            dependency, implementation, Scope.SCOPED, tags, constructor_args
-        )
+        self._register(dependency, implementation, Scope.SCOPED, tags, constructor_args)
 
     def register_singleton(
         self,
@@ -81,11 +70,7 @@ class DependencyContainer(metaclass=SingletonMeta):
         tags: Optional[set] = None,
         constructor_args: Optional[Dict[str, Any]] = None,
     ) -> None:
-        if implementation is None:
-            implementation = dependency
-        if dependency in self._registrations:
-            raise ValueError(f"Dependency {dependency} is already registered.")
-        self._registrations[dependency] = Registration(
+        self._register(
             dependency, implementation, Scope.SINGLETON, tags, constructor_args
         )
 
@@ -96,64 +81,77 @@ class DependencyContainer(metaclass=SingletonMeta):
         factory_args: Optional[Dict[str, Any]] = None,
         tags: Optional[set] = None,
     ) -> None:
-        if dependency in self._registrations:
-            raise ValueError(f"Dependency {dependency} is already registered.")
+        self._validate_registration(dependency)
         self._registrations[dependency] = Registration(
-            dependency, None, Scope.FACTORY, None, tags, factory, factory_args
+            dependency, None, Scope.FACTORY, tags, None, factory, factory_args
         )
 
     def register_instance(
         self, dependency: Type, instance: Any, tags: Optional[set] = None
     ) -> None:
-        if dependency in self._registrations:
-            raise ValueError(f"Dependency {dependency} is already registered.")
+        self._validate_registration(dependency)
         self._registrations[dependency] = Registration(
-            dependency, type(instance), Scope.SINGLETON, constructor_args={}, tags=tags
+            dependency, type(instance), Scope.SINGLETON, tags=tags
         )
         self._singleton_instances[dependency] = instance
 
-    def resolve(self, dependency: Type, scope_name: str = DEFAULT_SCOPE_NAME) -> Type:
+    def _register(
+        self,
+        dependency: Type,
+        implementation: Optional[Type],
+        scope: Scope,
+        tags: Optional[set],
+        constructor_args: Optional[Dict[str, Any]],
+    ) -> None:
+        implementation = implementation or dependency
+        self._validate_registration(dependency)
+        self._registrations[dependency] = Registration(
+            dependency, implementation, scope, tags, constructor_args
+        )
+
+    def resolve(self, dependency: Type, scope_name: str = DEFAULT_SCOPE_NAME) -> Any:
         self._has_resolved = True
 
         if scope_name not in self._scoped_instances:
             self._scoped_instances[scope_name] = {}
 
-        if dependency not in self._registrations:
+        registration = self._registrations.get(dependency)
+        if not registration:
             raise KeyError(f"Dependency {dependency.__name__} is not registered.")
 
-        registration = self._registrations[dependency]
-        scope = registration.scope
-        implementation = registration.implementation
-        constructor_args = registration.constructor_args
+        constructor_args = registration.constructor_args or {}
+        self._validate_constructor_args(constructor_args, registration.implementation)
 
-        self._validate_constructor_args(
-            constructor_args=constructor_args, implementation=implementation
-        )
+        return self._resolve_by_scope(registration, scope_name)
+
+    def _resolve_by_scope(self, registration: Registration, scope_name: str) -> Any:
+        scope = registration.scope
 
         if scope == Scope.TRANSIENT:
             return self._inject_dependencies(
-                implementation=implementation, constructor_args=constructor_args
+                registration.implementation,
+                constructor_args=registration.constructor_args,
             )
         elif scope == Scope.SCOPED:
-            if dependency not in self._scoped_instances[scope_name]:
-                self._scoped_instances[scope_name][
-                    dependency
-                ] = self._inject_dependencies(
-                    implementation=implementation,
-                    scope_name=scope_name,
-                    constructor_args=constructor_args,
+            instances = self._scoped_instances[scope_name]
+            if registration.dependency not in instances:
+                instances[registration.dependency] = self._inject_dependencies(
+                    registration.implementation,
+                    scope_name,
+                    registration.constructor_args,
                 )
-            return self._scoped_instances[scope_name][dependency]
+            return instances[registration.dependency]
         elif scope == Scope.SINGLETON:
-            if dependency not in self._singleton_instances:
-                self._singleton_instances[dependency] = self._inject_dependencies(
-                    implementation=implementation, constructor_args=constructor_args
+            if registration.dependency not in self._singleton_instances:
+                self._singleton_instances[
+                    registration.dependency
+                ] = self._inject_dependencies(
+                    registration.implementation,
+                    constructor_args=registration.constructor_args,
                 )
-            return self._singleton_instances[dependency]
+            return self._singleton_instances[registration.dependency]
         elif scope == Scope.FACTORY:
-            factory = registration.factory
-            factory_args = registration.factory_args or {}
-            return factory(**factory_args)
+            return registration.factory(**(registration.factory_args or {}))
 
         raise ValueError(f"Invalid dependency scope: {scope}")
 
@@ -204,6 +202,10 @@ class DependencyContainer(metaclass=SingletonMeta):
                         f"Expected type: {expected_type}, "
                         f"provided type: {type(arg_value)}."
                     )
+
+    def _validate_registration(self, dependency: Type) -> None:
+        if dependency in self._registrations:
+            raise ValueError(f"Dependency {dependency} is already registered.")
 
     def _inject_dependencies(
         self,
