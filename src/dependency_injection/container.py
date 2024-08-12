@@ -33,16 +33,6 @@ class DependencyContainer(metaclass=SingletonMeta):
 
         return cls._instances[(cls, name)]
 
-    def get_registrations(self) -> Dict[Type, Registration]:
-        return self._registrations
-
-    def set_registrations(self, registrations) -> None:
-        if self._has_resolved:
-            raise Exception(
-                "You can't set registrations after a dependency has been resolved."
-            )
-        self._registrations = registrations
-
     def register_transient(
         self,
         dependency: Type,
