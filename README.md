@@ -83,6 +83,10 @@ You can find the source code for `py-dependency-injection` on [GitHub](https://g
 
 ## Release Notes
 
+### [1.0.0-alpha.11](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.11) (2024-08-xx)
+
+- **Removal**: We have removed the dependency container getter and setter functions, as well as the RegistrationSerializer class, which were first introduced in v1.0.0-alpha.9. This decision reflects our focus on maintaining a streamlined library that emphasizes core functionality. These features, which would not be widely used, added unnecessary complexity without offering significant value. By removing them, we are reinforcing our commitment to our design principles.
+
 ### [1.0.0-alpha.10](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.10) (2024-08-11)
 
 - **Tagged Constructor Injection**: Introduced support for constructor injection using the `Tagged`, `AnyTagged`, and `AllTagged` classes. This allows for seamless injection of dependencies that have been registered with specific tags, enhancing flexibility and control in managing your application's dependencies.
