@@ -1,6 +1,7 @@
-.. warning::
+.. note::
 
-   This library is currently in the alpha stage of development. Expect changes and improvements as we work towards a stable release.
+    This library is currently in the beta stage of development.
+    While features are stable, some minor adjustments may occur before the final release.
 
 py-dependency-injection
 =======================
@@ -41,12 +42,5 @@ Key Advantages
   :caption: Releases
 
   releases
-
-.. apireference-docs:
-.. toctree::
-  :maxdepth: 1
-  :caption: API Reference
-
-  py-modindex
 
 You can find the source code for `py-dependency-injection` in our `GitHub repository <https://github.com/runemalm/py-dependency-injection>`_.

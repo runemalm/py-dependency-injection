@@ -1,15 +1,14 @@
 import functools
 import inspect
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
 from dependency_injection.container import DEFAULT_CONTAINER_NAME, DependencyContainer
-from dependency_injection.scope import DEFAULT_SCOPE_NAME
 
 F = TypeVar("F", bound=Callable[..., Any])
 
 
 def inject(
-    container_name=DEFAULT_CONTAINER_NAME, scope_name=DEFAULT_SCOPE_NAME
+    container_name=DEFAULT_CONTAINER_NAME, scope_name: Optional[str] = None
 ) -> Callable[[F], F]:
     def is_instance_method(func: Callable[..., Any]) -> bool:
         parameters = inspect.signature(func).parameters
@@ -30,10 +29,11 @@ def inject(
                 if parameter_name != "cls" and parameter_name not in kwargs:
                     # get container
                     container = DependencyContainer.get_instance(container_name)
+                    actual_scope_name = scope_name or container.get_default_scope_name()
                     # Resolve the dependency based on the parameter name
                     dependency_type = sig.parameters[parameter_name].annotation
                     kwargs[parameter_name] = container.resolve(
-                        dependency_type, scope_name=scope_name
+                        dependency_type, scope_name=actual_scope_name
                     )
 
             # Call the original function with the injected dependencies
