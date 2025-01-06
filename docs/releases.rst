@@ -1,17 +1,19 @@
-.. warning::
+.. note::
 
-   This library is currently in the alpha stage of development. Expect changes and improvements as we work towards a stable release.
+    This library is currently in the beta stage of development.
+    While features are stable, some minor adjustments may occur before the final release.
 
 ###############
 Version History
 ###############
 
-**1.0.0-alpha.11 (2025-01-06)**
+**1.0.0-beta.1 (2025-01-06)**
 
+- **Transition to Beta**: Transitioned from alpha to beta. Features have been stabilized and are ready for broader testing.
 - **Removal**: We have removed the dependency container getter and setter functions, as well as the RegistrationSerializer class, which were first introduced in v1.0.0-alpha.9. This decision reflects our focus on maintaining a streamlined library that emphasizes core functionality. These features, which would not be widely used, added unnecessary complexity without offering significant value. By removing them, we are reinforcing our commitment to our design principles.
 - **Enhancement**: Added suppprt for configuring default scope name. Either a static string value, or a callable that returns the name.
 
-`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-alpha.11>`_
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-beta.1>`_
 
 **1.0.0-alpha.10 (2024-08-11)**
 
