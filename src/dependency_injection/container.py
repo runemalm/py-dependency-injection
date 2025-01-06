@@ -1,7 +1,7 @@
 import inspect
 from dataclasses import is_dataclass
 
-from typing import Any, Callable, Dict, List, Optional, TypeVar, Type
+from typing import Any, Callable, Dict, List, Optional, TypeVar, Type, Union
 
 from dependency_injection.tags.all_tagged import AllTagged
 from dependency_injection.tags.any_tagged import AnyTagged
@@ -17,12 +17,28 @@ DEFAULT_CONTAINER_NAME = "default_container"
 
 
 class DependencyContainer(metaclass=SingletonMeta):
+    _default_scope_name: Union[str, Callable[[], str]] = DEFAULT_SCOPE_NAME
+
     def __init__(self, name: str = None):
         self.name = name if name is not None else DEFAULT_CONTAINER_NAME
         self._registrations = {}
         self._singleton_instances = {}
         self._scoped_instances = {}
         self._has_resolved = False
+
+    @classmethod
+    def configure_default_scope_name(
+        cls, default_scope_name: Union[str, Callable[[], str]]
+    ) -> None:
+        """Configure the global default scope name, which can be string or callable."""
+        cls._default_scope_name = default_scope_name
+
+    @classmethod
+    def get_default_scope_name(cls) -> str:
+        """Return the default scope name. If it's callable, call it to get the value."""
+        if callable(cls._default_scope_name):
+            return cls._default_scope_name()
+        return cls._default_scope_name
 
     @classmethod
     def get_instance(cls, name: str = None) -> Self:
@@ -99,8 +115,9 @@ class DependencyContainer(metaclass=SingletonMeta):
             dependency, implementation, scope, tags, constructor_args
         )
 
-    def resolve(self, dependency: Type, scope_name: str = DEFAULT_SCOPE_NAME) -> Any:
+    def resolve(self, dependency: Type, scope_name: Optional[str] = None) -> Any:
         self._has_resolved = True
+        scope_name = scope_name or self.get_default_scope_name()
 
         if scope_name not in self._scoped_instances:
             self._scoped_instances[scope_name] = {}
@@ -114,8 +131,11 @@ class DependencyContainer(metaclass=SingletonMeta):
 
         return self._resolve_by_scope(registration, scope_name)
 
-    def _resolve_by_scope(self, registration: Registration, scope_name: str) -> Any:
+    def _resolve_by_scope(
+        self, registration: Registration, scope_name: Optional[str] = None
+    ) -> Any:
         scope = registration.scope
+        scope_name = scope_name or self.get_default_scope_name()
 
         if scope == Scope.TRANSIENT:
             return self._inject_dependencies(
@@ -200,9 +220,11 @@ class DependencyContainer(metaclass=SingletonMeta):
     def _inject_dependencies(
         self,
         implementation: Type,
-        scope_name: str = None,
+        scope_name: Optional[str] = None,
         constructor_args: Optional[Dict[str, Any]] = None,
     ) -> Type:
+        scope_name = scope_name or self.get_default_scope_name()
+
         if is_dataclass(implementation):
             return implementation()  # Do not inject into dataclasses
 

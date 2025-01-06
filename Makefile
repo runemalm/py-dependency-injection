@@ -106,6 +106,10 @@ pre-commit-run: ## run the pre-commit hooks
 # PIPENV
 ################################################################################
 
+.PHONY: pipenv-rm
+pipenv-rm: ## remove the virtual environment
+	pipenv --rm
+
 .PHONY: pipenv-install
 pipenv-install: ## setup the virtual environment
 	pipenv install --dev
