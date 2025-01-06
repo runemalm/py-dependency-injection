@@ -42,11 +42,4 @@ Key Advantages
 
   releases
 
-.. apireference-docs:
-.. toctree::
-  :maxdepth: 1
-  :caption: API Reference
-
-  py-modindex
-
 You can find the source code for `py-dependency-injection` in our `GitHub repository <https://github.com/runemalm/py-dependency-injection>`_.
