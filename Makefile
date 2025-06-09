@@ -92,7 +92,7 @@ black-check: ## check code don't violate black formatting rules
 
 .PHONY: flake
 flake: ## lint code with flake
-	pipenv run flake8 $(SRC)
+	pipenv run flake8 --max-line-length=88 $(SRC)
 
 .PHONY: pre-commit-install
 pre-commit-install: ## install the pre-commit git hook
