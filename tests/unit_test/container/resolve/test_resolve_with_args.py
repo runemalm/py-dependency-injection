@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pytest
 
 from dependency_injection.container import DependencyContainer
@@ -150,3 +152,73 @@ class TestResolveWithArgs(UnitTestCase):
         self.assertIsInstance(resolved_dependency, Car)
         self.assertEqual("red", resolved_dependency.color)
         self.assertIsInstance(resolved_dependency.engine, Engine)
+
+    def test_optional_dependency_overridden_by_constructor_args(self):
+        # arrange
+        class Engine:
+            def __init__(self, name: str):
+                self.name = name
+
+        class Car:
+            def __init__(self, engine: Optional[Engine] = None):
+                self.engine = engine
+
+        engine_instance = Engine("Manual")
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_transient(
+            Car, constructor_args={"engine": engine_instance}
+        )
+
+        # act
+        resolved_car = dependency_container.resolve(Car)
+
+        # assert
+        self.assertEqual(resolved_car.engine.name, "Manual")
+
+    def test_optional_dependency_not_registered_but_constructor_arg_provided(self):
+        # arrange
+        class Engine:
+            def __init__(self, name: str):
+                self.name = name
+
+        class Car:
+            def __init__(self, engine: Optional[Engine] = None):
+                self.engine = engine
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_transient(
+            Car, constructor_args={"engine": Engine("Fallback")}
+        )
+
+        # act
+        resolved_car = dependency_container.resolve(Car)
+
+        # assert
+        self.assertEqual(resolved_car.engine.name, "Fallback")
+
+    def test_optional_dependency_registered_but_constructor_arg_still_takes_precedence(
+        self,
+    ):
+        # arrange
+        class Engine:
+            def __init__(self, name: str):
+                self.name = name
+
+        class Car:
+            def __init__(self, engine: Optional[Engine] = None):
+                self.engine = engine
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_transient(
+            Engine, constructor_args={"name": "Auto"}
+        )
+        dependency_container.register_transient(
+            Car, constructor_args={"engine": Engine("Manual")}
+        )
+
+        # act
+        resolved_car = dependency_container.resolve(Car)
+
+        # assert
+        self.assertEqual(resolved_car.engine.name, "Manual")  # not Auto
