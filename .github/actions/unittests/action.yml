@@ -11,19 +11,30 @@ runs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install .python-version and ${{ inputs.python-version }}
-      uses: "gabrielfalcao/pyenv-action@v18"
-      with:
-        default: 3.7.17
-        versions: ${{ inputs.python-version }}
-
-    - name: Switch to .python-version
+    - name: Install pyenv from source
       run: |
-        pyenv local "$(cat .python-version)"
-        if python -V | grep -q "$(cat .python-version)"; then
-          echo "Python version is '$(python -V)'"
-        else
-          echo "Python version is '$(python -V)', but should be '$(cat .python-version)'. Exiting workflow."
+        git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+        echo "PYENV_ROOT=$HOME/.pyenv" >> $GITHUB_ENV
+        echo "$HOME/.pyenv/bin" >> $GITHUB_PATH
+      shell: bash
+
+    - name: Install Python ${{ inputs.python-version }} via pyenv
+      run: |
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init --path)"
+        pyenv install -s ${{ inputs.python-version }}
+        pyenv global ${{ inputs.python-version }}
+        echo "${{ inputs.python-version }}" > .python-version
+      shell: bash
+
+    - name: Verify installed Python version
+      run: |
+        ACTUAL=$(python -V)
+        EXPECTED=${{ inputs.python-version }}
+        echo "Python version installed: $ACTUAL"
+        if ! python -V | grep -q "$EXPECTED"; then
+          echo "Python version is not correct. Exiting."
           exit 1
         fi
       shell: bash
