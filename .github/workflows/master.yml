@@ -9,8 +9,7 @@ on:
 jobs:
   pre-commit:
     name: Run pre-commit
-    runs-on: ubuntu-latest
-    container: python:3.7
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -26,8 +25,7 @@ jobs:
 
   unittests:
     name: Run unittests
-    runs-on: ubuntu-latest
-    container: python:3.7
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
@@ -47,8 +45,7 @@ jobs:
     name: Pre-release (test-pypi)
     needs: unittests
     if: success()
-    runs-on: ubuntu-latest
-    container: python:3.7
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -75,8 +72,7 @@ jobs:
     name: Release (pypi)
     needs: prerelease
     if: success() && (github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    container: python:3.7
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Download artifact

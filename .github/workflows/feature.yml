@@ -8,8 +8,7 @@ on:
 jobs:
   pre-commit:
     name: Run pre-commit
-    runs-on: ubuntu-latest
-    container: python:3.7
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,8 +23,7 @@ jobs:
 
   unittests:
     name: Run tests
-    runs-on: ubuntu-latest
-    container: python:3.7
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
