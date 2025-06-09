@@ -83,6 +83,10 @@ You can find the source code for `py-dependency-injection` on [GitHub](https://g
 
 ## Release Notes
 
+### [1.0.0-beta.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-beta.2) (2025-06-09)
+
+- **Enhancement**: Constructor parameters with default values or `Optional[...]` are now supported without requiring explicit registration.
+
 ### [1.0.0-beta.1](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-beta.1) (2025-01-06)
 
 - **Transition to Beta**: Transitioned from alpha to beta. Features have been stabilized and are ready for broader testing.

@@ -28,14 +28,14 @@ master_doc = "index"
 # -- Project information -----------------------------------------------------
 
 project = "py-dependency-injection"
-copyright = "2024, David Runemalm"
+copyright = "2025, David Runemalm"
 author = "David Runemalm"
 
 # The version
 version = "1.0"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0.0-beta.1"
+release = "1.0.0-beta.2"
 
 
 # -- General configuration ---------------------------------------------------
