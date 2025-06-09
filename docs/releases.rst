@@ -7,6 +7,13 @@
 Version History
 ###############
 
+**1.0.0-beta.2 (2025-06-09)**
+
+- **Enhancement**: Constructor parameters with default values or `Optional[...]` are now supported without requiring explicit registration.
+- **Python Version Support**: Added support for Python version 3.13.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-beta.2>`_
+
 **1.0.0-beta.1 (2025-01-06)**
 
 - **Transition to Beta**: Transitioned from alpha to beta. Features have been stabilized and are ready for broader testing.

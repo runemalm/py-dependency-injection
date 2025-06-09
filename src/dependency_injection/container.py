@@ -3,6 +3,17 @@ from dataclasses import is_dataclass
 
 from typing import Any, Callable, Dict, List, Optional, TypeVar, Type, Union
 
+try:
+    from typing import get_origin, get_args
+except ImportError:
+    # Fallback if on Python <= 3.8
+    def get_origin(tp):
+        return getattr(tp, "__origin__", None)
+
+    def get_args(tp):
+        return getattr(tp, "__args__", ())
+
+
 from dependency_injection.tags.all_tagged import AllTagged
 from dependency_injection.tags.any_tagged import AnyTagged
 from dependency_injection.tags.tagged import Tagged
@@ -11,6 +22,7 @@ from dependency_injection.scope import DEFAULT_SCOPE_NAME, Scope
 from dependency_injection.utils.singleton_meta import SingletonMeta
 
 Self = TypeVar("Self", bound="DependencyContainer")
+NoneType = type(None)
 
 
 DEFAULT_CONTAINER_NAME = "default_container"
@@ -206,12 +218,23 @@ class DependencyContainer(metaclass=SingletonMeta):
 
             expected_type = constructor[arg_name].annotation
             if expected_type != inspect.Parameter.empty:
-                if not isinstance(arg_value, expected_type):
-                    raise TypeError(
-                        f"Constructor argument '{arg_name}' has an incompatible type. "
-                        f"Expected type: {expected_type}, "
-                        f"provided type: {type(arg_value)}."
-                    )
+                if self._is_optional_type(expected_type):
+                    real_type = self._unwrap_optional_type(expected_type)
+                    if not isinstance(arg_value, real_type) and arg_value is not None:
+                        raise TypeError(
+                            f"Constructor argument '{arg_name}' "
+                            f"has an incompatible type. "
+                            f"Expected type: {expected_type}, "
+                            f"provided type: {type(arg_value)}."
+                        )
+                else:
+                    if not isinstance(arg_value, expected_type):
+                        raise TypeError(
+                            f"Constructor argument '{arg_name}' "
+                            f"has an incompatible type. "
+                            f"Expected type: {expected_type}, "
+                            f"provided type: {type(arg_value)}."
+                        )
 
     def _validate_registration(self, dependency: Type) -> None:
         if dependency in self._registrations:
@@ -228,62 +251,78 @@ class DependencyContainer(metaclass=SingletonMeta):
         if is_dataclass(implementation):
             return implementation()  # Do not inject into dataclasses
 
-        constructor = inspect.signature(implementation.__init__)
-        params = constructor.parameters
-
-        dependencies = {}
-        for param_name, param_info in params.items():
-            if param_name != "self":
-                if param_info.kind == inspect.Parameter.VAR_POSITIONAL:
-                    pass
-                elif param_info.kind == inspect.Parameter.VAR_KEYWORD:
-                    pass
-                else:
-                    if constructor_args and param_name in constructor_args:
-                        dependencies[param_name] = constructor_args[param_name]
-                    else:
-                        if (
-                            hasattr(param_info.annotation, "__origin__")
-                            and param_info.annotation.__origin__ is list
-                        ):
-                            inner_type = param_info.annotation.__args__[0]
-
-                            tagged_dependencies = []
-                            if isinstance(inner_type, type) and issubclass(
-                                inner_type, Tagged
-                            ):
-                                tagged_type = inner_type.tag
-                                tagged_dependencies = self.resolve_all(
-                                    tags={tagged_type}
-                                )
-
-                            elif isinstance(inner_type, type) and issubclass(
-                                inner_type, AnyTagged
-                            ):
-                                tagged_dependencies = self.resolve_all(
-                                    tags=inner_type.tags, match_all_tags=False
-                                )
-
-                            elif isinstance(inner_type, type) and issubclass(
-                                inner_type, AllTagged
-                            ):
-                                tagged_dependencies = self.resolve_all(
-                                    tags=inner_type.tags, match_all_tags=True
-                                )
-
-                            dependencies[param_name] = tagged_dependencies
-
-                        else:
-                            try:
-                                dependencies[param_name] = self.resolve(
-                                    param_info.annotation, scope_name=scope_name
-                                )
-                            except KeyError:
-                                raise ValueError(
-                                    f"Cannot resolve dependency for parameter "
-                                    f"'{param_name}' of type "
-                                    f"'{param_info.annotation}' in class "
-                                    f"'{implementation.__name__}'."
-                                )
-
+        dependencies = self._resolve_constructor_args(
+            implementation, scope_name, constructor_args
+        )
         return implementation(**dependencies)
+
+    def _resolve_constructor_args(
+        self,
+        implementation: Type,
+        scope_name: str,
+        constructor_args: Optional[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        constructor = inspect.signature(implementation.__init__)
+        dependencies = {}
+
+        for name, param in constructor.parameters.items():
+            if name == "self":
+                continue
+            if param.kind in (
+                inspect.Parameter.VAR_POSITIONAL,
+                inspect.Parameter.VAR_KEYWORD,
+            ):
+                continue
+
+            if constructor_args and name in constructor_args:
+                dependencies[name] = constructor_args[name]
+            else:
+                try:
+                    dependencies[name] = self._resolve_param_value(param, scope_name)
+                except KeyError:
+                    if self._should_use_default(param):
+                        continue
+                    raise ValueError(
+                        f"Cannot resolve dependency for parameter '{name}' "
+                        f"of type '{param.annotation}' in class "
+                        f"'{implementation.__name__}'."
+                    )
+
+        return dependencies
+
+    def _resolve_param_value(self, param: inspect.Parameter, scope_name: str) -> Any:
+        annotation = param.annotation
+
+        if get_origin(annotation) is list:
+            return self._resolve_list_dependency(annotation)
+
+        if self._is_optional_type(annotation):
+            inner = self._unwrap_optional_type(annotation)
+            try:
+                return self.resolve(inner, scope_name)
+            except KeyError:
+                if self._should_use_default(param):
+                    raise KeyError  # signal to fallback to default
+                return None
+
+        return self.resolve(annotation, scope_name)
+
+    def _resolve_list_dependency(self, annotation: Any) -> List[Any]:
+        inner = get_args(annotation)[0]
+        if isinstance(inner, type) and issubclass(inner, Tagged):
+            return self.resolve_all(tags={inner.tag})
+        elif isinstance(inner, type) and issubclass(inner, AnyTagged):
+            return self.resolve_all(tags=inner.tags, match_all_tags=False)
+        elif isinstance(inner, type) and issubclass(inner, AllTagged):
+            return self.resolve_all(tags=inner.tags, match_all_tags=True)
+        else:
+            raise ValueError(f"Unsupported list injection type: {annotation}")
+
+    def _is_optional_type(self, annotation: Any) -> bool:
+        return get_origin(annotation) is Union and type(None) in get_args(annotation)
+
+    def _unwrap_optional_type(self, annotation: Any) -> Any:
+        return next(arg for arg in get_args(annotation) if arg is not NoneType)
+
+    def _should_use_default(self, param_info: inspect.Parameter) -> bool:
+        return param_info.default is not inspect.Parameter.empty

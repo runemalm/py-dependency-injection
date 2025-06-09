@@ -20,7 +20,7 @@ A dependency injection library for Python.
 
 The library is compatible with the following Python versions:
 
-- 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
+- 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13
 
 ## Installation
 
@@ -82,6 +82,11 @@ For more advanced usage and examples, please visit our [readthedocs](https://py-
 You can find the source code for `py-dependency-injection` on [GitHub](https://github.com/runemalm/py-dependency-injection).
 
 ## Release Notes
+
+### [1.0.0-beta.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-beta.2) (2025-06-09)
+
+- **Enhancement**: Constructor parameters with default values or `Optional[...]` are now supported without requiring explicit registration.
+- **Python Version Support**: Added support for Python version 3.13.
 
 ### [1.0.0-beta.1](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-beta.1) (2025-01-06)
 
