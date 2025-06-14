@@ -6,21 +6,25 @@
 py-dependency-injection
 =======================
 
-A dependency injection library for Python.
+A dependency injection library for Python — inspired by the built-in DI system in ASP.NET Core.
 
-Purpose
--------
+Overview
+--------
 
-Dependency injection is a powerful design pattern that promotes loose coupling and enhances testability in software applications. `py-dependency-injection` is a prototypical implementation of this pattern, designed to provide the essential features needed for effective dependency management in both small scripts and larger software projects.
+`py-dependency-injection` provides a lightweight and extensible way to manage dependencies in Python applications. It promotes constructor injection, supports scoped lifetimes, and encourages clean architecture through explicit configuration and testable design.
 
-This library is particularly suited for beginners exploring the concept of dependency injection, as it offers a straightforward and easy-to-understand implementation. It serves as an excellent starting point for learning the pattern and can also be used as a foundational base for frameworks requiring a more specialized interface for dependency injection.
+This library is well-suited for both standalone use in Python applications and as a foundation for frameworks or tools that require structured dependency management.
 
 Key Advantages
 --------------
 
-- **Suitable for Learning:** Ideal for beginners exploring the concept of dependency injection.
-- **Base Implementation for Frameworks:** Can be used as a foundational base for frameworks requiring a more specialized interface for dependency injection.
-- **Standalone Solution:** Can also be used on its own, as a fully-featured dependency injection solution in any software project.
+- **Familiar model** – Inspired by ASP.NET Core’s DI system
+- **Scoped lifetimes** – Support for `singleton`, `scoped`, and `transient` registrations
+- **Explicit injection** – Promotes clarity over magic
+- **Test-friendly** – Designed for container isolation and overrides
+- **Minimalistic** – Easy to use, extend, and integrate
+
+You can find the source code for `py-dependency-injection` in our `GitHub repository <https://github.com/runemalm/py-dependency-injection>`_.
 
 .. userguide-docs:
 .. toctree::

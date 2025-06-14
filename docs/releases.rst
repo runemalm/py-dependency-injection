@@ -7,6 +7,13 @@
 Version History
 ###############
 
+**1.0.0-beta.3 (2025-06-14)**
+
+- **Enhancement**: Added `DependencyContainer.configure_default_container_name(...)` to support container isolation in parallel tests, even when application code uses a single shared container via `DependencyContainer.get_instance()`.
+- **Enhancement**: Added `DependencyContainer.clear_instances()` as a clean alternative to manually resetting `_instances` during test teardown.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-beta.3>`_
+
 **1.0.0-beta.2 (2025-06-09)**
 
 - **Enhancement**: Constructor parameters with default values or `Optional[...]` are now supported without requiring explicit registration.

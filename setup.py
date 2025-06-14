@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="py-dependency-injection",
-    version="1.0.0-beta.2",
+    version="1.0.0-beta.3",
     author="David Runemalm, 2025",
     author_email="david.runemalm@gmail.com",
     description="A dependency injection library for Python.",
