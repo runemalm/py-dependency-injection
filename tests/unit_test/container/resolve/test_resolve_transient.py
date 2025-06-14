@@ -34,7 +34,7 @@ class TestResolveTransient(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        dependency_container = DependencyContainer()
+        dependency_container = DependencyContainer.get_instance()
         dependency = Vehicle
         implementation = Car
         dependency_container.register_transient(dependency, implementation)

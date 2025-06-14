@@ -30,13 +30,21 @@ DEFAULT_CONTAINER_NAME = "default_container"
 
 class DependencyContainer(metaclass=SingletonMeta):
     _default_scope_name: Union[str, Callable[[], str]] = DEFAULT_SCOPE_NAME
+    _default_container_name: Union[str, Callable[[], str]] = DEFAULT_CONTAINER_NAME
 
-    def __init__(self, name: str = None):
-        self.name = name if name is not None else DEFAULT_CONTAINER_NAME
+    def __init__(self, name: str):
+        self.name = name
         self._registrations = {}
         self._singleton_instances = {}
         self._scoped_instances = {}
         self._has_resolved = False
+
+    @classmethod
+    def configure_default_container_name(
+        cls, name_or_callable: Union[str, Callable[[], str]]
+    ) -> None:
+        """Override the default container name, which can be string or callable."""
+        cls._default_container_name = name_or_callable
 
     @classmethod
     def configure_default_scope_name(
@@ -54,7 +62,12 @@ class DependencyContainer(metaclass=SingletonMeta):
 
     @classmethod
     def get_instance(cls, name: str = None) -> Self:
-        name = name or DEFAULT_CONTAINER_NAME
+        if name is None:
+            name = (
+                cls._default_container_name()
+                if callable(cls._default_container_name)
+                else cls._default_container_name
+            )
 
         if (cls, name) not in cls._instances:
             cls._instances[(cls, name)] = cls(name)
@@ -326,3 +339,8 @@ class DependencyContainer(metaclass=SingletonMeta):
 
     def _should_use_default(self, param_info: inspect.Parameter) -> bool:
         return param_info.default is not inspect.Parameter.empty
+
+    @classmethod
+    def clear_instances(cls) -> None:
+        """Clear all container instances. Useful for test teardown."""
+        cls._instances.clear()

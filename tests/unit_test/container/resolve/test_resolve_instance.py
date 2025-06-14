@@ -33,7 +33,7 @@ class TestResolveInstance(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        dependency_container = DependencyContainer()
+        dependency_container = DependencyContainer.get_instance()
         instance = Car()
         dependency_container.register_instance(Vehicle, instance)
 

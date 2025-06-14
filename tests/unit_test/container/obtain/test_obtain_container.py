@@ -2,7 +2,7 @@ from dependency_injection.container import DEFAULT_CONTAINER_NAME, DependencyCon
 from unit_test.unit_test_case import UnitTestCase
 
 
-class TestObtainInstance(UnitTestCase):
+class TestObtainContainer(UnitTestCase):
     def test_obtain_instance_without_name_returns_default_container(
         self,
     ):
