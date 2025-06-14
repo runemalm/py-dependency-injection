@@ -9,9 +9,9 @@ Getting Started
 Introduction
 ############
 
-`py-dependency-injection` is a lightweight and flexible dependency injection library for Python. It simplifies managing dependencies in your applications, promoting cleaner and more testable code.
+`py-dependency-injection` is a lightweight and extensible dependency injection library for Python — inspired by the built-in DI system in **ASP.NET Core**. It promotes constructor injection, supports scoped lifetimes, and encourages clean, testable application architecture.
 
-This guide will help you understand the key concepts and how to start using the library. For detailed examples, see the `Examples` section.
+This guide provides an overview of the key concepts and demonstrates how to start using the library effectively. For detailed examples, see the `Examples` section.
 
 ############
 Installation
@@ -75,11 +75,11 @@ Basic workflow:
 Best Practices
 ##############
 
-- **Use Constructor Injection**: Preferred for most cases as it promotes clear and testable designs.
-- **Leverage Tags for Organization**: Group dependencies logically using tags.
-- **Choose the Right Scope**: Use scoped or singleton lifetimes to optimize performance and resource usage.
-- **Keep Dependencies Decoupled**: Avoid tightly coupling your components to the container.
-- **Isolate Contexts with Containers**: Use multiple containers to manage dependencies for separate modules or contexts.
+- **Prefer Constructor Injection**: It promotes clear interfaces and testable components.
+- **Use the Right Lifetime**: Choose between transient, scoped, and singleton based on your component's role.
+- **Organize with Tags**: Use tag-based registration and resolution to group related services.
+- **Avoid Container Coupling**: Inject dependencies via constructors rather than accessing the container directly.
+- **Use Multiple Containers When Needed**: For modular apps or test isolation, create dedicated containers.
 
 #################
 Where to Go Next?
