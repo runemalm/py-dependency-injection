@@ -15,6 +15,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src/"))
 
+from dependency_injection._version import __version__  # noqa: E402
+
 
 # -- Auto doc generation -----
 
@@ -22,7 +24,7 @@ sys.path.insert(0, os.path.abspath("../src/"))
 # autodoc_mock_imports = ["dependency_injection"]
 
 # The main module
-master_doc = "index"
+root_doc = "index"
 
 
 # -- Project information -----------------------------------------------------
@@ -31,11 +33,11 @@ project = "py-dependency-injection"
 copyright = "2025, David Runemalm"
 author = "David Runemalm"
 
-# The version
-version = "1.0"
+# Short X.Y version
+version = __version__.split("-")[0]
 
-# The full version, including alpha/beta/rc tags
-release = "1.0.0-beta.3"
+# Full version string
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -44,6 +46,7 @@ release = "1.0.0-beta.3"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autosummary",
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosectionlabel",
@@ -51,9 +54,11 @@ extensions = [
     "sphinx.ext.napoleon",
 ]
 
-# List of directories, relative to source directory, that shouldn't be searched
-# for source files.
-exclude_trees = ["build", ".git", "examples", "scratch", "tests"]
+autosummary_generate = True
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -61,7 +66,17 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = [
+    "_build",
+    "**/site-packages/**",
+    "Thumbs.db",
+    ".DS_Store",
+    "build",
+    ".git",
+    "examples",
+    "scratch",
+    "tests",
+]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
@@ -77,6 +92,15 @@ autodoc_member_order = "alphabetical"
 # a list of builtin themes.
 #
 html_theme = "sphinx_rtd_theme"
+
+html_context = {
+    "display_github": False,  # Optional: only needed if you're showing GitHub links
+    "display_version": True,  # ✅ Enable version display manually
+    "version": version,  # pulled from your __version__
+    "release": release,
+}
+
+html_css_files = ["custom.css"]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

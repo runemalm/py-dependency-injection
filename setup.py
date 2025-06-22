@@ -1,12 +1,19 @@
+import os
+
 from setuptools import find_packages
 from setuptools import setup
+
+
+version = {}
+with open(os.path.join("src", "dependency_injection", "_version.py")) as f:
+    exec(f.read(), version)
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
     name="py-dependency-injection",
-    version="1.0.0-beta.3",
+    version=version["__version__"],
     author="David Runemalm, 2025",
     author_email="david.runemalm@gmail.com",
     description="A dependency injection library for Python.",

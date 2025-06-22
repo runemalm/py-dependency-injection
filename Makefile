@@ -12,6 +12,8 @@ SRC := $(PWD)/src
 TESTS := $(PWD)/tests
 DOCS := $(PWD)/docs
 
+DOCS_PYTHON_VERSION := 3.12.11
+
 # Load env file
 include env.make
 export $(shell sed 's/=.*//' env.make)
@@ -36,6 +38,10 @@ test: ## run test suite
 # RELEASE
 ################################################################################
 
+.PHONY: bump-version
+bump-version: ## bump the package version (uses VERSION)
+	sed -i '' "s/__version__ = \".*\"/__version__ = \"$(VERSION)\"/" $(SRC)/dependency_injection/_version.py
+
 .PHONY: build
 build: ## build the python package
 	pipenv run python setup.py sdist bdist_wheel
@@ -48,10 +54,6 @@ clean: ## clean the build
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type d -name '*.egg-info' -exec rm -rf {} +
 
-.PHONY: bump_version
-bump_version: ## Bump the version
-	pipenv run bump2version --dry-run release --allow-dirty --verbose
-
 .PHONY: upload-test
 upload-test: ## upload package to testpypi repository
 	TWINE_USERNAME=$(PYPI_USERNAME_TEST) TWINE_PASSWORD=$(PYPI_PASSWORD_TEST) pipenv run twine upload --repository testpypi --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
@@ -60,23 +62,45 @@ upload-test: ## upload package to testpypi repository
 upload: ## upload package to pypi repository
 	TWINE_USERNAME=$(PYPI_USERNAME) TWINE_PASSWORD=$(PYPI_PASSWORD) pipenv run twine upload --skip-existing dist/*
 
-.PHONY: sphinx-quickstart
-sphinx-quickstart: ## run the sphinx quickstart
-	pipenv run docker run -it --rm -v $(PWD)/docs:/docs sphinxdoc/sphinx sphinx-quickstart
+################################################################################
+# DOCS
+################################################################################
+
+.PHONY: sphinx-venv-init
+sphinx-venv-init: ## Init venv for docs (requires pyenv $(DOCS_PYTHON_VERSION))
+	cd $(DOCS) && \
+	command -v pyenv >/dev/null || { echo "pyenv not found"; exit 1; } && \
+	pyenv versions --bare | grep -q "^$(DOCS_PYTHON_VERSION)$$" || { echo "pyenv $(DOCS_PYTHON_VERSION) not installed"; exit 1; } && \
+	PYENV_PYTHON=$$(pyenv root)/versions/$(DOCS_PYTHON_VERSION)/bin/python && \
+	$$PYENV_PYTHON -m venv .venv && \
+	.venv/bin/pip install --upgrade pip && \
+	.venv/bin/pip install -r requirements.txt
+
+.PHONY: sphinx-venv-install
+sphinx-venv-install: ## Install or update docs venv from requirements.txt
+	cd $(DOCS) && \
+	[ -d .venv ] || { echo "Missing .venv — run sphinx-venv-init first."; exit 1; } && \
+	.venv/bin/pip install -r requirements.txt
+
+.PHONY: sphinx-venv-rm
+sphinx-venv-rm: ## Remove docs venv
+	rm -rf $(DOCS)/.venv
 
 .PHONY: sphinx-html
 sphinx-html: ## build the sphinx html
-	pipenv run make -C docs html
+	cd $(DOCS) && .venv/bin/sphinx-build -M html . _build
 
 .PHONY: sphinx-rebuild
 sphinx-rebuild: ## re-build the sphinx docs
 	cd $(DOCS) && \
-	pipenv run make clean && pipenv run make html
+	rm -rf _build/.doctrees && \
+	.venv/bin/sphinx-build -M clean . _build && \
+	.venv/bin/sphinx-build -M html . _build
 
 .PHONY: sphinx-autobuild
 sphinx-autobuild: ## activate autobuild of docs
 	cd $(DOCS) && \
-	pipenv run sphinx-autobuild . _build/html --watch $(SRC)
+	.venv/bin/sphinx-autobuild . _build/html --watch $(SRC)
 
 ################################################################################
 # PRE-COMMIT HOOKS
@@ -110,24 +134,24 @@ pre-commit-run: ## run the pre-commit hooks
 pipenv-rm: ## remove the virtual environment
 	pipenv --rm
 
-.PHONY: pipenv-install
-pipenv-install: ## setup the virtual environment
+.PHONY: pipenv-install-dev
+pipenv-install-dev: ## setup the virtual environment, with dev packages
 	pipenv install --dev
 
 .PHONY: pipenv-install-package
 pipenv-install-package: ## install a package (uses PACKAGE)
 	pipenv install $(PACKAGE)
 
-.PHONY: pipenv-install-package-dev
-pipenv-install-package-dev: ## install a dev package (uses PACKAGE)
+.PHONY: pipenv-install-dev-package
+pipenv-install-dev-package: ## install a dev package (uses PACKAGE)
 	pipenv install --dev $(PACKAGE)
 
-.PHONY: pipenv-packages-graph
-pipenv-packages-graph: ## Check installed packages
+.PHONY: pipenv-graph
+pipenv-graph: ## Check installed packages
 	pipenv graph
 
-.PHONY: pipenv-requirements-generate
-pipenv-requirements-generate: ## Check a requirements.txt
+.PHONY: pipenv-generate-requirements
+pipenv-generate-requirements: ## Check a requirements.txt
 	pipenv lock -r > requirements.txt
 
 .PHONY: pipenv-shell
@@ -146,7 +170,3 @@ pipenv-lock-and-install: ## Lock the pipfile and install (after updating Pipfile
 .PHONY: pipenv-pip-freeze
 pipenv-pip-freeze: ## Run pip freeze in the virtual environment
 	pipenv run pip freeze
-
-.PHONY: pipenv-setup-sync
-pipenv-setup-sync: ## Sync dependencies between Pipfile and setup.py
-	pipenv run pipenv-setup sync

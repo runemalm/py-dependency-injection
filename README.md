@@ -3,6 +3,7 @@
 [![Master workflow](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
 [![PyPI version](https://badge.fury.io/py/py-dependency-injection.svg)](https://pypi.org/project/py-dependency-injection/)
 ![Downloads](https://pepy.tech/badge/py-dependency-injection)
+![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 
 # py-dependency-injection
 
@@ -11,6 +12,8 @@ A dependency injection library for Python.
 ## Why py-dependency-injection?
 
 `py-dependency-injection` is inspired by the built-in dependency injection system in **ASP.NET Core**. It provides a lightweight and extensible way to manage dependencies in Python applications. By promoting constructor injection and supporting scoped lifetimes, it encourages clean architecture and makes testable, maintainable code the default.
+
+This library is implemented in **pure Python** and has **no runtime dependencies**.
 
 ## Features
 
@@ -85,12 +88,10 @@ For more advanced usage and examples, please visit our [readthedocs](https://py-
 
 You can find the source code for `py-dependency-injection` on [GitHub](https://github.com/runemalm/py-dependency-injection).
 
-
 ## Release Notes
 
-### Latest: [1.0.0-beta.3](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-beta.3) (2025-06-14)
+### Latest: [1.0.0-rc.1](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.1) (2025-06-22)
 
-- **Enhancement**: Added `DependencyContainer.configure_default_container_name(...)` to support container isolation in parallel tests, even when application code uses a single shared container via `DependencyContainer.get_instance()`.
-- **Enhancement**: Added `DependencyContainer.clear_instances()` as a clean alternative to manually resetting `_instances` during test teardown.
+- **Transition to Release Candidate**: This marks the first release candidate. The public API is now considered stable and ready for final validation before 1.0.0.
 
 ➡️ Full changelog: [GitHub Releases](https://github.com/runemalm/py-dependency-injection/releases)

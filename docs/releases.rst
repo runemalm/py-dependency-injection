@@ -7,6 +7,12 @@
 Version History
 ###############
 
+**1.0.0-rc.1 (2025-06-22)**
+
+- **Transition to Release Candidate**: This marks the first release candidate. The public API is now considered stable and ready for final validation before 1.0.0.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.1>`_
+
 **1.0.0-beta.3 (2025-06-14)**
 
 - **Enhancement**: Added `DependencyContainer.configure_default_container_name(...)` to support container isolation in parallel tests, even when application code uses a single shared container via `DependencyContainer.get_instance()`.

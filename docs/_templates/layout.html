@@ -1,0 +1,8 @@
+{% extends "!layout.html" %}
+
+{% block sidebarlogo %}
+  {{ super() }}
+  <div class="version">
+    v{{ version }}
+  </div>
+{% endblock %}
