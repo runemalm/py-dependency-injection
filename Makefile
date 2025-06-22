@@ -48,10 +48,6 @@ clean: ## clean the build
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type d -name '*.egg-info' -exec rm -rf {} +
 
-.PHONY: bump_version
-bump_version: ## Bump the version
-	pipenv run bump2version --dry-run release --allow-dirty --verbose
-
 .PHONY: upload-test
 upload-test: ## upload package to testpypi repository
 	TWINE_USERNAME=$(PYPI_USERNAME_TEST) TWINE_PASSWORD=$(PYPI_PASSWORD_TEST) pipenv run twine upload --repository testpypi --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
@@ -122,12 +118,12 @@ pipenv-install-package: ## install a package (uses PACKAGE)
 pipenv-install-package-dev: ## install a dev package (uses PACKAGE)
 	pipenv install --dev $(PACKAGE)
 
-.PHONY: pipenv-packages-graph
-pipenv-packages-graph: ## Check installed packages
+.PHONY: pipenv-graph
+pipenv-graph: ## Check installed packages
 	pipenv graph
 
-.PHONY: pipenv-requirements-generate
-pipenv-requirements-generate: ## Check a requirements.txt
+.PHONY: pipenv-generate-requirements
+pipenv-generate-requirements: ## Check a requirements.txt
 	pipenv lock -r > requirements.txt
 
 .PHONY: pipenv-shell
@@ -146,7 +142,3 @@ pipenv-lock-and-install: ## Lock the pipfile and install (after updating Pipfile
 .PHONY: pipenv-pip-freeze
 pipenv-pip-freeze: ## Run pip freeze in the virtual environment
 	pipenv run pip freeze
-
-.PHONY: pipenv-setup-sync
-pipenv-setup-sync: ## Sync dependencies between Pipfile and setup.py
-	pipenv run pipenv-setup sync
