@@ -72,3 +72,6 @@ docs/_build/
 # Project-specific files
 scratch
 env.make
+
+# Docs
+docs/.venv
