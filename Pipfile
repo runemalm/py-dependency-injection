@@ -12,6 +12,7 @@ importlib-metadata = "==4.13.0"
 pre-commit = "*"
 pytest = "7.4.4"
 pytest-xdist = "*"
+typing-extensions = "*"
 wheel = "0.42.0"
 
 [requires]
