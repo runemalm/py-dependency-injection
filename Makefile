@@ -93,6 +93,7 @@ sphinx-html: ## build the sphinx html
 .PHONY: sphinx-rebuild
 sphinx-rebuild: ## re-build the sphinx docs
 	cd $(DOCS) && \
+	rm -rf _build/.doctrees && \
 	.venv/bin/sphinx-build -M clean . _build && \
 	.venv/bin/sphinx-build -M html . _build
 

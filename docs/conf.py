@@ -24,7 +24,7 @@ from dependency_injection._version import __version__  # noqa: E402
 # autodoc_mock_imports = ["dependency_injection"]
 
 # The main module
-master_doc = "index"
+root_doc = "index"
 
 
 # -- Project information -----------------------------------------------------
@@ -46,6 +46,7 @@ release = __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autosummary",
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosectionlabel",
@@ -53,9 +54,11 @@ extensions = [
     "sphinx.ext.napoleon",
 ]
 
-# List of directories, relative to source directory, that shouldn't be searched
-# for source files.
-exclude_trees = ["build", ".git", "examples", "scratch", "tests"]
+autosummary_generate = True
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -63,7 +66,17 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = [
+    "_build",
+    "**/site-packages/**",
+    "Thumbs.db",
+    ".DS_Store",
+    "build",
+    ".git",
+    "examples",
+    "scratch",
+    "tests",
+]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
