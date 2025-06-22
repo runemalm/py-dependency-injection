@@ -3,7 +3,8 @@ Getting Started
 ###############
 
 .. note::
-    `py-dependency-injection` has transitioned to beta! Features are now stable and ready for broader testing. Feedback is encouraged to help refine the library for its final release.
+    This library is currently in the release candidate stage.
+    The public API is considered stable and is undergoing final validation before the 1.0.0 release.
 
 ############
 Introduction

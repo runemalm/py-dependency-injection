@@ -1,7 +1,7 @@
 .. note::
 
-    This library is currently in the beta stage of development.
-    While features are stable, some minor adjustments may occur before the final release.
+    This library is currently in the release candidate stage.
+    The public API is considered stable and is undergoing final validation before the 1.0.0 release.
 
 py-dependency-injection
 =======================
