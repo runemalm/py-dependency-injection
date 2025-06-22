@@ -36,6 +36,10 @@ test: ## run test suite
 # RELEASE
 ################################################################################
 
+.PHONY: bump-version
+bump-version: ## bump the package version (uses VERSION)
+	sed -i '' "s/__version__ = \".*\"/__version__ = \"$(VERSION)\"/" $(SRC)/dependency_injection/_version.py
+
 .PHONY: build
 build: ## build the python package
 	pipenv run python setup.py sdist bdist_wheel

@@ -15,6 +15,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src/"))
 
+from dependency_injection._version import __version__  # noqa: E402
+
 
 # -- Auto doc generation -----
 
@@ -31,11 +33,11 @@ project = "py-dependency-injection"
 copyright = "2025, David Runemalm"
 author = "David Runemalm"
 
-# The version
-version = "1.0"
+# Short X.Y version
+version = __version__.split("-")[0]
 
-# The full version, including alpha/beta/rc tags
-release = "1.0.0-beta.3"
+# Full version string
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
