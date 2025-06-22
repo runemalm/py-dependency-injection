@@ -1,3 +1,4 @@
+# Auto-generated for Read the Docs. Do not edit manually.
 sphinx==5.3.0
 sphinx-rtd-theme==2.0.0
 sphinx-autobuild==2021.3.14

@@ -60,9 +60,14 @@ upload-test: ## upload package to testpypi repository
 upload: ## upload package to pypi repository
 	TWINE_USERNAME=$(PYPI_USERNAME) TWINE_PASSWORD=$(PYPI_PASSWORD) pipenv run twine upload --skip-existing dist/*
 
-.PHONY: sphinx-quickstart
-sphinx-quickstart: ## run the sphinx quickstart
-	pipenv run docker run -it --rm -v $(PWD)/docs:/docs sphinxdoc/sphinx sphinx-quickstart
+.PHONY: sphinx-generate-requirements
+sphinx-generate-requirements: ## Export sphinx-related deps from Pipfile to docs/requirements.txt for Read the Docs
+	@echo "# Auto-generated for Read the Docs. Do not edit manually." > docs/requirements.txt
+	@grep -A 1000 '^\[dev-packages\]' Pipfile \
+		| grep '^sphinx' \
+		| sed 's/ *= */==/' \
+		| tr -d '"' \
+		>> docs/requirements.txt
 
 .PHONY: sphinx-html
 sphinx-html: ## build the sphinx html
