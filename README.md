@@ -3,6 +3,7 @@
 [![Master workflow](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
 [![PyPI version](https://badge.fury.io/py/py-dependency-injection.svg)](https://pypi.org/project/py-dependency-injection/)
 ![Downloads](https://pepy.tech/badge/py-dependency-injection)
+![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 
 # py-dependency-injection
 
@@ -11,6 +12,8 @@ A dependency injection library for Python.
 ## Why py-dependency-injection?
 
 `py-dependency-injection` is inspired by the built-in dependency injection system in **ASP.NET Core**. It provides a lightweight and extensible way to manage dependencies in Python applications. By promoting constructor injection and supporting scoped lifetimes, it encourages clean architecture and makes testable, maintainable code the default.
+
+This library is implemented in **pure Python** and has **no runtime dependencies**.
 
 ## Features
 
