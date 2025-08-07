@@ -32,49 +32,98 @@ help:
 
 .PHONY: test
 test: ## run test suite
-	PYTHONPATH=$(SRC):$(TESTS) pipenv run pytest $(TESTS)
+	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest $(TESTS)
 
 ################################################################################
 # RELEASE
 ################################################################################
 
-.PHONY: bump-version
-bump-version: ## bump the package version (uses VERSION)
-	sed -i '' "s/__version__ = \".*\"/__version__ = \"$(VERSION)\"/" $(SRC)/dependency_injection/_version.py
-
 .PHONY: build
 build: ## build the python package
-	pipenv run python setup.py sdist bdist_wheel
+	poetry build
 
 .PHONY: clean
 clean: ## clean the build
-	python setup.py clean
 	rm -rf build dist
 	find . -type f -name '*.py[co]' -delete
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type d -name '*.egg-info' -exec rm -rf {} +
 
-.PHONY: upload-test
-upload-test: ## upload package to testpypi repository
-	TWINE_USERNAME=$(PYPI_USERNAME_TEST) TWINE_PASSWORD=$(PYPI_PASSWORD_TEST) pipenv run twine upload --repository testpypi --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+.PHONY: publish-test
+publish-test: ## upload package to test.pypi.org
+	poetry publish --repository testpypi
 
-.PHONY: upload
-upload: ## upload package to pypi repository
-	TWINE_USERNAME=$(PYPI_USERNAME) TWINE_PASSWORD=$(PYPI_PASSWORD) pipenv run twine upload --skip-existing dist/*
+.PHONY: publish
+publish: ## upload package to PyPI
+	poetry publish
+
+.PHONY: act-feature
+act-feature: ## Run release workflow locally with act
+	@act push --job unittests -P ubuntu-latest=catthehacker/ubuntu:act-latest
+
+.PHONY: release-test-all
+release-test-all: ## Install from TestPyPI and run test on all versions
+	@for PY in 3.9 3.10 3.11 3.12 3.13; do \
+		echo "\n--- Running release-test-version for Python $$PY ---"; \
+		make release-test-version PY=$$PY || exit 1; \
+	done
+
+.PHONY: release-test-version
+release-test-version: ## Install package from TestPyPI and test it. Usage: make release-test-version PY=3.9
+	@if [ -z "$(PY)" ]; then \
+		echo "❌ PY is required. Usage: make release-test-version PY=3.10"; exit 1; \
+	fi
+	@echo "\n>>> Installing from TestPyPI with Python $(PY)"
+	@PYTHON_BIN=$$(pyenv prefix $(PY))/bin/python; \
+	VENV_DIR=.venv-install-test-$(PY); \
+	$$PYTHON_BIN -m venv $$VENV_DIR && \
+	$$VENV_DIR/bin/pip install --upgrade pip && \
+	$$VENV_DIR/bin/pip install --index-url https://test.pypi.org/simple/ \
+	                             --extra-index-url https://pypi.org/simple \
+	                             py-dependency-injection && \
+	$$VENV_DIR/bin/python scripts/test_installed_package.py && \
+	rm -rf $$VENV_DIR
+
+.PHONY: sync-version
+sync-version: ## Sync version.py to pyproject.toml
+	python scripts/sync_version.py
+
+################################################################################
+# PRE-COMMIT HOOKS
+################################################################################
+
+.PHONY: black
+black: ## format code using black
+	poetry run black --line-length 88 $(SRC) $(TESTS)
+
+.PHONY: black-check
+black-check: ## check code don't violate black formatting rules
+	poetry run black --check --line-length 88 $(SRC) $(TESTS)
+
+.PHONY: flake
+flake: ## lint code with flake
+	poetry run flake8 --max-line-length=88 $(SRC) $(TESTS)
+
+.PHONY: pre-commit-install
+pre-commit-install: ## install the pre-commit git hook
+	poetry run pre-commit install
+
+.PHONY: pre-commit-run
+pre-commit-run: ## run the pre-commit hooks
+	poetry run pre-commit run --all-files
 
 ################################################################################
 # DOCS
 ################################################################################
 
 .PHONY: sphinx-venv-init
-sphinx-venv-init: ## Init venv for docs (requires pyenv $(DOCS_PYTHON_VERSION))
+sphinx-venv-init: ## Init venv for docs
 	cd $(DOCS) && \
 	command -v pyenv >/dev/null || { echo "pyenv not found"; exit 1; } && \
 	pyenv versions --bare | grep -q "^$(DOCS_PYTHON_VERSION)$$" || { echo "pyenv $(DOCS_PYTHON_VERSION) not installed"; exit 1; } && \
 	PYENV_PYTHON=$$(pyenv root)/versions/$(DOCS_PYTHON_VERSION)/bin/python && \
 	$$PYENV_PYTHON -m venv .venv && \
-	.venv/bin/pip install --upgrade pip && \
-	.venv/bin/pip install -r requirements.txt
+	.venv/bin/pip install --upgrade pip
 
 .PHONY: sphinx-venv-install
 sphinx-venv-install: ## Install or update docs venv from requirements.txt
@@ -90,6 +139,10 @@ sphinx-venv-rm: ## Remove docs venv
 sphinx-html: ## build the sphinx html
 	cd $(DOCS) && .venv/bin/sphinx-build -M html . _build
 
+.PHONY: sphinx-clean
+sphinx-clean: ## Remove Sphinx build artifacts
+	rm -rf $(DOCS)/_build
+
 .PHONY: sphinx-rebuild
 sphinx-rebuild: ## re-build the sphinx docs
 	cd $(DOCS) && \
@@ -103,70 +156,39 @@ sphinx-autobuild: ## activate autobuild of docs
 	.venv/bin/sphinx-autobuild . _build/html --watch $(SRC)
 
 ################################################################################
-# PRE-COMMIT HOOKS
+# POETRY
 ################################################################################
 
-.PHONY: black
-black: ## run black auto-formatting
-	pipenv run black $(SRC) $(TESTS)
+.PHONY: poetry-install-with-dev
+poetry-install-with-dev: ## Install all dependencies including dev group
+	poetry install --with dev
 
-.PHONY: black-check
-black-check: ## check code don't violate black formatting rules
-	pipenv run black --check $(SRC)
+.PHONY: poetry-env-remove
+poetry-env-remove: ## Remove the Poetry virtual environment
+	poetry env info --path >/dev/null 2>&1 && poetry env remove python || echo "No Poetry environment found."
 
-.PHONY: flake
-flake: ## lint code with flake
-	pipenv run flake8 --max-line-length=88 $(SRC)
+.PHONY: poetry-env-info-path
+poetry-env-info-path: ## Show the path to the Poetry virtual environment
+	poetry env info --path
 
-.PHONY: pre-commit-install
-pre-commit-install: ## install the pre-commit git hook
-	pipenv run pre-commit install
+.PHONY: poetry-add
+poetry-add: ## Install a runtime package (uses PACKAGE)
+	@if [ -z "$(PACKAGE)" ]; then \
+		echo "❌ PACKAGE is required. Usage: make poetry-add PACKAGE=your-package"; exit 1; \
+	fi
+	poetry add $(PACKAGE)
 
-.PHONY: pre-commit-run
-pre-commit-run: ## run the pre-commit hooks
-	pipenv run pre-commit run --all-files
+.PHONY: poetry-add-dev
+poetry-add-dev: ## Install a dev package (uses PACKAGE)
+	@if [ -z "$(PACKAGE)" ]; then \
+		echo "❌ PACKAGE is required. Usage: make poetry-add-dev PACKAGE=your-package"; exit 1; \
+	fi
+	poetry add --group dev $(PACKAGE)
 
-################################################################################
-# PIPENV
-################################################################################
+.PHONY: poetry-show-tree
+poetry-show-tree: ## Show dependency tree
+	poetry show --tree
 
-.PHONY: pipenv-rm
-pipenv-rm: ## remove the virtual environment
-	pipenv --rm
-
-.PHONY: pipenv-install-dev
-pipenv-install-dev: ## setup the virtual environment, with dev packages
-	pipenv install --dev
-
-.PHONY: pipenv-install-package
-pipenv-install-package: ## install a package (uses PACKAGE)
-	pipenv install $(PACKAGE)
-
-.PHONY: pipenv-install-dev-package
-pipenv-install-dev-package: ## install a dev package (uses PACKAGE)
-	pipenv install --dev $(PACKAGE)
-
-.PHONY: pipenv-graph
-pipenv-graph: ## Check installed packages
-	pipenv graph
-
-.PHONY: pipenv-generate-requirements
-pipenv-generate-requirements: ## Check a requirements.txt
-	pipenv lock -r > requirements.txt
-
-.PHONY: pipenv-shell
-pipenv-shell: ## Activate the virtual environment
-	pipenv shell
-
-.PHONY: pipenv-venv
-pipenv-venv: ## Show the path to the venv
-	pipenv --venv
-
-.PHONY: pipenv-lock-and-install
-pipenv-lock-and-install: ## Lock the pipfile and install (after updating Pipfile)
-	pipenv lock && \
-	pipenv install --dev
-
-.PHONY: pipenv-pip-freeze
-pipenv-pip-freeze: ## Run pip freeze in the virtual environment
-	pipenv run pip freeze
+.PHONY: poetry-export-requirements-txt
+poetry-export-requirements-txt: ## Export requirements.txt (for Docker or CI)
+	poetry export --without-hashes --format=requirements.txt > requirements.txt
