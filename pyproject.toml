@@ -2,16 +2,14 @@
 name = "py-dependency-injection"
 version = "1.0.0-rc.2"
 description = "A dependency injection library for Python - inspired by ASP.NET Core."
-authors = [
-    {name = "David Runemalm",email = "david.runemalm@gmail.com"}
-]
-license = {text = "MIT"}
+authors = [{ name = "David Runemalm", email = "david.runemalm@gmail.com" }]
+license = { text = "MIT" }
 readme = "README.md"
+requires-python = ">=3.7"
 repository = "https://github.com/runemalm/py-dependency-injection"
 homepage = "https://py-dependency-injection.readthedocs.io/en/latest/"
 documentation = "https://py-dependency-injection.readthedocs.io/en/latest/"
 keywords = ["dependency injection", "di", "ioc", "inversion of control", "python"]
-requires-python = ">=3.7"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -43,10 +41,9 @@ pytest = "*"
 setuptools = "*"
 wheel = "*"
 
-[tool.poetry]
-packages = [
-    { include = "dependency_injection", from = "src" }
-]
+[tool.poetry.packages]
+include = "dependency_injection"
+from = "src"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
