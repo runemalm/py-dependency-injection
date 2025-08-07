@@ -46,6 +46,11 @@ wheel = "*"
 packages = ["dependency_injection"]
 package-dir = {"" = "src"}
 
+[tool.poetry]
+packages = [
+    { include = "dependency_injection", from = "src" }
+]
+
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
