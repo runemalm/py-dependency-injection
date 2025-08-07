@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Author: David Runemalm](https://img.shields.io/badge/Author-David%20Runemalm-blue)](https://www.davidrunemalm.com)
 [![Master workflow](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
 [![PyPI version](https://badge.fury.io/py/py-dependency-injection.svg)](https://pypi.org/project/py-dependency-injection/)
@@ -82,7 +82,8 @@ For more advanced usage and examples, please visit our [readthedocs](https://py-
 
 ## License
 
-`py-dependency-injection` is released under the GPL 3 license. See [LICENSE](LICENSE) for more details.
+`py-dependency-injection` is released under the MIT license — a permissive license that allows commercial use, modification, distribution, and private use.
+See [LICENSE](LICENSE) for full details.
 
 ## Source Code
 
