@@ -22,7 +22,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.7'
+          python-version: '3.9'
 
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
@@ -30,4 +30,4 @@ jobs:
   unittests:
     uses: ./.github/workflows/run-unittests.yml
     with:
-      python-versions: '["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]'
+      python-versions: '["3.9", "3.10", "3.11", "3.12", "3.13"]'

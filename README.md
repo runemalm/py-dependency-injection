@@ -1,5 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Author: David Runemalm](https://img.shields.io/badge/Author-David%20Runemalm-blue)](https://www.davidrunemalm.com)
+[![Python Versions](https://img.shields.io/pypi/pyversions/py-dependency-injection)](https://pypi.org/project/py-dependency-injection/)
 [![Master workflow](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
 [![PyPI version](https://badge.fury.io/py/py-dependency-injection.svg)](https://pypi.org/project/py-dependency-injection/)
 ![Downloads](https://pepy.tech/badge/py-dependency-injection)
@@ -27,9 +28,11 @@ This library is implemented in **pure Python** and has **no runtime dependencies
 
 ## Compatibility
 
-The library is compatible with the following Python versions:
+This library requires **Python 3.9 or later**.
 
-- 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13
+It is tested and compatible with:
+
+- Python 3.9, 3.10, 3.11, 3.12, 3.13
 
 ## Installation
 
@@ -95,5 +98,6 @@ You can find the source code for `py-dependency-injection` on [GitHub](https://g
 
 - **License Change**: Switched from GPL-3.0 to MIT to support broader adoption and commercial use.
 - **Toolchange**: Migrated from `pipenv` to `Poetry`.
+- **Dropped Python 3.7 & 3.8 support** – Both versions are EOL and increasingly unsupported by modern tooling.
 
 ➡️ Full changelog: [GitHub Releases](https://github.com/runemalm/py-dependency-injection/releases)

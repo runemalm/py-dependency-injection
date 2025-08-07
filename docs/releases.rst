@@ -11,6 +11,7 @@ Version History
 
 - **License Change**: Switched from GPL-3.0 to MIT to support broader adoption and commercial use.
 - **Toolchange**: Migrated from `pipenv` to `Poetry`.
+- **Dropped Python 3.7 & 3.8 support** – Both versions are EOL and increasingly unsupported by modern tooling.
 
 `View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.2>`_
 

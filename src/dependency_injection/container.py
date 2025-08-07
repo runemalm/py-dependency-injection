@@ -1,18 +1,18 @@
 import inspect
 from dataclasses import is_dataclass
 
-from typing import Any, Callable, Dict, List, Optional, TypeVar, Type, Union
-
-try:
-    from typing import get_origin, get_args
-except ImportError:
-    # Fallback if on Python <= 3.8
-    def get_origin(tp):
-        return getattr(tp, "__origin__", None)
-
-    def get_args(tp):
-        return getattr(tp, "__args__", ())
-
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    TypeVar,
+    Type,
+    Union,
+    get_args,
+    get_origin,
+)
 
 from dependency_injection.tags.all_tagged import AllTagged
 from dependency_injection.tags.any_tagged import AnyTagged

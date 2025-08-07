@@ -63,13 +63,13 @@ act-feature: ## Run release workflow locally with act
 
 .PHONY: release-test-all
 release-test-all: ## Install from TestPyPI and run test on all versions
-	@for PY in 3.7 3.8 3.9 3.10 3.11 3.12 3.13; do \
+	@for PY in 3.9 3.10 3.11 3.12 3.13; do \
 		echo "\n--- Running release-test-version for Python $$PY ---"; \
 		make release-test-version PY=$$PY || exit 1; \
 	done
 
 .PHONY: release-test-version
-release-test-version: ## Install package from TestPyPI and test it. Usage: make release-test-version PY=3.10
+release-test-version: ## Install package from TestPyPI and test it. Usage: make release-test-version PY=3.9
 	@if [ -z "$(PY)" ]; then \
 		echo "❌ PY is required. Usage: make release-test-version PY=3.10"; exit 1; \
 	fi

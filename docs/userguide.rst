@@ -24,7 +24,7 @@ Install the library using pip:
 
     $ pip install py-dependency-injection
 
-The library supports Python versions 3.7 through 3.13.
+The library supports Python versions 3.9 through 3.13.
 
 ##########################
 Core Concepts and Features
