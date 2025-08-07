@@ -6,11 +6,15 @@ on:
       - 'master'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  id-token: write
+  checks: write
+
 jobs:
   pre-commit:
     name: Run pre-commit
     runs-on: ubuntu-22.04
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,84 +28,6 @@ jobs:
         uses: pre-commit/action@v3.0.1
 
   unittests:
-    name: Run unittests
-    runs-on: ubuntu-22.04
-
-    strategy:
-      matrix:
-        python-version: [3.7.16, 3.8.18, 3.9.18, "3.10.13", 3.11.5, 3.12.0, 3.13.4]
-      fail-fast: false
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run unittests
-        uses: ./.github/actions/unittests
-        with:
-          python-version: ${{ matrix.python-version }}
-
-  prerelease:
-    name: Pre-release (test-pypi)
-    needs: unittests
-    if: success()
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build package
-        run: python setup.py sdist bdist_wheel
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: py-dependency-injection
-          path: dist/
-
-      - name: Publish to Test PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
-
-  release:
-    name: Release (pypi)
-    needs: prerelease
-    if: success() && (github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: py-dependency-injection
-          path: dist/
-
-      - name: Extract version from setup.py
-        id: extract-version
-        run: |
-          version=$(grep -Eo "version=['\"]([^'\"]+)['\"]" setup.py | awk -F"'" '{print $2}')
-          echo "Using version: $version"
-          echo "::set-output name=RELEASE_VERSION::$version"
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
-          repository_url: https://upload.pypi.org/legacy/
-          skip_existing: false
-
-      - name: Set up Git
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-
-      - name: Create and push tag
-        run: |
-          git tag -a v${{ steps.extract-version.outputs.RELEASE_VERSION }} -m "Release version v${{ steps.extract-version.outputs.RELEASE_VERSION }}"
-          git push origin v${{ steps.extract-version.outputs.RELEASE_VERSION }}
+    uses: ./.github/workflows/run-unittests.yml
+    with:
+      python-versions: '["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]'

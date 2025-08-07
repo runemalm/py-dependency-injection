@@ -6,7 +6,7 @@
 py-dependency-injection
 =======================
 
-A dependency injection library for Python — inspired by the built-in DI system in ASP.NET Core.
+A dependency injection library for Python - inspired by ASP.NET Core.
 
 Overview
 --------

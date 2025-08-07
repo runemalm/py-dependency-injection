@@ -7,6 +7,13 @@
 Version History
 ###############
 
+**1.0.0-rc.2 (2025-08-07)**
+
+- **License Change**: Switched from GPL-3.0 to MIT to support broader adoption and commercial use.
+- **Toolchange**: Migrated from `pipenv` to `Poetry`.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.2>`_
+
 **1.0.0-rc.1 (2025-06-22)**
 
 - **Transition to Release Candidate**: This marks the first release candidate. The public API is now considered stable and ready for final validation before 1.0.0.

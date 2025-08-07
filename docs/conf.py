@@ -15,7 +15,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src/"))
 
-from dependency_injection._version import __version__  # noqa: E402
+from dependency_injection.version import __version__  # noqa: E402
 
 
 # -- Auto doc generation -----

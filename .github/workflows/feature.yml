@@ -5,6 +5,10 @@ on:
     branches:
       - 'feature/*'
 
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   pre-commit:
     name: Run pre-commit
@@ -22,19 +26,6 @@ jobs:
         uses: pre-commit/action@v3.0.1
 
   unittests:
-    name: Run tests
-    runs-on: ubuntu-22.04
-
-    strategy:
-      matrix:
-        python-version: [3.7.16, 3.8.18, 3.9.18, "3.10.13", 3.11.5, 3.12.0, 3.13.4]
-      fail-fast: false
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run unittests
-        uses: ./.github/actions/unittests
-        with:
-          python-version: ${{ matrix.python-version }}
+    uses: ./.github/workflows/run-unittests.yml
+    with:
+      python-versions: '["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]'
