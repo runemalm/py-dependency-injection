@@ -1,14 +1,9 @@
-from typing import Type, Generic, TypeVar, Tuple, Union, Set
+from typing import Type, Generic, TypeVar, Tuple, Union
 
 T = TypeVar("T")
 
 
 class AnyTagged(Generic[T]):
-    def __init__(self, tags: Union[Tuple[Type[T], ...], Type[T]]):
-        if not isinstance(tags, tuple):
-            tags = (tags,)
-        self.tags: Set[Type[T]] = set(tags)
-
     @classmethod
     def __class_getitem__(
         cls, item: Union[Type[T], Tuple[Type[T], ...]]

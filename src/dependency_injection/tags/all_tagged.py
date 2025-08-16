@@ -1,12 +1,9 @@
-from typing import Generic, Set, Tuple, Type, TypeVar, Union
+from typing import Generic, Tuple, Type, TypeVar, Union
 
 T = TypeVar("T")
 
 
 class AllTagged(Generic[T]):
-    def __init__(self, tags: Tuple[Type[T], ...]):
-        self.tags: Set[Type[T]] = set(tags)
-
     @classmethod
     def __class_getitem__(
         cls, item: Union[Type[T], Tuple[Type[T], ...]]
