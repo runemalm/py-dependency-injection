@@ -128,8 +128,8 @@ black: ## format code using black
 black-check: ## check code don't violate black formatting rules
 	poetry run black --check --line-length 88 $(SRC) $(TESTS)
 
-.PHONY: flake
-flake: ## lint code with flake
+.PHONY: flake8
+flake8: ## lint code with flake8
 	poetry run flake8 --max-line-length=88 $(SRC) $(TESTS)
 
 .PHONY: pre-commit-install
