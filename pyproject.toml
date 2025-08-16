@@ -42,6 +42,7 @@ pre-commit = "*"
 pytest = "*"
 setuptools = "*"
 wheel = "*"
+pytest-cov = "^6.2.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

@@ -75,3 +75,9 @@ env.make
 
 # Docs
 docs/.venv
+
+# Test Coverage
+.coverage
+
+# Test Reports
+reports/

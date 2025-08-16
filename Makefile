@@ -32,7 +32,17 @@ help:
 
 .PHONY: test
 test: ## run test suite
-	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest $(TESTS)
+	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest \
+		$(TESTS)
+
+.PHONY: test-coverage
+test-coverage: ## run test suite with coverage and show terminal report
+	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest \
+		--cov=$(SRC) \
+		--cov-report=term-missing \
+		--cov-report=xml:reports/coverage.xml \
+		--cov-fail-under=90 \
+		$(TESTS)
 
 ################################################################################
 # RELEASE

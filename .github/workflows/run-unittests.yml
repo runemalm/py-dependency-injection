@@ -39,7 +39,26 @@ jobs:
       - name: Run unittests
         run: |
           mkdir -p reports
-          PYTHONPATH=./src:./tests poetry run pytest ./tests/unit_test --junitxml=reports/report.xml
+          PYTHONPATH=./src:./tests poetry run pytest \
+            --cov=src \
+            --cov-report=xml:reports/coverage.xml \
+            --junitxml=reports/report.xml \
+            ./tests/unit_test
+
+      - name: Upload coverage report
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.python-version }}
+          path: reports/coverage.xml
+
+      - name: Upload to Codecov
+        if: matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v4
+        with:
+          files: reports/coverage.xml
+          flags: unittests
+          fail_ci_if_error: true
 
       - name: Upload JUnit report
         uses: actions/upload-artifact@v4
