@@ -311,6 +311,10 @@ class DependencyContainer(metaclass=SingletonMeta):
 
         if self._is_optional_type(annotation):
             inner = self._unwrap_optional_type(annotation)
+
+            if get_origin(inner) is list:
+                return self._resolve_list_dependency(inner)
+
             try:
                 return self.resolve(inner, scope_name)
             except KeyError:
