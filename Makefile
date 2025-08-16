@@ -31,18 +31,31 @@ help:
 ##########################################################################
 
 .PHONY: test
-test: ## run test suite
+test: ## run test suite (uses VERBOSE)
 	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest \
+		$(if $(VERBOSE),-v,) \
 		$(TESTS)
 
-.PHONY: test-coverage
-test-coverage: ## run test suite with coverage and show terminal report
+.PHONY: coverage
+coverage: ## run test suite with coverage and show terminal report
 	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest \
 		--cov=$(SRC) \
 		--cov-report=term-missing \
 		--cov-report=xml:reports/coverage.xml \
 		--cov-fail-under=90 \
 		$(TESTS)
+
+.PHONY: coverage-html
+coverage-html: ## run test suite with coverage and generate HTML report
+	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest \
+		--cov=$(SRC) \
+		--cov-report=html:reports/htmlcov \
+		$(TESTS)
+	@echo "HTML coverage report generated at reports/htmlcov/index.html"
+
+.PHONY: coverage-open
+coverage-open: ## open the HTML coverage report in Google Chrome
+	open -a "Google Chrome" reports/htmlcov/index.html
 
 ################################################################################
 # RELEASE
