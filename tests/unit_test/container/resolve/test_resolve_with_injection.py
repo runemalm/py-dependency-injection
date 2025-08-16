@@ -149,6 +149,31 @@ class TestResolveWithInjection(UnitTestCase):
             any(isinstance(t, Banana) for t in resolved_dependency.transportations)
         )
 
+    def test_resolve_injects_any_tagged_dependencies_when_single_tag(self):
+        class PrimaryPort:
+            pass
+
+        class Http:
+            pass
+
+        class Cli:
+            pass
+
+        class App:
+            def __init__(self, ports: List[AnyTagged[PrimaryPort]]):
+                self.ports = ports
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_transient(Http, tags={PrimaryPort})
+        dependency_container.register_transient(Cli, tags={PrimaryPort})
+        dependency_container.register_transient(App)
+
+        app = dependency_container.resolve(App)
+
+        self.assertEqual(len(app.ports), 2)
+        self.assertTrue(any(isinstance(p, Http) for p in app.ports))
+        self.assertTrue(any(isinstance(p, Cli) for p in app.ports))
+
     def test_resolve_injects_all_tagged_dependencies(self):
         # arrange
         class Red:
@@ -188,6 +213,31 @@ class TestResolveWithInjection(UnitTestCase):
         self.assertEqual(len(resolved_dependency.white_colors), 1)
         self.assertIsInstance(resolved_dependency.white_colors[0], White)
         self.assertNotIsInstance(resolved_dependency.white_colors[0], NonWhite)
+
+    def test_resolve_injects_all_tagged_dependencies_when_single_tag(self):
+        class PrimaryPort:
+            pass
+
+        class Http:
+            pass
+
+        class Cli:
+            pass
+
+        class App:
+            def __init__(self, ports: List[AllTagged[PrimaryPort]]):
+                self.ports = ports
+
+        dependency_container = DependencyContainer.get_instance()
+        dependency_container.register_transient(Http, tags={PrimaryPort})
+        dependency_container.register_transient(Cli, tags={PrimaryPort})
+        dependency_container.register_transient(App)
+
+        app = dependency_container.resolve(App)
+
+        self.assertEqual(len(app.ports), 2)
+        self.assertTrue(any(isinstance(p, Http) for p in app.ports))
+        self.assertTrue(any(isinstance(p, Cli) for p in app.ports))
 
     def test_resolve_injects_empty_list_if_no_tags_match(self):
         # arrange
