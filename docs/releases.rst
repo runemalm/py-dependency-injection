@@ -7,6 +7,13 @@
 Version History
 ###############
 
+**1.0.0-rc.3 (2025-08-xx)**
+
+- **Tooling**: Added test coverage tooling (Codecov).
+- **Tests**: Added more unit tests to increase coverage.
+
+`View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.3>`_
+
 **1.0.0-rc.2 (2025-08-07)**
 
 - **License Change**: Switched from GPL-3.0 to MIT to support broader adoption and commercial use.

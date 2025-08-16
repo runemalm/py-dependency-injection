@@ -95,10 +95,9 @@ You can find the source code for `py-dependency-injection` on [GitHub](https://g
 
 ## Release Notes
 
-### Latest: [1.0.0-rc.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.2) (2025-08-07)
+### Latest: [1.0.0-rc.3](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.3) (2025-08-xx)
 
-- **License Change**: Switched from GPL-3.0 to MIT to support broader adoption and commercial use.
-- **Toolchange**: Migrated from `pipenv` to `Poetry`.
-- **Dropped Python 3.7 & 3.8 support** – Both versions are EOL and increasingly unsupported by modern tooling.
+- **Tooling**: Added test coverage tooling (Codecov).
+- **Tests**: Added more unit tests to increase coverage.
 
 ➡️ Full changelog: [GitHub Releases](https://github.com/runemalm/py-dependency-injection/releases)
