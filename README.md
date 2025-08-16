@@ -93,6 +93,7 @@ See [LICENSE](LICENSE) for full details.
 
 You can find the source code for `py-dependency-injection` on [GitHub](https://github.com/runemalm/py-dependency-injection).
 
+
 ## Release Notes
 
 ### Latest: [1.0.0-rc.2](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.2) (2025-08-07)
