@@ -31,9 +31,14 @@ help:
 ##########################################################################
 
 .PHONY: test
-test: ## run test suite (uses VERBOSE)
+test: ## run test suite
 	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest \
-		$(if $(VERBOSE),-v,) \
+		$(TESTS)
+
+.PHONY: test-verbose
+test-verbose: ## run test suite, in verbose mode
+	PYTHONPATH=$(SRC):$(TESTS) poetry run pytest \
+		-v \
 		$(TESTS)
 
 .PHONY: coverage
