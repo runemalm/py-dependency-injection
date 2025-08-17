@@ -157,7 +157,8 @@ sphinx-venv-init: ## Init venv for docs
 sphinx-venv-install: ## Install or update docs venv from requirements.txt
 	cd $(DOCS) && \
 	[ -d .venv ] || { echo "Missing .venv — run sphinx-venv-init first."; exit 1; } && \
-	.venv/bin/pip install -r requirements.txt
+	.venv/bin/pip install -r requirements.txt && \
+	.venv/bin/pip install -r requirements-dev.txt
 
 .PHONY: sphinx-venv-rm
 sphinx-venv-rm: ## Remove docs venv
