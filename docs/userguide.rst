@@ -18,11 +18,25 @@ This guide provides an overview of the key concepts and demonstrates how to star
 Installation
 ############
 
-Install the library using pip:
+Choose your preferred installer:
 
-.. code-block:: bash
+.. tab:: pip
 
-    $ pip install py-dependency-injection
+   .. code-block:: bash
+
+      python -m pip install py-dependency-injection
+
+.. tab:: Poetry
+
+   .. code-block:: bash
+
+      poetry add py-dependency-injection
+
+.. tab:: uv (fast)
+
+   .. code-block:: bash
+
+      uv add py-dependency-injection
 
 The library supports Python versions 3.9 through 3.13.
 
