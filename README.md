@@ -13,18 +13,18 @@ A dependency injection library for Python.
 
 ## Why py-dependency-injection?
 
-`py-dependency-injection` is inspired by the built-in dependency injection system in **ASP.NET Core**. It provides a lightweight and extensible way to manage dependencies in Python applications. By promoting constructor injection and supporting scoped lifetimes, it encourages clean architecture and makes testable, maintainable code the default.
+`py-dependency-injection` is inspired by the built-in dependency injection system in **ASP.NET Core**. It provides a lightweight and extensible way to manage services in Python applications. By promoting constructor injection and supporting scoped lifetimes, it encourages clean architecture and makes testable, maintainable code the default.
 
 This library is implemented in **pure Python** and has **no runtime dependencies**.
 
 ## Features
 
-- **Scoped Registrations:** Define the lifetime of your dependencies as transient, scoped, or singleton.
-- **Constructor Injection:** Automatically resolve and inject dependencies when creating instances.
-- **Method Injection:** Inject dependencies into methods using a simple decorator.
-- **Factory Functions:** Register factory functions, classes, or lambdas to create dependencies.
-- **Instance Registration:** Register existing instances as dependencies.
-- **Tag-Based Registration and Resolution:** Organize and resolve dependencies based on tags.
+- **Scoped Registrations:** Define the lifetime of your services as transient, scoped, or singleton.
+- **Constructor Injection:** Automatically resolve and inject services when creating instances.
+- **Method Injection:** Inject services into methods using a simple decorator.
+- **Factory Functions:** Register factory functions, classes, or lambdas to create services.
+- **Instance Registration:** Register existing instances as services.
+- **Tag-Based Registration and Resolution:** Organize and resolve services based on tags.
 - **Multiple Containers:** Support for using multiple dependency containers.
 
 ## Compatibility
@@ -66,7 +66,7 @@ class CheckoutService:
     def checkout(self):
         self._gateway.charge(2000, "USD")  # e.g. $20.00
 
-# Get the default dependency container
+# Get the default container
 container = DependencyContainer.get_instance()
 
 # Register StripeGateway as a singleton (shared for the app's lifetime)
@@ -97,6 +97,8 @@ You can find the source code for `py-dependency-injection` on [GitHub](https://g
 
 ### Latest: [1.0.0-rc.3](https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.3) (2025-08-xx)
 
+- **API polish:** Renamed `dependency` → `service`, `constructor_args` → `constructor_kwargs`, and `factory_args` → `factory_kwargs`; old keywords still work but emit deprecation warnings.
+- **Documentation**: Enabled copy button for code example blocks.
 - **Tooling**: Added test coverage tooling (Codecov).
 - **Tests**: Added more unit tests to increase coverage.
 
