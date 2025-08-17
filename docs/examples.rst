@@ -2,7 +2,7 @@
 Creating dependency containers
 ##############################
 
-In this example, we demonstrate how to create and retrieve dependency containers using the `DependencyContainer` class. This is useful when you want to manage dependencies in different contexts or areas of your application.
+In this example, we demonstrate how to create and retrieve dependency containers using the `DependencyContainer` class. This is useful when you want to manage services in different contexts or areas of your application.
 
 .. code-block:: python
 
@@ -17,47 +17,47 @@ In this example, we demonstrate how to create and retrieve dependency containers
     )
 
 
-####################################
-Registering dependencies with scopes
-####################################
+################################
+Registering services with scopes
+################################
 
-This example shows how to register dependencies with different scopes (transient, scoped, and singleton). This is important for controlling the lifecycle and reuse of your dependencies.
+This example shows how to register services with different scopes (transient, scoped, and singleton). This is important for controlling the lifecycle and reuse of your services.
 
 .. code-block:: python
 
-    # Register a transient dependency
+    # Register a transient service
     dependency_container.register_transient(
         Connection,
         PostgresConnection
     )
 
-    # Register a scoped dependency
+    # Register a scoped service
     dependency_container.register_scoped(
         Connection,
         PostgresConnection,
         scope_name="http_request"
     )
 
-    # Register a singleton dependency
+    # Register a singleton service
     dependency_container.register_singleton(
         Connection,
         PostgresConnection
     )
 
 
-######################################
-Registering with constructor arguments
-######################################
+###################################
+Registering with constructor kwargs
+###################################
 
-Here, we illustrate how to register a dependency with constructor arguments. This allows you to provide specific values or configurations to your dependencies when they are instantiated.
+Here, we illustrate how to register a service with constructor keyword arguments. This allows you to provide specific values or configurations to your services when they are instantiated.
 
 .. code-block:: python
 
-    # Register with constructor arguments
+    # Register with constructor kwargs
     dependency_container.register_transient(
         Connection,
         PostgresConnection,
-        constructor_args={
+        constructor_kwargs={
             "host": "localhost",
             "port": 5432
         }
@@ -68,7 +68,7 @@ Here, we illustrate how to register a dependency with constructor arguments. Thi
 Resolving with factory functions
 ################################
 
-In this section, we demonstrate how to register and resolve dependencies using the factory pattern. This provides flexibility in how your dependencies are created and configured. You can use factory functions, factory classes and factory lambdas.
+In this section, we demonstrate how to register and resolve services using the factory pattern. This provides flexibility in how your services are created and configured. You can use factory functions, factory classes and factory lambdas.
 
 .. note::
     Any `callable <https://docs.python.org/3/glossary.html#term-callable>`_ can be used as factory.
@@ -86,7 +86,7 @@ In this section, we demonstrate how to register and resolve dependencies using t
     dependency_container.register_factory(
         Connection,
         factory_function,
-        factory_args={
+        factory_kwargs={
             "host": "localhost",
             "port": 5432
         }
@@ -107,7 +107,7 @@ In this section, we demonstrate how to register and resolve dependencies using t
     dependency_container.register_factory(
         Connection,
         FactoryClass.create,
-        factory_args={
+        factory_kwargs={
             "host": "localhost",
             "port": 5432
         }
@@ -122,7 +122,7 @@ In this section, we demonstrate how to register and resolve dependencies using t
             host=host,
             port=port
         ),
-        factory_args={
+        factory_kwargs={
             "host": "localhost",
             "port": 5432
         }
@@ -133,7 +133,7 @@ In this section, we demonstrate how to register and resolve dependencies using t
 Registering and using instances
 ###############################
 
-This example demonstrates how to register and use instances of your dependencies. This is useful when you want to provide a specific instance of a dependency for use throughout your application.
+This example demonstrates how to register and use instances of your services. This is useful when you want to provide a specific instance of a service for use throughout your application.
 
 .. code-block:: python
 
@@ -150,15 +150,15 @@ This example demonstrates how to register and use instances of your dependencies
     )
 
     # Resolve instance
-    resolved_instance = dependency_container.resolve(Connection)
-    print(resolved_instance.host)  # Output: localhost
+    resolved = dependency_container.resolve(Connection)
+    print(resolved.host)  # Output: localhost
 
 
 ###################################
 Registering and resolving with tags
 ###################################
 
-In this example, we show how to register and resolve dependencies using tags. This allows you to categorize and retrieve specific groups of dependencies based on their tags.
+In this example, we show how to register and resolve services using tags. This allows you to categorize and retrieve specific groups of services based on their tags.
 
 .. code-block:: python
 
@@ -172,7 +172,7 @@ In this example, we show how to register and resolve dependencies using tags. Th
         }
     )
 
-    # Register another dependency with tags
+    # Register another service with tags
     dependency_container.register_scoped(
         BusConnection,
         KafkaBusConnection,
@@ -182,23 +182,23 @@ In this example, we show how to register and resolve dependencies using tags. Th
         }
     )
 
-    # Resolve all dependencies with the 'Startable' tag
-    resolved_dependencies = dependency_container.resolve_all(
+    # Resolve all services with the 'Startable' tag
+    resolved = dependency_container.resolve_all(
         tags={
             Startable
         }
     )
 
-    # Use resolved dependencies
-    for dependency in resolved_dependencies:
-        dependency.start()
+    # Use resolved services
+    for service in resolved:
+        service.start()
 
 
 ###########################
 Using constructor injection
 ###########################
 
-This example illustrates how to use constructor injection to automatically inject dependencies into your classes. This is a common pattern for managing dependencies in object-oriented programming. This is probably how you'll want to resolve 99% of the dependencies in your software application.
+This example illustrates how to use constructor injection to automatically inject services into your classes. This is a common pattern for managing dependencies in object-oriented programming. This is probably how you'll want to resolve 99% of the services in your software application.
 
 .. code-block:: python
 
@@ -206,7 +206,7 @@ This example illustrates how to use constructor injection to automatically injec
         def __init__(self, connection: Connection):
             self.connection = connection
 
-    # Register dependencies
+    # Register services
     dependency_container.register_transient(
         OrderRepository
     )
@@ -216,20 +216,20 @@ This example illustrates how to use constructor injection to automatically injec
         PostgresConnection
     )
 
-    # Resolve with injected dependencies
+    # Resolve with injected services
     repository = dependency_container.resolve(
         OrderRepository
     )
 
-    # Use injected dependency
+    # Use injected service
     print(repository.connection.__class__.__name__)  # Output: PostgresConnection
 
 
-######################################################
-Using constructor injection with tagged dependencies
-######################################################
+################################################
+Using constructor injection with tagged services
+################################################
 
-This example demonstrates how to use constructor injection to automatically inject tagged dependencies into your classes. By leveraging tags, you can group and categorize dependencies, enabling automatic injection based on specific criteria.
+This example demonstrates how to use constructor injection to automatically inject tagged services into your classes. By leveraging tags, you can group and categorize services, enabling automatic injection based on specific criteria.
 
 .. code-block:: python
 
@@ -250,36 +250,36 @@ This example demonstrates how to use constructor injection to automatically inje
             self.primary_ports = primary_ports
             self.secondary_ports = secondary_ports
 
-    # Register dependencies with tags
+    # Register services with tags
     dependency_container.register_transient(HttpAdapter, tags={PrimaryPort})
     dependency_container.register_transient(PostgresCarRepository, tags={SecondaryPort})
 
-    # Register the Application class to have its dependencies injected
+    # Register the Application class to have its services injected
     dependency_container.register_transient(Application)
 
-    # Resolve the Application class, with tagged dependencies automatically injected
+    # Resolve the Application class, with tagged services automatically injected
     application = dependency_container.resolve(Application)
 
-    # Use the injected dependencies
+    # Use the injected services
     print(f"Primary ports: {len(application.primary_ports)}")  # Output: Primary ports: 1
     print(f"Secondary ports: {len(application.secondary_ports)}")  # Output: Secondary ports: 1
     print(f"Primary port instance: {type(application.primary_ports[0]).__name__}")  # Output: HttpAdapter
     print(f"Secondary port instance: {type(application.secondary_ports[0]).__name__}")  # Output: PostgresCarRepository
 
 
-In this example, the `Application` class expects lists of instances tagged with `PrimaryPort` and `SecondaryPort`. By tagging and registering these dependencies, the container automatically injects the correct instances into the `Application` class when it is resolved.
+In this example, the `Application` class expects lists of instances tagged with `PrimaryPort` and `SecondaryPort`. By tagging and registering these services, the container automatically injects the correct instances into the `Application` class when it is resolved.
 
-Tags offer a powerful way to manage dependencies, ensuring that the right instances are injected based on your application's needs.
+Tags offer a powerful way to manage services, ensuring that the right instances are injected based on your application's needs.
 
 .. note::
-    You can also use the ``AnyTagged`` and ``AllTagged`` classes to inject dependencies based on more complex tagging logic. ``AnyTagged`` allows injection of any dependency matching one or more specified tags, while ``AllTagged`` requires the dependency to match all specified tags before injection. This provides additional flexibility in managing and resolving dependencies in your application.
+    You can also use the ``AnyTagged`` and ``AllTagged`` classes to inject services based on more complex tagging logic. ``AnyTagged`` allows injection of any service matching one or more specified tags, while ``AllTagged`` requires the service to match all specified tags before injection. This provides additional flexibility in managing and resolving services in your application.
 
 
 ######################
 Using method injection
 ######################
 
-This example demonstrates how to use method injection to inject dependencies into methods at runtime. This is useful for dynamically providing dependencies to class- or static methods, without affecting the entire class.
+This example demonstrates how to use method injection to inject services into methods at runtime. This is useful for dynamically providing services to class- or static methods, without affecting the entire class.
 
 .. note::
     You can pass the arguments ``container_name`` and ``scope_name`` to ``@inject``.
@@ -296,7 +296,7 @@ This example demonstrates how to use method injection to inject dependencies int
             order.set_status("placed")
             repository.save(order)
 
-    # Register dependencies
+    # Register services
     dependency_container.register_transient(
         OrderRepository
     )

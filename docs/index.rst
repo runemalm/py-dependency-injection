@@ -24,8 +24,6 @@ Key Advantages
 - **Test-friendly** – Designed for container isolation and overrides
 - **Minimalistic** – Easy to use, extend, and integrate
 
-You can find the source code for `py-dependency-injection` in our `GitHub repository <https://github.com/runemalm/py-dependency-injection>`_.
-
 .. userguide-docs:
 .. toctree::
   :maxdepth: 1

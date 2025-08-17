@@ -14,6 +14,15 @@ Introduction
 
 This guide provides an overview of the key concepts and demonstrates how to start using the library effectively. For detailed examples, see the `Examples` section.
 
+###########
+Terminology
+###########
+
+In this guide:
+
+- **Service** — an abstract type or protocol you depend on.
+- **Implementation** — a concrete class that fulfills the service.
+
 ############
 Installation
 ############
@@ -46,10 +55,10 @@ Core Concepts and Features
 
 `py-dependency-injection` offers:
 
-- **Scoped Dependency Management**: Define lifetimes for your dependencies (e.g., transient, scoped, singleton).
-- **Flexible Registrations**: Use constructors, factories, or predefined instances for dependency registration.
-- **Tag-Based Organization**: Categorize and resolve dependencies using tags.
-- **Multiple Containers**: Isolate dependencies for different parts of your application.
+- **Scoped Service Management**: Define lifetimes for your services (transient, scoped, singleton).
+- **Flexible Registrations**: Use constructors, factories, or predefined instances for service registration.
+- **Tag-Based Organization**: Categorize and resolve services using tags.
+- **Multiple Containers**: Isolate services for different parts of your application.
 
 Refer to the `Examples` section for detailed usage scenarios.
 
@@ -58,13 +67,13 @@ Quick Start Overview
 ####################
 
 1. **Create a Dependency Container**:
-   - The `DependencyContainer` is the core object for managing dependencies.
+   - The `DependencyContainer` is the core object for registering and resolving services.
 
-2. **Register Dependencies**:
-   - Dependencies can be registered with different lifetimes: transient, scoped, or singleton.
+2. **Register Services**:
+   - Services can be registered with different lifetimes: transient, scoped, or singleton.
 
-3. **Resolve Dependencies**:
-   - Use the container to resolve dependencies where needed.
+3. **Resolve Services**:
+   - Use the container to resolve services where needed.
 
 Basic workflow:
 
@@ -81,7 +90,7 @@ Basic workflow:
     # Create a container
     container = DependencyContainer.get_instance()
 
-    # Register and resolve dependencies
+    # Register and resolve services
     container.register_singleton(Connection, PostgresConnection)
     connection = container.resolve(Connection)
     print(type(connection).__name__)  # Output: PostgresConnection
@@ -93,7 +102,7 @@ Best Practices
 - **Prefer Constructor Injection**: It promotes clear interfaces and testable components.
 - **Use the Right Lifetime**: Choose between transient, scoped, and singleton based on your component's role.
 - **Organize with Tags**: Use tag-based registration and resolution to group related services.
-- **Avoid Container Coupling**: Inject dependencies via constructors rather than accessing the container directly.
+- **Avoid Container Coupling**: Inject services via constructors rather than accessing the container directly.
 - **Use Multiple Containers When Needed**: For modular apps or test isolation, create dedicated containers.
 
 #################
@@ -101,7 +110,7 @@ Where to Go Next?
 #################
 
 - **Examples**:
-  Explore detailed examples of how to register, resolve, and manage dependencies effectively in the `Examples` section.
+  Explore detailed examples of how to register, resolve, and manage services effectively in the `Examples` section.
 
 - **Community and Support**:
   Join our community on GitHub to ask questions, report issues, or contribute to the project.
