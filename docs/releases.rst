@@ -9,6 +9,8 @@ Version History
 
 **1.0.0-rc.3 (2025-08-xx)**
 
+- **API polish:** Renamed `dependency` → `service`, `constructor_args` → `constructor_kwargs`, and `factory_args` → `factory_kwargs`; old keywords still work but emit deprecation warnings.
+- **Documentation**: Enabled copy button for code example blocks.
 - **Tooling**: Added test coverage tooling (Codecov).
 - **Tests**: Added more unit tests to increase coverage.
 
