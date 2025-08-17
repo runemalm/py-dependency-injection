@@ -16,11 +16,11 @@ class TestRegisterTransient(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
         # act
-        dependency_container.register_transient(dependency, implementation)
+        dependency_container.register_transient(service, implementation)
 
         # assert (no exception thrown)
 
@@ -35,13 +35,13 @@ class TestRegisterTransient(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
-        dependency_container.register_transient(dependency, implementation)
+        dependency_container.register_transient(service, implementation)
 
         # act + assert
         with pytest.raises(ValueError, match="is already registered"):
-            dependency_container.register_transient(dependency, implementation)
+            dependency_container.register_transient(service, implementation)
 
     def test_success_when_dependency_and_implementation_same(
         self,
@@ -51,10 +51,10 @@ class TestRegisterTransient(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
 
         # act
-        dependency_container.register_transient(dependency)
+        dependency_container.register_transient(service)
 
         # assert (no exception thrown)
 

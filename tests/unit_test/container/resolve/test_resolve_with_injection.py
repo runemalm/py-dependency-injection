@@ -25,12 +25,12 @@ class TestResolveWithInjection(UnitTestCase):
         dependency_container.register_transient(Car)
 
         # act
-        resolved_dependency = dependency_container.resolve(Car)
+        resolved = dependency_container.resolve(Car)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Car)
-        self.assertIsNotNone(resolved_dependency.engine)
-        self.assertIsInstance(resolved_dependency.engine, Engine)
+        self.assertIsInstance(resolved, Car)
+        self.assertIsNotNone(resolved.engine)
+        self.assertIsInstance(resolved.engine, Engine)
 
     def test_resolve_skips_constructor_injection_for_dataclass(self):
         # arrange
@@ -46,13 +46,11 @@ class TestResolveWithInjection(UnitTestCase):
         dependency_container.register_transient(Car)
 
         # act
-        resolved_dependency = dependency_container.resolve(Car)
+        resolved = dependency_container.resolve(Car)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Car)
-        self.assertIsNone(
-            resolved_dependency.engine
-        )  # Should be None since injection is skipped
+        self.assertIsInstance(resolved, Car)
+        self.assertIsNone(resolved.engine)  # Should be None since injection is skipped
 
     def test_resolve_injects_tagged_dependencies(self):
         # arrange
@@ -84,22 +82,15 @@ class TestResolveWithInjection(UnitTestCase):
         dependency_container.register_transient(Application)
 
         # act
-        resolved_dependency = dependency_container.resolve(Application)
+        resolved = dependency_container.resolve(Application)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Application)
-        self.assertEqual(len(resolved_dependency.primary_ports), 2)
-        self.assertTrue(
-            any(isinstance(t, HttpAdapter) for t in resolved_dependency.primary_ports)
-        )
-        self.assertTrue(
-            any(isinstance(t, CliAdapter) for t in resolved_dependency.primary_ports)
-        )
+        self.assertIsInstance(resolved, Application)
+        self.assertEqual(len(resolved.primary_ports), 2)
+        self.assertTrue(any(isinstance(t, HttpAdapter) for t in resolved.primary_ports))
+        self.assertTrue(any(isinstance(t, CliAdapter) for t in resolved.primary_ports))
         self.assertFalse(
-            any(
-                isinstance(t, PostgresCarRepository)
-                for t in resolved_dependency.primary_ports
-            )
+            any(isinstance(t, PostgresCarRepository) for t in resolved.primary_ports)
         )
 
     def test_resolve_injects_any_tagged_dependencies(self):
@@ -133,21 +124,15 @@ class TestResolveWithInjection(UnitTestCase):
         dependency_container.register_transient(Trip)
 
         # act
-        resolved_dependency = dependency_container.resolve(Trip)
+        resolved = dependency_container.resolve(Trip)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Trip)
-        self.assertIsInstance(resolved_dependency, Trip)
-        self.assertEqual(len(resolved_dependency.transportations), 2)
-        self.assertTrue(
-            any(isinstance(t, Volvo) for t in resolved_dependency.transportations)
-        )
-        self.assertTrue(
-            any(isinstance(t, Scania) for t in resolved_dependency.transportations)
-        )
-        self.assertFalse(
-            any(isinstance(t, Banana) for t in resolved_dependency.transportations)
-        )
+        self.assertIsInstance(resolved, Trip)
+        self.assertIsInstance(resolved, Trip)
+        self.assertEqual(len(resolved.transportations), 2)
+        self.assertTrue(any(isinstance(t, Volvo) for t in resolved.transportations))
+        self.assertTrue(any(isinstance(t, Scania) for t in resolved.transportations))
+        self.assertFalse(any(isinstance(t, Banana) for t in resolved.transportations))
 
     def test_resolve_injects_any_tagged_dependencies_when_single_tag(self):
         class PrimaryPort:
@@ -206,13 +191,13 @@ class TestResolveWithInjection(UnitTestCase):
         dependency_container.register_transient(Palette)
 
         # act
-        resolved_dependency = dependency_container.resolve(Palette)
+        resolved = dependency_container.resolve(Palette)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Palette)
-        self.assertEqual(len(resolved_dependency.white_colors), 1)
-        self.assertIsInstance(resolved_dependency.white_colors[0], White)
-        self.assertNotIsInstance(resolved_dependency.white_colors[0], NonWhite)
+        self.assertIsInstance(resolved, Palette)
+        self.assertEqual(len(resolved.white_colors), 1)
+        self.assertIsInstance(resolved.white_colors[0], White)
+        self.assertNotIsInstance(resolved.white_colors[0], NonWhite)
 
     def test_resolve_injects_all_tagged_dependencies_when_single_tag(self):
         class PrimaryPort:
@@ -252,8 +237,8 @@ class TestResolveWithInjection(UnitTestCase):
         dependency_container.register_transient(Application)
 
         # act
-        resolved_dependency = dependency_container.resolve(Application)
+        resolved = dependency_container.resolve(Application)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Application)
-        self.assertEqual(len(resolved_dependency.primary_ports), 0)
+        self.assertIsInstance(resolved, Application)
+        self.assertEqual(len(resolved.primary_ports), 0)

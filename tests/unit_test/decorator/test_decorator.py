@@ -15,10 +15,10 @@ class TestDecorator(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
-        dependency_container.register_transient(dependency, implementation)
+        dependency_container.register_transient(service, implementation)
 
         class Garage:
             vehicle: Vehicle
@@ -43,10 +43,10 @@ class TestDecorator(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
-        dependency_container.register_transient(dependency, implementation)
+        dependency_container.register_transient(service, implementation)
 
         class Garage:
             vehicle: Vehicle
@@ -73,10 +73,10 @@ class TestDecorator(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
-        dependency_container.register_transient(dependency, implementation)
+        dependency_container.register_transient(service, implementation)
 
         with pytest.raises(
             TypeError,
@@ -99,16 +99,16 @@ class TestDecorator(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_singleton(dependency, implementation)
+        dependency_container.register_singleton(service, implementation)
 
         second_container = DependencyContainer.get_instance("second")
-        second_container.register_singleton(dependency, implementation)
+        second_container.register_singleton(service, implementation)
 
-        second_container_vehicle = second_container.resolve(dependency)
+        second_container_vehicle = second_container.resolve(service)
 
         class Garage:
             vehicle: Vehicle
@@ -134,17 +134,17 @@ class TestDecorator(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_scoped(dependency, implementation)
+        dependency_container.register_scoped(service, implementation)
 
         first_scope_vehicle = dependency_container.resolve(
-            dependency, scope_name="first_scope"
+            service, scope_name="first_scope"
         )
         second_scope_vehicle = dependency_container.resolve(
-            dependency, scope_name="second_scope"
+            service, scope_name="second_scope"
         )
 
         class Garage:
@@ -180,16 +180,16 @@ class TestDecorator(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_singleton(dependency, implementation)
+        dependency_container.register_singleton(service, implementation)
 
         second_container = DependencyContainer.get_instance("second")
-        second_container.register_singleton(dependency, implementation)
+        second_container.register_singleton(service, implementation)
 
-        second_container_vehicle = second_container.resolve(dependency)
+        second_container_vehicle = second_container.resolve(service)
 
         class Garage:
             vehicle: Vehicle
@@ -215,17 +215,17 @@ class TestDecorator(UnitTestCase):
         class Car(Vehicle):
             pass
 
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
         dependency_container = DependencyContainer.get_instance()
-        dependency_container.register_scoped(dependency, implementation)
+        dependency_container.register_scoped(service, implementation)
 
         first_scope_vehicle = dependency_container.resolve(
-            dependency, scope_name="first_scope"
+            service, scope_name="first_scope"
         )
         second_scope_vehicle = dependency_container.resolve(
-            dependency, scope_name="second_scope"
+            service, scope_name="second_scope"
         )
 
         class Garage:

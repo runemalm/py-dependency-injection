@@ -16,11 +16,11 @@ class TestRegisterSingleton(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
         # act
-        dependency_container.register_singleton(dependency, implementation)
+        dependency_container.register_singleton(service, implementation)
 
         # assert
         # (no exception thrown)
@@ -36,13 +36,13 @@ class TestRegisterSingleton(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
-        dependency_container.register_singleton(dependency, implementation)
+        dependency_container.register_singleton(service, implementation)
 
         # act + assert
         with pytest.raises(ValueError, match="is already registered"):
-            dependency_container.register_singleton(dependency, implementation)
+            dependency_container.register_singleton(service, implementation)
 
     def test_register_singleton_when_dependency_and_implementation_being_the_same(
         self,
@@ -52,9 +52,9 @@ class TestRegisterSingleton(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
 
         # act
-        dependency_container.register_singleton(dependency)
+        dependency_container.register_singleton(service)
 
         # assert (no exception thrown)

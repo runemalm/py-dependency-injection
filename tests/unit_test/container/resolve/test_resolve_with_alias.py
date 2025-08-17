@@ -15,8 +15,8 @@ class TestResolveWithAlias(UnitTestCase):
         dependency_container.register_transient(VehicleAlias)
 
         # act
-        resolved_dependency = dependency_container.resolve(Vehicle)
+        resolved = dependency_container.resolve(Vehicle)
 
         # assert
-        self.assertIsNotNone(resolved_dependency)
-        self.assertIsInstance(resolved_dependency, Vehicle)
+        self.assertIsNotNone(resolved)
+        self.assertIsInstance(resolved, Vehicle)

@@ -7,7 +7,7 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestResolveWithArgs(UnitTestCase):
-    def test_resolve_passes_constructor_args(
+    def test_resolve_passes_constructor_kwargs(
         self,
     ):
         # arrange
@@ -20,20 +20,20 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
         dependency_container.register_transient(
-            dependency=dependency,
+            service=service,
             implementation=implementation,
-            constructor_args={"color": "red", "make": "Volvo"},
+            constructor_kwargs={"color": "red", "make": "Volvo"},
         )
 
         # act
-        resolved_dependency = dependency_container.resolve(dependency)
+        resolved = dependency_container.resolve(service)
 
         # assert
-        self.assertEqual("red", resolved_dependency.color)
-        self.assertEqual("Volvo", resolved_dependency.make)
+        self.assertEqual("red", resolved.color)
+        self.assertEqual("Volvo", resolved.make)
 
     def test_resolve_with_extra_constructor_arg_raises(
         self,
@@ -48,12 +48,12 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
         dependency_container.register_transient(
-            dependency=dependency,
+            service=service,
             implementation=implementation,
-            constructor_args={"color": "red", "make": "Volvo", "extra": "argument"},
+            constructor_kwargs={"color": "red", "make": "Volvo", "extra": "argument"},
         )
 
         # act
@@ -62,7 +62,7 @@ class TestResolveWithArgs(UnitTestCase):
             match="Invalid constructor argument 'extra' for class 'Car'. "
             "The class does not have a constructor parameter with this name.",
         ):
-            dependency_container.resolve(dependency)
+            dependency_container.resolve(service)
 
     def test_resolve_with_wrong_constructor_arg_type_raises(
         self,
@@ -77,21 +77,21 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
         dependency_container.register_transient(
-            dependency=dependency,
+            service=service,
             implementation=implementation,
-            constructor_args={"color": "red", "make": -1},
+            constructor_kwargs={"color": "red", "make": -1},
         )
 
         # act
         with pytest.raises(
             TypeError,
             match="Constructor argument 'make' has an incompatible type. "
-            "Expected type: <class 'str'>, provided type: <class 'int'>.",
+            "Expected: <class 'str'>, provided: <class 'int'>.",
         ):
-            dependency_container.resolve(dependency)
+            dependency_container.resolve(service)
 
     def test_resolve_when_no_constructor_arg_type_is_ok(
         self,
@@ -106,18 +106,18 @@ class TestResolveWithArgs(UnitTestCase):
                 self.make = make
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
         dependency_container.register_transient(
-            dependency=dependency,
+            service=service,
             implementation=implementation,
-            constructor_args={"color": "red", "make": -1},
+            constructor_kwargs={"color": "red", "make": -1},
         )
 
         # act + assert (no exception)
-        dependency_container.resolve(dependency)
+        dependency_container.resolve(service)
 
-    def test_resolve_merges_registered_constructor_args_with_auto_injected_dependencies(
+    def test_resolve_merges_registered_constructor_kwargs_with_auto_injected_deps(
         self,
     ):
         # arrange
@@ -142,18 +142,18 @@ class TestResolveWithArgs(UnitTestCase):
         dependency_container.register_transient(
             Vehicle,
             Car,
-            constructor_args={"color": "red"},
+            constructor_kwargs={"color": "red"},
         )
 
         # act
-        resolved_dependency = dependency_container.resolve(Vehicle)
+        resolved = dependency_container.resolve(Vehicle)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Car)
-        self.assertEqual("red", resolved_dependency.color)
-        self.assertIsInstance(resolved_dependency.engine, Engine)
+        self.assertIsInstance(resolved, Car)
+        self.assertEqual("red", resolved.color)
+        self.assertIsInstance(resolved.engine, Engine)
 
-    def test_optional_dependency_overridden_by_constructor_args(self):
+    def test_optional_dependency_overridden_by_constructor_kwargs(self):
         # arrange
         class Engine:
             def __init__(self, name: str):
@@ -167,7 +167,7 @@ class TestResolveWithArgs(UnitTestCase):
 
         dependency_container = DependencyContainer.get_instance()
         dependency_container.register_transient(
-            Car, constructor_args={"engine": engine_instance}
+            Car, constructor_kwargs={"engine": engine_instance}
         )
 
         # act
@@ -188,7 +188,7 @@ class TestResolveWithArgs(UnitTestCase):
 
         dependency_container = DependencyContainer.get_instance()
         dependency_container.register_transient(
-            Car, constructor_args={"engine": Engine("Fallback")}
+            Car, constructor_kwargs={"engine": Engine("Fallback")}
         )
 
         # act
@@ -211,10 +211,10 @@ class TestResolveWithArgs(UnitTestCase):
 
         dependency_container = DependencyContainer.get_instance()
         dependency_container.register_transient(
-            Engine, constructor_args={"name": "Auto"}
+            Engine, constructor_kwargs={"name": "Auto"}
         )
         dependency_container.register_transient(
-            Car, constructor_args={"engine": Engine("Manual")}
+            Car, constructor_kwargs={"engine": Engine("Manual")}
         )
 
         # act

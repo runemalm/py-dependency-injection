@@ -16,11 +16,11 @@ class TestRegisterScoped(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
         # act
-        dependency_container.register_scoped(dependency, implementation)
+        dependency_container.register_scoped(service, implementation)
 
         # assert
         # (no exception thrown)
@@ -36,13 +36,13 @@ class TestRegisterScoped(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
-        dependency_container.register_scoped(dependency, implementation)
+        dependency_container.register_scoped(service, implementation)
 
         # act + assert
         with pytest.raises(ValueError, match="is already registered"):
-            dependency_container.register_scoped(dependency, implementation)
+            dependency_container.register_scoped(service, implementation)
 
     def test_register_scoped_when_dependency_and_implementation_being_the_same(
         self,
@@ -52,9 +52,9 @@ class TestRegisterScoped(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
 
         # act
-        dependency_container.register_scoped(dependency)
+        dependency_container.register_scoped(service)
 
         # assert (no exception thrown)

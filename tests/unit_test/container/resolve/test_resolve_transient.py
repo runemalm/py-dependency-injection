@@ -14,15 +14,15 @@ class TestResolveTransient(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
-        dependency_container.register_transient(dependency, implementation)
+        dependency_container.register_transient(service, implementation)
 
         # act
-        resolved_dependency = dependency_container.resolve(dependency)
+        resolved = dependency_container.resolve(service)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Car)
+        self.assertIsInstance(resolved, Car)
 
     def test_resolve_transient_twice_returns_different_instances(
         self,
@@ -35,16 +35,16 @@ class TestResolveTransient(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
-        dependency_container.register_transient(dependency, implementation)
+        dependency_container.register_transient(service, implementation)
 
         # act
-        resolved_dependency_1 = dependency_container.resolve(dependency)
-        resolved_dependency_2 = dependency_container.resolve(dependency)
+        resolved_1 = dependency_container.resolve(service)
+        resolved_2 = dependency_container.resolve(service)
 
         # assert
-        self.assertNotEqual(resolved_dependency_1, resolved_dependency_2)
+        self.assertNotEqual(resolved_1, resolved_2)
 
     def test_returns_an_instance_when_registered_without_implementation_arg(
         self,
@@ -54,11 +54,11 @@ class TestResolveTransient(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
-        dependency_container.register_transient(dependency)
+        service = Vehicle
+        dependency_container.register_transient(service)
 
         # act
-        resolved_dependency = dependency_container.resolve(dependency)
+        resolved = dependency_container.resolve(service)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Vehicle)
+        self.assertIsInstance(resolved, Vehicle)

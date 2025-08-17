@@ -1,4 +1,5 @@
 import inspect
+import warnings
 from dataclasses import is_dataclass
 
 from typing import (
@@ -74,85 +75,228 @@ class DependencyContainer(metaclass=SingletonMeta):
 
         return cls._instances[(cls, name)]
 
+    # -------------
+    # Registrations
+    # -------------
+
     def register_transient(
         self,
-        dependency: Type,
+        service: Type = None,
         implementation: Optional[Type] = None,
         tags: Optional[set] = None,
-        constructor_args: Optional[Dict[str, Any]] = None,
+        constructor_kwargs: Optional[Dict[str, Any]] = None,
+        **aliases: Any,
     ) -> None:
+        # when we remove deprecated aliases in next major make service non-optional arg
+        if "dependency" in aliases:
+            warnings.warn(
+                "`dependency` is deprecated; use `service`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            service = aliases.pop("dependency")
+        if "constructor_args" in aliases:
+            warnings.warn(
+                "`constructor_args` is deprecated; use `constructor_kwargs`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            constructor_kwargs = aliases.pop("constructor_args")
+        if aliases:
+            raise TypeError(f"Unexpected keyword(s): {', '.join(aliases)}")
+        if service is None:
+            raise TypeError("`service` is required (or use deprecated `dependency=`).")
+
         self._register(
-            dependency, implementation, Scope.TRANSIENT, tags, constructor_args
+            service, implementation, Scope.TRANSIENT, tags, constructor_kwargs
         )
 
     def register_scoped(
         self,
-        dependency: Type,
+        service: Type = None,
         implementation: Optional[Type] = None,
         tags: Optional[set] = None,
-        constructor_args: Optional[Dict[str, Any]] = None,
+        constructor_kwargs: Optional[Dict[str, Any]] = None,
+        **aliases: Any,
     ) -> None:
-        self._register(dependency, implementation, Scope.SCOPED, tags, constructor_args)
+        # when we remove deprecated aliases in next major make service non-optional arg
+        if "dependency" in aliases:
+            warnings.warn(
+                "`dependency` is deprecated; use `service`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            service = aliases.pop("dependency")
+        if "constructor_args" in aliases:
+            warnings.warn(
+                "`constructor_args` is deprecated; use `constructor_kwargs`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            constructor_kwargs = aliases.pop("constructor_args")
+        if aliases:
+            raise TypeError(f"Unexpected keyword(s): {', '.join(aliases)}")
+        if service is None:
+            raise TypeError("`service` is required (or use deprecated `dependency=`).")
+
+        self._register(service, implementation, Scope.SCOPED, tags, constructor_kwargs)
 
     def register_singleton(
         self,
-        dependency: Type,
+        service: Type = None,
         implementation: Optional[Type] = None,
         tags: Optional[set] = None,
-        constructor_args: Optional[Dict[str, Any]] = None,
+        constructor_kwargs: Optional[Dict[str, Any]] = None,
+        **aliases: Any,
     ) -> None:
+        # when we remove deprecated aliases in next major make service non-optional arg
+        if "dependency" in aliases:
+            warnings.warn(
+                "`dependency` is deprecated; use `service`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            service = aliases.pop("dependency")
+        if "constructor_args" in aliases:
+            warnings.warn(
+                "`constructor_args` is deprecated; use `constructor_kwargs`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            constructor_kwargs = aliases.pop("constructor_args")
+        if aliases:
+            raise TypeError(f"Unexpected keyword(s): {', '.join(aliases)}")
+        if service is None:
+            raise TypeError("`service` is required (or use deprecated `dependency=`).")
+
         self._register(
-            dependency, implementation, Scope.SINGLETON, tags, constructor_args
+            service, implementation, Scope.SINGLETON, tags, constructor_kwargs
         )
 
     def register_factory(
         self,
-        dependency: Type,
-        factory: Callable[[Any], Any],
-        factory_args: Optional[Dict[str, Any]] = None,
+        service: Type = None,
+        factory: Callable[[Any], Any] = None,
+        factory_kwargs: Optional[Dict[str, Any]] = None,
         tags: Optional[set] = None,
+        **aliases: Any,
     ) -> None:
-        self._validate_registration(dependency)
-        self._registrations[dependency] = Registration(
-            dependency, None, Scope.FACTORY, tags, None, factory, factory_args
+        # when we remove deprecated aliases in next major make service and
+        # factory non-optional args
+        if "dependency" in aliases:
+            warnings.warn(
+                "`dependency` is deprecated; use `service`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            service = aliases.pop("dependency")
+        if "factory_args" in aliases:
+            warnings.warn(
+                "`factory_args` is deprecated; use `factory_kwargs`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            factory_kwargs = aliases.pop("factory_args")
+        if aliases:
+            raise TypeError(f"Unexpected keyword(s): {', '.join(aliases)}")
+        if service is None:
+            raise TypeError("`service` is required (or use deprecated `dependency=`).")
+        if factory is None:
+            raise TypeError("`factory` is required.")
+
+        self._validate_registration(service)
+        self._registrations[service] = Registration(
+            service=service,
+            implementation=None,
+            scope=Scope.FACTORY,
+            tags=tags,
+            constructor_kwargs=None,
+            factory=factory,
+            factory_kwargs=factory_kwargs,
         )
 
     def register_instance(
-        self, dependency: Type, instance: Any, tags: Optional[set] = None
+        self,
+        service: Type = None,
+        instance: Any = None,
+        tags: Optional[set] = None,
+        **aliases: Any,
     ) -> None:
-        self._validate_registration(dependency)
-        self._registrations[dependency] = Registration(
-            dependency, type(instance), Scope.SINGLETON, tags=tags
+        # when we remove deprecated aliases in next major make service non-optional arg
+        if "dependency" in aliases:
+            warnings.warn(
+                "`dependency` is deprecated; use `service`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            service = aliases.pop("dependency")
+        if aliases:
+            raise TypeError(f"Unexpected keyword(s): {', '.join(aliases)}")
+        if service is None:
+            raise TypeError("`service` is required (or use deprecated `dependency=`).")
+        if instance is None:
+            raise TypeError("`instance` is required.")
+
+        self._validate_registration(service)
+        self._registrations[service] = Registration(
+            service=service,
+            implementation=type(instance),
+            scope=Scope.SINGLETON,
+            tags=tags,
         )
-        self._singleton_instances[dependency] = instance
+        self._singleton_instances[service] = instance
 
     def _register(
         self,
-        dependency: Type,
+        service: Type,
         implementation: Optional[Type],
         scope: Scope,
         tags: Optional[set],
-        constructor_args: Optional[Dict[str, Any]],
+        constructor_kwargs: Optional[Dict[str, Any]],
     ) -> None:
-        implementation = implementation or dependency
-        self._validate_registration(dependency)
-        self._registrations[dependency] = Registration(
-            dependency, implementation, scope, tags, constructor_args
+        implementation = implementation or service
+        self._validate_registration(service)
+        self._registrations[service] = Registration(
+            service=service,
+            implementation=implementation,
+            scope=scope,
+            tags=tags,
+            constructor_kwargs=constructor_kwargs,
         )
 
-    def resolve(self, dependency: Type, scope_name: Optional[str] = None) -> Any:
+    # --------
+    # Resolve
+    # --------
+
+    def resolve(
+        self, service: Type = None, scope_name: Optional[str] = None, **aliases: Any
+    ) -> Any:
+        if "dependency" in aliases:
+            warnings.warn(
+                "`dependency` is deprecated; use `service`.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            service = aliases.pop("dependency")
+        if aliases:
+            raise TypeError(f"Unexpected keyword(s): {', '.join(aliases)}")
+
         self._has_resolved = True
         scope_name = scope_name or self.get_default_scope_name()
 
         if scope_name not in self._scoped_instances:
             self._scoped_instances[scope_name] = {}
 
-        registration = self._registrations.get(dependency)
+        registration = self._registrations.get(service)
         if not registration:
-            raise KeyError(f"Dependency {dependency.__name__} is not registered.")
+            raise KeyError(
+                f"Service {getattr(service, '__name__', service)!r} is not registered."
+            )
 
-        constructor_args = registration.constructor_args or {}
-        self._validate_constructor_args(constructor_args, registration.implementation)
+        constructor_kwargs = registration.constructor_kwargs or {}
+        self._validate_constructor_kwargs(
+            constructor_kwargs, registration.implementation
+        )
 
         return self._resolve_by_scope(registration, scope_name)
 
@@ -165,63 +309,63 @@ class DependencyContainer(metaclass=SingletonMeta):
         if scope == Scope.TRANSIENT:
             return self._inject_dependencies(
                 registration.implementation,
-                constructor_args=registration.constructor_args,
+                constructor_kwargs=registration.constructor_kwargs,
             )
         elif scope == Scope.SCOPED:
             instances = self._scoped_instances[scope_name]
-            if registration.dependency not in instances:
-                instances[registration.dependency] = self._inject_dependencies(
+            if registration.service not in instances:
+                instances[registration.service] = self._inject_dependencies(
                     registration.implementation,
                     scope_name,
-                    registration.constructor_args,
+                    registration.constructor_kwargs,
                 )
-            return instances[registration.dependency]
+            return instances[registration.service]
         elif scope == Scope.SINGLETON:
-            if registration.dependency not in self._singleton_instances:
+            if registration.service not in self._singleton_instances:
                 self._singleton_instances[
-                    registration.dependency
+                    registration.service
                 ] = self._inject_dependencies(
                     registration.implementation,
-                    constructor_args=registration.constructor_args,
+                    constructor_kwargs=registration.constructor_kwargs,
                 )
-            return self._singleton_instances[registration.dependency]
+            return self._singleton_instances[registration.service]
         elif scope == Scope.FACTORY:
-            return registration.factory(**(registration.factory_args or {}))
+            return registration.factory(**(registration.factory_kwargs or {}))
 
-        raise ValueError(f"Invalid dependency scope: {scope}")
+        raise ValueError(f"Invalid service scope: {scope}")
 
     def resolve_all(
         self, tags: Optional[set] = None, match_all_tags: bool = False
     ) -> List[Any]:
         tags = tags or set()
-        resolved_dependencies = []
+        resolved = []
 
         for registration in self._registrations.values():
             if not tags:
-                # If no tags are provided, resolve all dependencies
-                resolved_dependencies.append(self.resolve(registration.dependency))
+                # If no tags are provided, resolve all services
+                resolved.append(self.resolve(registration.service))
             else:
                 if match_all_tags:
-                    # Match dependencies that have all the specified tags
+                    # Match registrations that have all specified tags
                     if registration.tags and tags.issubset(registration.tags):
-                        resolved_dependencies.append(
-                            self.resolve(registration.dependency)
-                        )
+                        resolved.append(self.resolve(registration.service))
                 else:
-                    # Match dependencies that have any of the specified tags
+                    # Match registrations that have any of the specified tags
                     if registration.tags and tags.intersection(registration.tags):
-                        resolved_dependencies.append(
-                            self.resolve(registration.dependency)
-                        )
+                        resolved.append(self.resolve(registration.service))
 
-        return resolved_dependencies
+        return resolved
 
-    def _validate_constructor_args(
-        self, constructor_args: Dict[str, Any], implementation: Type
+    # -------------------
+    # Validation & utils
+    # -------------------
+
+    def _validate_constructor_kwargs(
+        self, constructor_kwargs: Dict[str, Any], implementation: Type
     ) -> None:
         constructor = inspect.signature(implementation.__init__).parameters
 
-        for arg_name, arg_value in constructor_args.items():
+        for arg_name, arg_value in constructor_kwargs.items():
             if arg_name not in constructor:
                 raise ValueError(
                     f"Invalid constructor argument '{arg_name}' for class "
@@ -235,37 +379,35 @@ class DependencyContainer(metaclass=SingletonMeta):
                     real_type = self._unwrap_optional_type(expected_type)
                     if not isinstance(arg_value, real_type) and arg_value is not None:
                         raise TypeError(
-                            f"Constructor argument '{arg_name}' "
-                            f"has an incompatible type. "
-                            f"Expected type: {expected_type}, "
-                            f"provided type: {type(arg_value)}."
+                            f"Constructor argument '{arg_name}' has an "
+                            f"incompatible type. "
+                            f"Expected: {expected_type}, provided: {type(arg_value)}."
                         )
                 else:
                     if not isinstance(arg_value, expected_type):
                         raise TypeError(
-                            f"Constructor argument '{arg_name}' "
-                            f"has an incompatible type. "
-                            f"Expected type: {expected_type}, "
-                            f"provided type: {type(arg_value)}."
+                            f"Constructor argument '{arg_name}' has an "
+                            f"incompatible type. "
+                            f"Expected: {expected_type}, provided: {type(arg_value)}."
                         )
 
-    def _validate_registration(self, dependency: Type) -> None:
-        if dependency in self._registrations:
-            raise ValueError(f"Dependency {dependency} is already registered.")
+    def _validate_registration(self, service: Type) -> None:
+        if service in self._registrations:
+            raise ValueError(f"Service {service} is already registered.")
 
     def _inject_dependencies(
         self,
         implementation: Type,
         scope_name: Optional[str] = None,
-        constructor_args: Optional[Dict[str, Any]] = None,
-    ) -> Type:
+        constructor_kwargs: Optional[Dict[str, Any]] = None,
+    ) -> Any:
         scope_name = scope_name or self.get_default_scope_name()
 
         if is_dataclass(implementation):
             return implementation()  # Do not inject into dataclasses
 
         dependencies = self._resolve_constructor_args(
-            implementation, scope_name, constructor_args
+            implementation, scope_name, constructor_kwargs
         )
         return implementation(**dependencies)
 
@@ -273,10 +415,10 @@ class DependencyContainer(metaclass=SingletonMeta):
         self,
         implementation: Type,
         scope_name: str,
-        constructor_args: Optional[Dict[str, Any]],
+        constructor_kwargs: Optional[Dict[str, Any]],
     ) -> Dict[str, Any]:
         constructor = inspect.signature(implementation.__init__)
-        dependencies = {}
+        resolved: Dict[str, Any] = {}
 
         for name, param in constructor.parameters.items():
             if name == "self":
@@ -287,33 +429,33 @@ class DependencyContainer(metaclass=SingletonMeta):
             ):
                 continue
 
-            if constructor_args and name in constructor_args:
-                dependencies[name] = constructor_args[name]
+            if constructor_kwargs and name in constructor_kwargs:
+                resolved[name] = constructor_kwargs[name]
             else:
                 try:
-                    dependencies[name] = self._resolve_param_value(param, scope_name)
+                    resolved[name] = self._resolve_param_value(param, scope_name)
                 except KeyError:
                     if self._should_use_default(param):
                         continue
                     raise ValueError(
-                        f"Cannot resolve dependency for parameter '{name}' "
+                        f"Cannot resolve service for parameter '{name}' "
                         f"of type '{param.annotation}' in class "
                         f"'{implementation.__name__}'."
                     )
 
-        return dependencies
+        return resolved
 
     def _resolve_param_value(self, param: inspect.Parameter, scope_name: str) -> Any:
         annotation = param.annotation
 
         if get_origin(annotation) is list:
-            return self._resolve_list_dependency(annotation)
+            return self._resolve_param_value_of_list_type(annotation)
 
         if self._is_optional_type(annotation):
             inner = self._unwrap_optional_type(annotation)
 
             if get_origin(inner) is list:
-                return self._resolve_list_dependency(inner)
+                return self._resolve_param_value_of_list_type(inner)
 
             try:
                 return self.resolve(inner, scope_name)
@@ -324,7 +466,7 @@ class DependencyContainer(metaclass=SingletonMeta):
 
         return self.resolve(annotation, scope_name)
 
-    def _resolve_list_dependency(self, annotation: Any) -> List[Any]:
+    def _resolve_param_value_of_list_type(self, annotation: Any) -> List[Any]:
         inner = get_args(annotation)[0]
         if isinstance(inner, type) and issubclass(inner, Tagged):
             return self.resolve_all(tags={inner.tag})

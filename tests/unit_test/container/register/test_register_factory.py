@@ -28,7 +28,7 @@ class TestRegisterFactory(UnitTestCase):
         # assert
         # (no exception thrown)
 
-    def test_register_with_factory_args(
+    def test_register_with_factory_kwargs(
         self,
     ):
         # arrange
@@ -51,7 +51,7 @@ class TestRegisterFactory(UnitTestCase):
         dependency_container.register_factory(
             Vehicle,
             factory=CarFactory.create,
-            factory_args={"color": "red", "mileage": 3800},
+            factory_kwargs={"color": "red", "mileage": 3800},
         )
 
     def test_register_with_lambda_method(

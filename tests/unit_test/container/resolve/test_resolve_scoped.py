@@ -17,15 +17,15 @@ class TestResolveScoped(UnitTestCase):
         dependency_container.register_scoped(Vehicle, Car)
 
         # act
-        resolved_dependency_in_scope_1 = dependency_container.resolve(
+        resolved_in_scope_1 = dependency_container.resolve(
             Vehicle, scope_name="test-scope"
         )
-        resolved_dependency_in_scope_2 = dependency_container.resolve(
+        resolved_in_scope_2 = dependency_container.resolve(
             Vehicle, scope_name="test-scope"
         )
 
         # assert
-        self.assertEqual(resolved_dependency_in_scope_1, resolved_dependency_in_scope_2)
+        self.assertEqual(resolved_in_scope_1, resolved_in_scope_2)
 
     def test_returns_different_instances_when_registered_in_different_scopes(
         self,
@@ -41,17 +41,15 @@ class TestResolveScoped(UnitTestCase):
         dependency_container.register_scoped(Vehicle, Car)
 
         # act
-        resolved_dependency_in_scope_1 = dependency_container.resolve(
+        resolved_in_scope_1 = dependency_container.resolve(
             Vehicle, scope_name="scope_1"
         )
-        resolved_dependency_in_scope_2 = dependency_container.resolve(
+        resolved_in_scope_2 = dependency_container.resolve(
             Vehicle, scope_name="scope_2"
         )
 
         # assert
-        self.assertNotEqual(
-            resolved_dependency_in_scope_1, resolved_dependency_in_scope_2
-        )
+        self.assertNotEqual(resolved_in_scope_1, resolved_in_scope_2)
 
     def test_returns_an_instance_when_registered_without_implementation_arg(
         self,
@@ -64,7 +62,7 @@ class TestResolveScoped(UnitTestCase):
         dependency_container.register_scoped(Vehicle)
 
         # act
-        resolved_dependency = dependency_container.resolve(Vehicle)
+        resolved = dependency_container.resolve(Vehicle)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Vehicle)
+        self.assertIsInstance(resolved, Vehicle)

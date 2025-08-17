@@ -3,7 +3,7 @@ from unit_test.unit_test_case import UnitTestCase
 
 
 class TestRegisterWithArgs(UnitTestCase):
-    def test_register_with_constructor_args(
+    def test_register_with_constructor_kwargs(
         self,
     ):
         # arrange
@@ -14,12 +14,12 @@ class TestRegisterWithArgs(UnitTestCase):
             pass
 
         dependency_container = DependencyContainer.get_instance()
-        dependency = Vehicle
+        service = Vehicle
         implementation = Car
 
         # act + assert (no exception)
         dependency_container.register_transient(
-            dependency,
+            service,
             implementation,
-            constructor_args={"color": "red", "mileage": 3800},
+            constructor_kwargs={"color": "red", "mileage": 3800},
         )

@@ -23,5 +23,5 @@ class TestResolveMissingDependency(UnitTestCase):
 
         # assert
         msg = str(e.value)
-        self.assertIn("Cannot resolve dependency for parameter 'engine'", msg)
+        self.assertIn("Cannot resolve service for parameter 'engine'", msg)
         self.assertIn("in class 'Car'", msg)

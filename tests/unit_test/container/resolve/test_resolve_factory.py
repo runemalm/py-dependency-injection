@@ -22,10 +22,10 @@ class TestResolveTransient(UnitTestCase):
         dependency_container.register_factory(Vehicle, factory=CarFactory.create)
 
         # act
-        resolved_dependency = dependency_container.resolve(Vehicle)
+        resolved = dependency_container.resolve(Vehicle)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Car)
+        self.assertIsInstance(resolved, Car)
 
     def test_resolve_factory_twice_returns_different_instances(
         self,
@@ -46,13 +46,13 @@ class TestResolveTransient(UnitTestCase):
         dependency_container.register_factory(Vehicle, factory=CarFactory.create)
 
         # act
-        resolved_dependency_1 = dependency_container.resolve(Vehicle)
-        resolved_dependency_2 = dependency_container.resolve(Vehicle)
+        resolved_1 = dependency_container.resolve(Vehicle)
+        resolved_2 = dependency_container.resolve(Vehicle)
 
         # assert
-        self.assertNotEqual(resolved_dependency_1, resolved_dependency_2)
+        self.assertNotEqual(resolved_1, resolved_2)
 
-    def test_resolve_factory_with_args_passes_args(
+    def test_resolve_factory_with_kwargs_passes_kwargs(
         self,
     ):
         # arrange
@@ -73,16 +73,16 @@ class TestResolveTransient(UnitTestCase):
         dependency_container.register_factory(
             Vehicle,
             factory=CarFactory.create,
-            factory_args={"color": "red", "mileage": 6327},
+            factory_kwargs={"color": "red", "mileage": 6327},
         )
 
         # act
-        resolved_dependency = dependency_container.resolve(Vehicle)
+        resolved = dependency_container.resolve(Vehicle)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Car)
-        self.assertEqual("red", resolved_dependency.color)
-        self.assertEqual(6327, resolved_dependency.mileage)
+        self.assertIsInstance(resolved, Car)
+        self.assertEqual("red", resolved.color)
+        self.assertEqual(6327, resolved.mileage)
 
     def test_resolve_factory_registered_with_lambda(
         self,
@@ -99,8 +99,8 @@ class TestResolveTransient(UnitTestCase):
         dependency_container.register_factory(Vehicle, factory=lambda: Car(color="red"))
 
         # act
-        resolved_dependency = dependency_container.resolve(Vehicle)
+        resolved = dependency_container.resolve(Vehicle)
 
         # assert
-        self.assertIsInstance(resolved_dependency, Car)
-        self.assertEqual(resolved_dependency.color, "red")
+        self.assertIsInstance(resolved, Car)
+        self.assertEqual(resolved.color, "red")
