@@ -12,16 +12,13 @@
 #
 import os
 import sys
+from datetime import date
+from importlib.metadata import PackageNotFoundError, version as pkg_version
 
-sys.path.insert(0, os.path.abspath("../src/"))
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+SRC = os.path.join(ROOT, "src")
+sys.path.insert(0, SRC)
 
-from dependency_injection.version import __version__  # noqa: E402
-
-
-# -- Auto doc generation -----
-
-# # Specify the module to document
-# autodoc_mock_imports = ["dependency_injection"]
 
 # The main module
 root_doc = "index"
@@ -30,14 +27,27 @@ root_doc = "index"
 # -- Project information -----------------------------------------------------
 
 project = "py-dependency-injection"
-copyright = "2025, David Runemalm"
 author = "David Runemalm"
+copyright = f"{date.today().year}, {author}"
 
-# Short X.Y version
-version = __version__.split("-")[0]
+# Try to read the installed package version; fall back for local builds
+try:
+    release = pkg_version("py-dependency-injection")
+except PackageNotFoundError:
+    # Fallback: read from source without importing the package
+    _ver_file = os.path.join(SRC, "dependency_injection", "version.py")
+    _ver = "0.0.0-dev"
+    try:
+        with open(_ver_file, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip().startswith("__version__"):
+                    _ver = line.split("=", 1)[1].strip().strip("\"'")
+                    break
+    except OSError:
+        pass
+    release = _ver
 
-# Full version string
-release = __version__
+version = release.split("-")[0]
 
 
 # -- General configuration ---------------------------------------------------
@@ -46,19 +56,95 @@ release = __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autosummary",
-    "sphinx.ext.autodoc",
-    "sphinx.ext.intersphinx",
+    "sphinx.ext.autodoc",  # generate API from docstrings
     "sphinx.ext.autosectionlabel",
-    "sphinx_rtd_theme",
-    "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary",  # summary tables + per-object pages
+    "sphinx.ext.napoleon",  # Google/NumPy docstrings
+    "sphinx_autodoc_typehints",  # display type hints nicely
+    "sphinx.ext.intersphinx",  # cross-link to Python stdlib, etc.
+    "sphinx.ext.linkcode",  # "view source" links
+    "sphinx.ext.doctest",  # run code in docs if you want
+    "sphinx_copybutton",
+    "sphinx_inline_tabs",
 ]
 
+# --- Theme ---
+html_theme = "sphinx_rtd_theme"
+
+# Optional RTD theme polish
+# html_theme_options = {
+#    "collapse_navigation": True,
+#    "navigation_depth": 3,
+#    "style_external_links": True,
+# }
+
+html_context = {
+    "display_github": False,  # Optional: only needed if you're showing GitHub links
+    "display_version": True,  # ✅ Enable version display manually
+    "version": version,  # pulled from your __version__
+    "release": release,
+}
+
+html_css_files = ["custom.css"]
+
+# Add any paths that contain custom static files (such as style sheets) here,
+# relative to this directory. They are copied after the builtin static files,
+# so a file named "default.css" will overwrite the builtin "default.css".
+html_static_path = ["_static"]
+
+# --- Autosectionlabel behavior ---
+autosectionlabel_prefix_document = True
+
+# --- Autodoc / Autosummary behavior ---
 autosummary_generate = True
+# If you re-export public API from __init__.py, uncomment:
+# autosummary_imported_members = True
 autodoc_default_options = {
     "members": True,
-    "undoc-members": True,
+    "undoc-members": False,
+    "inherited-members": True,
+    "show-inheritance": True,
 }
+autodoc_member_order = "bysource"
+autodoc_preserve_defaults = True  # show default arg values as written
+
+# sphinx-autodoc-typehints tuning
+typehints_fully_qualified = False
+always_document_param_types = True
+set_type_checking_flag = True
+simplify_optional_unions = True
+typehints_use_rtype = False
+
+# --- Don’t explode when optional deps aren’t installed during docs build ---
+# If your package has optional imports, list them here to mock:
+autodoc_mock_imports = [
+    # "fastapi", "some_heavy_provider",
+]
+
+# --- Copybutton behaviour -------------------------------------------------
+copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d+\]: |Out\[\d+\]: "
+copybutton_prompt_is_regexp = True
+
+# --- Napoleon (Google style recommended) ---
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False
+napoleon_use_param = True
+napoleon_use_rtype = False  # keep return type in signature from hints
+napoleon_use_admonition_for_notes = True
+napoleon_use_admonition_for_examples = True
+
+# -- General configuration ---------------------------------------------------
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+}
+
+# --- Strictness (great for CI; relax locally if needed) ---
+nitpicky = True  # warn on broken references
+nitpick_ignore = [
+    # Example if a third-party type isn’t resolvable:
+    # ("py:class", "SomeExternalType"),
+]
+# In CI, also run sphinx-build with -W to turn warnings into errors.
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -84,30 +170,47 @@ pygments_style = "sphinx"
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
 
-autodoc_member_order = "alphabetical"
 
-# -- Options for HTML output -------------------------------------------------
+# -- Linkcode: map objects to GitHub -----------------------------------------
+def linkcode_resolve(domain, info):
+    if domain != "py" or not info.get("module"):
+        return None
+    import importlib
+    import pathlib
+    import inspect as _inspect
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
-html_theme = "sphinx_rtd_theme"
+    try:
+        mod = importlib.import_module(info["module"])
+    except Exception:
+        return None
 
-html_context = {
-    "display_github": False,  # Optional: only needed if you're showing GitHub links
-    "display_version": True,  # ✅ Enable version display manually
-    "version": version,  # pulled from your __version__
-    "release": release,
-}
+    obj = mod
+    for part in info["fullname"].split("."):
+        obj = getattr(obj, part, None)
+        if obj is None:
+            return None
 
-html_css_files = ["custom.css"]
+    try:
+        fn = _inspect.getsourcefile(obj) or _inspect.getfile(obj)
+        source, lineno = _inspect.getsourcelines(obj)
+    except Exception:
+        return None
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
+    fn = pathlib.Path(fn).resolve()
+    try:
+        relpath = fn.relative_to(SRC)
+    except ValueError:
+        return None
 
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", None),
-    "sqlalchemy": ("http://docs.sqlalchemy.org/en/latest/", None),
-}
+    # Prefer commit/tag if present; fall back to branch-ish
+    ref = (
+        os.environ.get("READTHEDOCS_GIT_IDENTIFIER")  # exact commit or tag
+        or os.environ.get("READTHEDOCS_VERSION")  # 'latest'/'stable'/branch
+        or "master"
+    )
+
+    start, end = lineno, lineno + len(source) - 1
+    return (
+        "https://github.com/runemalm/py-dependency-injection/"
+        f"blob/{ref}/src/{relpath}#L{start}-L{end}"
+    )
