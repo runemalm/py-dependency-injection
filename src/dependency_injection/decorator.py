@@ -24,19 +24,19 @@ def inject(
             sig = inspect.signature(func)
             parameter_names = [param.name for param in sig.parameters.values()]
 
-            # Iterate over the parameter names and inject dependencies into kwargs
+            # Iterate over the parameter names and inject services into kwargs
             for parameter_name in parameter_names:
                 if parameter_name != "cls" and parameter_name not in kwargs:
                     # get container
                     container = DependencyContainer.get_instance(container_name)
                     actual_scope_name = scope_name or container.get_default_scope_name()
-                    # Resolve the dependency based on the parameter name
-                    dependency_type = sig.parameters[parameter_name].annotation
+                    # Resolve the service in the parameter type annotation
+                    service = sig.parameters[parameter_name].annotation
                     kwargs[parameter_name] = container.resolve(
-                        dependency_type, scope_name=actual_scope_name
+                        service, scope_name=actual_scope_name
                     )
 
-            # Call the original function with the injected dependencies
+            # Call the original function with the injected services
             return func(*args, **kwargs)
 
         # Not allowed on instance methods
