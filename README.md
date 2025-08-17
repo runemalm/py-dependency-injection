@@ -1,11 +1,11 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Author: David Runemalm](https://img.shields.io/badge/Author-David%20Runemalm-blue)](https://www.davidrunemalm.com)
+[![PyPI version](https://badge.fury.io/py/py-dependency-injection.svg)](https://pypi.org/project/py-dependency-injection/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/py-dependency-injection)](https://pypi.org/project/py-dependency-injection/)
+![Downloads](https://pepy.tech/badge/py-dependency-injection)
 [![Master workflow](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/runemalm/py-dependency-injection/actions/workflows/master.yml)
 [![Codecov](https://codecov.io/github/runemalm/py-dependency-injection/branch/master/graph/badge.svg)](https://codecov.io/github/runemalm/py-dependency-injection)
-[![PyPI version](https://badge.fury.io/py/py-dependency-injection.svg)](https://pypi.org/project/py-dependency-injection/)
-![Downloads](https://pepy.tech/badge/py-dependency-injection)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
+[![Author: David Runemalm](https://img.shields.io/badge/Author-David%20Runemalm-blue)](https://www.davidrunemalm.com)
 
 # py-dependency-injection
 
