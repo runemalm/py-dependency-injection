@@ -46,7 +46,7 @@ $ pip install py-dependency-injection
 Here's a quick example to get you started:
 
 ```python
-from dependency_injection.container import DependencyContainer
+from dependency_injection import DependencyContainer
 
 # Define an abstract payment gateway interface
 class PaymentGateway:
