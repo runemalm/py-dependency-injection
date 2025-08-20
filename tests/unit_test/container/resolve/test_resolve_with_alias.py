@@ -1,9 +1,8 @@
-from dependency_injection.container import DependencyContainer
-
 from unit_test.unit_test_case import UnitTestCase
-
 from unit_test.container.resolve.test_data.vehicle import Vehicle
 from unit_test.container.resolve.test_data.vehicle import Vehicle as VehicleAlias
+
+from dependency_injection import DependencyContainer
 
 
 class TestResolveWithAlias(UnitTestCase):

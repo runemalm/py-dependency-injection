@@ -1,9 +1,8 @@
-from typing import Optional
-
 import pytest
 
-from dependency_injection.container import DependencyContainer
+from typing import Optional
 from unit_test.unit_test_case import UnitTestCase
+from dependency_injection import DependencyContainer
 
 
 class TestResolveWithArgs(UnitTestCase):

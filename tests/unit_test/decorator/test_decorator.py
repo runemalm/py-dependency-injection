@@ -1,7 +1,6 @@
 import pytest
 
-from dependency_injection.container import DependencyContainer
-from dependency_injection.decorator import inject
+from dependency_injection import DependencyContainer, inject
 from unit_test.unit_test_case import UnitTestCase
 
 

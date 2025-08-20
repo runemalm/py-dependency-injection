@@ -1,4 +1,4 @@
-from dependency_injection.container import DependencyContainer
+from dependency_injection import DependencyContainer
 
 
 class Foo:

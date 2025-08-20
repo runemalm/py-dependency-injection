@@ -1,11 +1,9 @@
-from dataclasses import dataclass
 from typing import List
+from dataclasses import dataclass
 
-from dependency_injection.container import DependencyContainer
-from dependency_injection.tags.all_tagged import AllTagged
-from dependency_injection.tags.any_tagged import AnyTagged
-from dependency_injection.tags.tagged import Tagged
 from unit_test.unit_test_case import UnitTestCase
+
+from dependency_injection import DependencyContainer, AllTagged, AnyTagged, Tagged
 
 
 class TestResolveWithInjection(UnitTestCase):

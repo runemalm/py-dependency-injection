@@ -1,5 +1,6 @@
 import pytest
-from dependency_injection.container import DependencyContainer
+
+from dependency_injection import DependencyContainer
 from unit_test.unit_test_case import UnitTestCase
 
 

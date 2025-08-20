@@ -1,7 +1,7 @@
 import pytest
 
-from dependency_injection.container import DependencyContainer
 from unit_test.unit_test_case import UnitTestCase
+from dependency_injection import DependencyContainer
 
 
 class TestRegisterScoped(UnitTestCase):
