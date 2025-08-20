@@ -9,10 +9,11 @@ Version History
 
 **1.0.0-rc.3 (2025-08-xx)**
 
-- **API polish:** Renamed `dependency` → `service`, `constructor_args` → `constructor_kwargs`, and `factory_args` → `factory_kwargs`; old keywords still work but emit deprecation warnings.
-- **Documentation**: Enabled copy button for code example blocks.
-- **Tooling**: Added test coverage tooling (Codecov).
-- **Tests**: Added more unit tests to increase coverage.
+- **API polish:** Renamed `dependency` → `service`, `constructor_args` → `constructor_kwargs`, and `factory_args` → `factory_kwargs`; Old names remain supported but now emit deprecation warnings.
+- **API**: Re-exported public symbols from the root package for cleaner imports.
+- **Docs**: Added copy-to-clipboard buttons on code examples.
+- **Tooling**: Integrated Codecov for test coverage reporting.
+- **Tests**: Expanded unit test suite to improve coverage.
 
 `View release on GitHub <https://github.com/runemalm/py-dependency-injection/releases/tag/v1.0.0-rc.3>`_
 
